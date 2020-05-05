@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+    <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
+        <div class="container" style="color: rgb(241,234,72);width: 355px;height: 302px;">
+            <h1 style="padding: 18px;color: rgb(44,62,80);">Bem Vindo</h1>
+            <div class="row">
+                <div class="col" style="padding-right: 2px;padding-left: 9px;">
+                    <a  href="{% url 'cardapio' %}" >
+                    <div class="btn-group justify-content-center" role="group" style="height: 229px;width: 334px;padding: 4px;min-width: 8px;"><button class="btn btn-primary text-center border rounded align-content-center" type="button" style="width: 188px;padding: 5px;padding-right: 15px;margin: 7px;height: 193px;"><small></small><i class="fa fa-list-alt" style="height: 79px;width: 121px;font-size: 59px;margin: 3px;padding: 5px;"></i></button></div>
+                    <small
+                        style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">CARDÁPIO</small>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+</html>
