@@ -12,8 +12,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     # path('vend/', include('gerenciador.urls', namespace='vend')),
     path('loguin', views.loguin, name='loguin'),
-    path('logout', views.logout, name='logout'),
+    path('logout', views.logoutuser, name='logout'),
     path('feed', views.feed, name='feed'),
     path('ped', views.ped, name='ped'),
+    # path('adm', views.adm, name='adm'),
     path('cardapio', views.cardapio, name='cardapio')
 ]

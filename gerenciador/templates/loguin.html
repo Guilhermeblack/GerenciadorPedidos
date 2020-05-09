@@ -4,17 +4,32 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-    <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
-        <h1 class="align-items-center text-primary" style="font-size: 62px;margin: 3px;">ENTRAR</h1>
-    </header>
-    <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
-        <form method="post" style="margin-top: 4px;padding: 22px;">
-            {% csrf_token %}
-            <h2 class="sr-only">Login Form</h2>
-            <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
-            <div class="form-group"><input class="form-control" type="text" name="user" placeholder="Usuário"></div>
-            <div class="form-group"><input class="form-control" type="password" name="pass" placeholder="Senha"></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div><a href="#" class="forgot">Forgot your email or password?</a></form>
-    </div>
+    {% if user.is_authenticated %}
+        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
+            <h1 class="align-items-center text-primary" style="font-size: 62px;margin: 3px;">Bem vindo !</h1>
+        </header>
+        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
+            <p align="center">
+            <h2>
+                LOGO EMPRESA
+            </h2>
+            </p>
+        </div>
+    {% elif user.is_anonymous %}
+        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
+            <h1 class="align-items-center text-primary" style="font-size: 62px;margin: 3px;">ENTRAR</h1>
+        </header>
+        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
+            <form method="post" style="margin-top: 4px;padding: 22px;">
+                {% csrf_token %}
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
+                {% if form %}
+                    <div class="form-group" align="center">{{form.nome}}</div>
+                    <div class="form-group" align="center">{{form.senha}}</div>
+                {% endif %}
+                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div><a href="#" class="forgot">Forgot your email or password?</a></form>
+        </div>
+    {% endif %}
 {% endblock %}
 </html>

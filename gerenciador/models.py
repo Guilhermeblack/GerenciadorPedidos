@@ -17,21 +17,22 @@ class Gerente(models.Model):
 
     id = models.AutoField(primary_key=True),
     nome = models.CharField(
-        max_length=255,
-        null=False,
-        blank=False
-    )
-    senha = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
-    )
+        default='gerente'
+    ),
+    senha = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+    ),
     senha_rep = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
 
-    )
+    ),
     objects = models.Manager()
 
 class Garçom(models.Model):
@@ -48,21 +49,21 @@ class Garçom(models.Model):
 
     id = models.AutoField(primary_key=True),
     nome = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
         default="garçom"
-    )
+    ),
     senha = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
-    )
+    ),
     senha_rep = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
-    )
+    ),
     objects = models.Manager()
 
 class Cozinha(models.Model):
@@ -77,70 +78,76 @@ class Cozinha(models.Model):
 
     id = models.AutoField(primary_key=True),
     nome = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
-        blank=False
+        blank=False,
+        default='cheff'
     )
     senha = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
     )
     senha_rep = models.CharField(
-        max_length=255,
+        max_length=50,
         null=False,
         blank=False,
-
     )
     objects = models.Manager()
 
 
 class Comanda(models.Model):
 
-    def __str__(self):
-        return self.id
+    id = models.AutoField(primary_key=True)
 
-    id = models.AutoField(primary_key=True),
+    nome = models.TextField(
+        max_length=50,
+        null=False,
+        blank=False,
+        # default='sôzé'
+    )
     total = models.FloatField(
         max_length=6,
         null=False,
-        blank=False
-    ),
-    pedidos = models.TextField(
-        max_length=200,
-        null=False,
-        blank=False
+        blank=False,
+        # default=1.00
     )
+    pedidos = models.TextField(
+        max_length=255,
+        null=False,
+        blank=False,
+        default=''
+    )
+
+    def __str__(self):
+        return '{}- {}'.format(self.id, self.nome)
+
     objects = models.Manager()
 
 
-class Produto(models.Model):
+class Produtocad(models.Model):
 
-    def __str__(self):
-        return self.nome
-
-    id = models.AutoField(primary_key=True),
+    id = models.AutoField(primary_key=True)
 
     nome = models.TextField(
+        max_length=50,
+        null=False,
+        blank=False
+    )
+    descricao = models.TextField(
         max_length=255,
         null=False,
         blank=False
-    ),
-    descricao= models.TextField(
-        max_length=255,
-        null=False,
-        blank=False
-    ),
+    )
     preco = models.FloatField(
         max_length=6,
         null=False,
         blank=False
     )
 
-    comanda = models.ForeignKey(
-        Comanda,
-        on_delete=models.CASCADE
-    )
+    def __str__(self):
+        return self.nome
+
     objects = models.Manager()
 
 
@@ -149,35 +156,36 @@ class Pedido(models.Model):
     STATUS_CHOICES = (
         ("P", "Pedido realizado"),
         ("F", "Fazendo"),
-        ("E", "Saiu para entrega"),
+        ("E", "Saiu para entrega")
     )
 
-    def __str__(self):
-        return self.id
 
-    id = models.AutoField(primary_key=True),
+
+    id = models.AutoField(primary_key=True)
+
+    produtosPedido = models.ManyToManyField(Produtocad)
 
     item = models.TextField(
-        max_length=255,
+        max_length=125,
         null=False,
         blank=False
-    ),
-    quantidade= models.IntegerField(
-        max_length=6,
-        null=False,
-        blank=False
-    ),
-    valor = models.FloatField(
-        max_length=6,
-        null=False,
-        blank=False,
-        default=0
     )
-    produtos = models.ManyToManyField(Produto)
+    quantidade = models.IntegerField(
+        null=False,
+        blank=False
+    )
+    observacao = models.TextField(
+        max_length=200,
+        null=False,
+        blank=True
+    )
+
     comanda = models.ForeignKey(
         Comanda,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        default=0
     )
+
     status = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
@@ -185,8 +193,23 @@ class Pedido(models.Model):
         null=False,
         default="P"
     )
+
+    def __str__(self):
+        return self.id
+
     objects = models.Manager()
 
 
+class logform(models.Model):
+    senha = models.CharField(
+        max_length=80,
+        null=False,
+        blank=False,
+    )
+    nome = models.CharField(
+        max_length=80,
+        null=False,
+        blank=False,
+    )
 
 # Create your models here.

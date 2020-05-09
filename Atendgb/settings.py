@@ -71,6 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Atendgb.wsgi.application'
 
+LOGOUT_REDIRECT_URL = '/'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
