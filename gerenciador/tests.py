@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .views import loguin, saveproduto, index
+from .views import loguin, index
 import os
 
 # importa a funçao ou classe a ser testada

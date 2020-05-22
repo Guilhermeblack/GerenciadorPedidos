@@ -52,7 +52,7 @@ class Garçom(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default="garçom"
+        default="garçom",
     ),
     senha = models.CharField(
         max_length=50,
@@ -81,7 +81,7 @@ class Cozinha(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default='cheff'
+        default='cheff',
     )
     senha = models.CharField(
         max_length=50,
@@ -129,7 +129,7 @@ class Produtocad(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    nome = models.TextField(
+    nome = models.CharField(
         max_length=50,
         null=False,
         blank=False
