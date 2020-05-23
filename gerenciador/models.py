@@ -100,27 +100,75 @@ class Comanda(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    nome = models.TextField(
+    nome = models.CharField(
         max_length=50,
         null=False,
         blank=False,
         # default='sôzé'
     )
-    total = models.FloatField(
-        max_length=6,
+
+    n_mesa = models.IntegerField(
+        default=0,
         null=False,
         blank=False,
-        # default=1.00
     )
-    pedidos = models.TextField(
-        max_length=255,
+
+
+    def __str__(self):
+        return '{} <> {}'.format(self.id, self.nome)
+
+    objects = models.Manager()
+
+class Pedido(models.Model):
+
+    STATUS_CHOICES = (
+        ("P", "Pedido realizado"),
+        ("F", "Fazendo"),
+        ("E", "Saiu para entrega")
+    )
+
+    comandaref= models.ForeignKey(
+        Comanda,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="pedidoComanda"
+    )
+
+    id = models.AutoField(primary_key=True)
+
+    produtosPed= models.ManyToManyField(Produtocad)
+    status = models.CharField(
+        max_length=1,
+        choices=produtosPed,
+        blank=False,
+        null=False,
+        default=""
+    )
+
+    # pro1pra =
+
+    quantidade = models.IntegerField(
         null=False,
         blank=False,
+        default= 1
+    )
+    observacao = models.TextField(
+        max_length=170,
+        null=False,
+        blank=True,
         default=''
     )
 
+    status = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        blank=False,
+        null=False,
+        default="P"
+    )
+
     def __str__(self):
-        return '{}- {}'.format(self.id, self.nome)
+        return '{}- {}'.format(self.id, self.status)
 
     objects = models.Manager()
 
@@ -145,59 +193,26 @@ class Produtocad(models.Model):
         blank=False
     )
 
+    pedidoProdutos = models.ManyToManyField(Pedido)
+
+    STATUS_CHOICES = (
+        ("A", "Alimento"),
+        ("B", "Bebida"),
+    )
+    tipo = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        blank=False,
+        null=False,
+        default="Alimento"
+    )
+
     def __str__(self):
         return self.nome
 
     objects = models.Manager()
 
 
-class Pedido(models.Model):
-
-    STATUS_CHOICES = (
-        ("P", "Pedido realizado"),
-        ("F", "Fazendo"),
-        ("E", "Saiu para entrega")
-    )
-
-
-
-    id = models.AutoField(primary_key=True)
-
-    produtosPedido = models.ManyToManyField(Produtocad)
-
-    item = models.TextField(
-        max_length=125,
-        null=False,
-        blank=False
-    )
-    quantidade = models.IntegerField(
-        null=False,
-        blank=False
-    )
-    observacao = models.TextField(
-        max_length=200,
-        null=False,
-        blank=True
-    )
-
-    comanda = models.ForeignKey(
-        Comanda,
-        on_delete=models.CASCADE,
-        default=0
-    )
-
-    status = models.CharField(
-        max_length=1,
-        choices=STATUS_CHOICES,
-        blank=False,
-        null=False,
-        default="P"
-    )
-
-    def __str__(self):
-        return self.id
-
-    objects = models.Manager()
 
 
 class logform(models.Model):

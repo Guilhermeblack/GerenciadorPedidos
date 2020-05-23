@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .views import loguin, saveproduto, index
+from .views import loguin, index
 import os
 
 # importa a funçao ou classe a ser testada
@@ -11,12 +11,7 @@ class testRenders(TestCase):
         if self.client.get(index).status_code == 200:
             return self.assertTemplateUsed('index.html')
 
-    def testLoguin(self):
-        c = Client()
-        if c.login(username='garçom', password='prontogarçom'):
-            return self.assertTemplateUsed('ped')
-
-    def funcLog(self):
+    def testLog(self):
         if self.client.post(loguin, {'nome':'garçom', 'senha':'prontogarçom'}).status_code == 200:
             return self.assertTemplateUsed('ped')
 

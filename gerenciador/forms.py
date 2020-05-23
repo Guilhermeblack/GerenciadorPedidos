@@ -16,7 +16,7 @@ class produto(forms.ModelForm):
 
     class Meta:
         model = models.Produtocad
-        fields = ('nome','descricao','preco')
+        fields = 'nome','descricao','preco'
 
     nome = forms.CharField()
     descricao = forms.CharField()
@@ -27,7 +27,8 @@ class pedidos(forms.ModelForm):
 
     class Meta:
         model = models.Pedido
-        fields = 'item', 'quantidade','observacao','status'
+        fields = 'quantidade','observacao','status'
+        name= 'soupedido'
 
 
 
@@ -35,4 +36,5 @@ class comandas(forms.ModelForm):
 
     class Meta:
         model = models.Comanda
-        fields = 'id','nome', 'total', 'pedidos'
+        fields = 'nome',"n_mesa"
+        name = 'soucomanda'

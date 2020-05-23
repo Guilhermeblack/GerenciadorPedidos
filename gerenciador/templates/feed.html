@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 
+    {% for pedido in pedidos %}
     <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
         <div class="container" style="color: rgb(241,234,72);width: 355px;height: 302px;">
             <h1 class="text-primary" style="padding: 18px;">FEED</h1>
@@ -10,17 +11,25 @@
 
                     <div class="card" style="color: rgb(33,37,41);">
                         <div class="card-header">
-                            <h5 class="mb-0">Nº xx</h5>
+                            <h5 class="mb-0">Comanda - {{pedido.nome}}</h5>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">empapado de camarão</p>
-                            <p class="card-text">Mesa: 20</p>
-                            <p class="card-text">Observações: sem milho</p>
+                            <p class="card-text">{{pedido.produtosPedido}}</p>
+                            <p class="card-text">{{pedido.comanda}}</p>
+                            <p class="card-text">{{pedido.observacao}}</p>
+                        </div>
+
+                        <div>
+                            <h7 class="mb-0">Status do pedido
+                                <br>
+                                {{pedido.status}}
+                            </h7>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+    {% endfor %}
 {% endblock %}
 </html>
