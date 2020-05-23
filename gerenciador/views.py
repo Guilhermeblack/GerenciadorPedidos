@@ -55,9 +55,15 @@ def loguin(request):
 
 def cardapio(request):
     if request.user.is_authenticated == False:
-        messages.info(request, 'Visitante. \n Data: %s', (date.today()))
+        pass
+        # messages.info(request, 'Visitante. \n Data: %s', (date.today()))
     else:
+<<<<<<< HEAD
         messages.info(request, 'Usuário registrado. \n Data: %s', (date.today()))
+=======
+        pass
+        # messages.info(request, 'Usuário registrado. \n Data: %s', (date.today()))
+>>>>>>> 4e9d9be1cfdc473adac71c6b80c4691a6f064a38
     return render(request, 'cardapio.html',{'prod': models.Produtocad.objects.all()})
 
 

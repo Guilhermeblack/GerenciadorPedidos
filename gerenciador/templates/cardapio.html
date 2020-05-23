@@ -5,10 +5,23 @@
 {% load static %}
 {% block content %}
     <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
-        <div class="container" style="color: rgb(241,234,72);width: 355px;height: 302px;">
+        <div class="container" style="color: rgb(241,234,72);width: 355px;height: 302px; align-content:center">
             <h1 class="text-primary" style="padding: 18px;">CARDÁPIO</h1>
-            <div class="row">
-                <div class="col"></div>
+            <div class="row" style=" align-content:center; padding: 18px">
+                <p></p>
+                {% for pro in prod %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{pro.nome}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                        <p class="card-text">{{pro.descricao}}</p>
+                        <a href="#" class="card-link">contato(link inativo)</a>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col">
+
+                </div>
             </div>
         </div>
     </header>
