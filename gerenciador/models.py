@@ -96,6 +96,37 @@ class Cozinha(models.Model):
     objects = models.Manager()
 
 
+
+class Caixa(models.Model):
+    class Meta:
+        permissions = [
+            ('fechar_comanda', 'fechar a comanda'),
+            ('ver_feed', 'visualizar o feed')
+        ]
+
+    def __str__(self):
+        return self.nome
+
+    id = models.AutoField(primary_key=True),
+    nome = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+        default='cheff',
+    )
+    senha = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+    )
+    senha_rep = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+    )
+    objects = models.Manager()
+
+
 class Comanda(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -104,11 +135,12 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        # default='sôzé'
+        default='cliente {}'.format(id)
     )
 
     n_mesa = models.IntegerField(
         default=0,
+        unique=True,
         null=False,
         blank=False,
     )
@@ -118,6 +150,48 @@ class Comanda(models.Model):
         return '{} <> {}'.format(self.id, self.nome)
 
     objects = models.Manager()
+
+
+class Produtocad(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+    nome = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False
+    )
+    descricao = models.TextField(
+        max_length=255,
+        null=False,
+        blank=False
+    )
+    preco = models.FloatField(
+        max_length=6,
+        null=False,
+        blank=False
+    )
+
+    # pedidoProdutos = models.ManyToManyField(Pedido)
+
+    STATUS_CHOICES = (
+        ("A", "Alimento"),
+        ("B", "Bebida"),
+    )
+    tipo = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        blank=False,
+        null=False,
+        default="Alimento"
+    )
+
+    def __str__(self):
+        return self.nome
+
+    objects = models.Manager()
+
+
 
 class Pedido(models.Model):
 
@@ -177,47 +251,6 @@ class Pedido(models.Model):
         return '{}- {}'.format(self.id, self.status)
 
     objects = models.Manager()
-
-
-class Produtocad(models.Model):
-
-    id = models.AutoField(primary_key=True)
-
-    nome = models.TextField(
-        max_length=50,
-        null=False,
-        blank=False
-    )
-    descricao = models.TextField(
-        max_length=255,
-        null=False,
-        blank=False
-    )
-    preco = models.FloatField(
-        max_length=6,
-        null=False,
-        blank=False
-    )
-
-    pedidoProdutos = models.ManyToManyField(Pedido)
-
-    STATUS_CHOICES = (
-        ("A", "Alimento"),
-        ("B", "Bebida"),
-    )
-    tipo = models.CharField(
-        max_length=1,
-        choices=STATUS_CHOICES,
-        blank=False,
-        null=False,
-        default="Alimento"
-    )
-
-    def __str__(self):
-        return self.nome
-
-    objects = models.Manager()
-
 
 
 

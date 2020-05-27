@@ -21,10 +21,11 @@
         </header>
         <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
             <form method="post" style="margin-top: 4px;padding: 22px;">
-                {% csrf_token %}
+
                 <h2 class="sr-only">Login Form</h2>
                 <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
                 {% if form %}
+                    {% csrf_token %}
                     <div class="form-group" align="center">{{form.nome}}</div>
                     <div class="form-group" align="center">{{form.senha}}</div>
                 {% endif %}
