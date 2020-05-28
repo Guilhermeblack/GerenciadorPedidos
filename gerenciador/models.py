@@ -104,7 +104,7 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        # default='sôzé'
+        default='sôzé'
     )
 
     n_mesa = models.IntegerField(
@@ -116,6 +116,46 @@ class Comanda(models.Model):
 
     def __str__(self):
         return '{} <> {}'.format(self.id, self.nome)
+
+    objects = models.Manager()
+
+
+class Produtocad(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+    nome = models.TextField(
+        max_length=50,
+        null=False,
+        blank=False
+    )
+    descricao = models.TextField(
+        max_length=255,
+        null=False,
+        blank=False
+    )
+    preco = models.FloatField(
+        max_length=6,
+        null=False,
+        blank=False
+    )
+
+    # pedidoProdutos = models.ManyToManyField(Pedido)
+
+    STATUS_CHOICES = (
+        ("A", "Alimento"),
+        ("B", "Bebida"),
+    )
+    tipo = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        blank=False,
+        null=False,
+        default="Alimento"
+    )
+
+    def __str__(self):
+        return self.nome
 
     objects = models.Manager()
 
@@ -145,12 +185,6 @@ class Pedido(models.Model):
         blank=False,
     )
 
-    nome = models.CharField(
-        max_length=50,
-        null=False,
-        default=""
-    )
-
     # pro1pra =
 
     quantidade = models.IntegerField(
@@ -177,48 +211,6 @@ class Pedido(models.Model):
         return '{}- {}'.format(self.id, self.status)
 
     objects = models.Manager()
-
-
-class Produtocad(models.Model):
-
-    id = models.AutoField(primary_key=True)
-
-    nome = models.TextField(
-        max_length=50,
-        null=False,
-        blank=False
-    )
-    descricao = models.TextField(
-        max_length=255,
-        null=False,
-        blank=False
-    )
-    preco = models.FloatField(
-        max_length=6,
-        null=False,
-        blank=False
-    )
-
-    pedidoProdutos = models.ManyToManyField(Pedido)
-
-    STATUS_CHOICES = (
-        ("A", "Alimento"),
-        ("B", "Bebida"),
-    )
-    tipo = models.CharField(
-        max_length=1,
-        choices=STATUS_CHOICES,
-        blank=False,
-        null=False,
-        default="Alimento"
-    )
-
-    def __str__(self):
-        return self.nome
-
-    objects = models.Manager()
-
-
 
 
 class logform(models.Model):
