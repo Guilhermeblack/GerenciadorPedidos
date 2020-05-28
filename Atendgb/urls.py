@@ -14,6 +14,6 @@ urlpatterns = [
     path('logout', views.logoutuser, name='logout'),
     path('feed', views.feed, name='feed'),
     path('ped', views.ped, name='pedidos'),
-    # path('adm', views.adm, name='adm'),
+    path('adm', views.adm, name='adm'),
     path('cardapio', views.cardapio, name='cardapio')
 ]

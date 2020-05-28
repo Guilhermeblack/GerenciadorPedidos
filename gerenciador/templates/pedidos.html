@@ -36,7 +36,8 @@
                                 <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
                             </div>
                         </div>
-                    </div><small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small><small style="padding: 9px;font-size: 32px;height: 0px;width: 0px;color: rgb(44,62,80);">ALIMENTO</small><button class="btn btn-primary text-center border rounded border-dark"
+                    </div><small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small><small style="padding: 9px;font-size: 32px;height: 0px;width: 0px;color: rgb(44,62,80);">ALIMENTO</small>
+                    <button class="btn btn-primary text-center border rounded border-dark"
                         type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA</button>
                     <div class="modal fade" role="dialog"
                         tabindex="-1" id="novaComanda" style="color: rgb(33,37,41);">
@@ -47,7 +48,7 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title">Nova comanda</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                     <div class="modal-body">
-                                        <p>{{newcomanda..as_p}}</p>
+                                        <p>{{newcomanda.as_p}}</p>
                                     </div>
                                     <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary " type="submit">Save</button></div>
                                 </form>

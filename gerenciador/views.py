@@ -6,15 +6,18 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
 from django.template import RequestContext
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 
-from . import forms
-from . import models
+
+from . import models, forms
 
 
 def index(request):
     if request.user.is_authenticated == False:
         messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
+    else:
+        messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
     return render(request, 'index.html')
 
 @csrf_protect
@@ -31,44 +34,43 @@ def loguin(request):
                 login(request, user)
                 messages.success(request, 'Loguin feito com sucesso !')
                 # separar mensagem para cada user group
-                grupo = request.user.groups.all()
+                grupo = request.user.groups.all()[0]
                 print(grupo)
-                if 'caixas' in grupo:
-                    if request.user.has_perm('fechar_comanda'):
+                if 'caixas' == grupo:
                         messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
-                        return render(request,'feed.html',{'feedpedidos': models.Pedido.objects.all()}, RequestContext(request))
-                elif 'cozinha' in grupo:
-                    if request.user.has_perm('pedido_pronto'):
+                        return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()}) # enviar para as comandas
+
+                elif 'cozinha' == grupo:
                         messages.info(request, 'Logado como cozinha. \n Data: {}'.format(date.today()))
-                        return render(request,'feed.html',{'feedpedidos': models.Pedido.objects.all()}, RequestContext(request))
-                elif 'gerente' in grupo:
+                        return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
+
+                elif 'gerente' == grupo:
                     messages.info(request, 'Bem vindo gerente. \n Data: {}'.format(date.today()))
-                    if request.user.has_perm('abrir_comanda'):
-                        formulario = forms.produto()
-                        return render(request,'adm.html',{'form': formulario}, RequestContext(request))
-                elif 'garçons' in grupo:
+                    formulario = models.Produtocad.objects.all()
+                    return redirect(adm)
+
+                elif 'garçons' == str(grupo):
                     messages.info(request, 'Bem vindo garçom. \n Data: {}'.format(date.today()))
-                    if request.user.has_perm('abrir_comanda'):
-                        formulario = forms.produto()
-                        return render(request,'adm.html',{'form': formulario}, RequestContext(request))
-                messages.error(request, "erro nos grupos")
-                print('cagao')
-                return redirect('loguin')
+                    formComanda = forms.comandas
+                    return render(request, 'pedidos.html',{'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
+
+            # depois de logar ele continua na view/url de loguin,
+            #entao onde ele for pede loguin/algo
+            #sair daqui depois de logar
+
+
             messages.error(request, 'Dados inválidos')
             return redirect('loguin')
         messages.error(request, 'Formulrio inválido')
         return render(request, 'loguin.html')
     else:
-        print('nao logado')
         return render(request, 'loguin.html',{'form': forms.autForm})
 
 
 def cardapio(request):
     if request.user.is_authenticated == False:
-        pass
         messages.info(request, 'Visitante. \n Data: {}'.format(date.today()))
-    else:
-        messages.info(request, 'Usuário registrado. \n Data: {}'.format(date.today()))
+
     return render(request, 'cardapio.html',{'prod': models.Produtocad.objects.all()})
 
 
@@ -80,7 +82,6 @@ def logoutuser(request):
 
 @permission_required('ver_feed')
 def feed(request):
-
     return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
 
 
@@ -90,12 +91,18 @@ def ped(request):
         print(request.POST)
         if 'soucomanda' in request.POST and request.user.has_perm('abrir_comanda'):
             formcom = forms.pedidos(request.POST)
+            print('tem perm')
             if formcom.is_valid():
+                print('foi valido')
                 formcom.save()
                 messages.success(request, "pedido feito com sucesso !")
     formComanda = forms.comandas
-    return render(request, 'pedidos.html',{'newcomanda': formComanda})
+    return render(request, 'pedidos.html',{'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
 
+def adm(request):
+    if authenticate(request.user):
+        formulario = forms.produto
+        return render(request, 'adm.html', {'form': formulario})
 
 
 # Create your views here.

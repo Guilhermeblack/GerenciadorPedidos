@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Gerente(models.Model):
+
     class Meta:
         permissions = [
             ('fazer_pedido', 'incluir pedido'),
@@ -11,6 +12,8 @@ class Gerente(models.Model):
             ('abrir_comanda', 'abrir uma nova comanda'),
             ('controlar_produtos', 'controlar produtos disponiveis')
         ]
+
+        # app_label = 'gerente'
 
     def __str__(self):
         return self.nome
@@ -96,7 +99,6 @@ class Cozinha(models.Model):
     objects = models.Manager()
 
 
-
 class Caixa(models.Model):
     class Meta:
         permissions = [
@@ -135,7 +137,7 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default='cliente {}'.format(id)
+        default=''
     )
 
     n_mesa = models.IntegerField(
