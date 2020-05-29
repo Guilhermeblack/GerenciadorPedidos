@@ -96,7 +96,6 @@ class Cozinha(models.Model):
     objects = models.Manager()
 
 
-
 class Caixa(models.Model):
     class Meta:
         permissions = [
@@ -135,7 +134,7 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default='cliente {}'.format(id)
+        default='cliente'
 
     )
 
@@ -199,7 +198,8 @@ class Pedido(models.Model):
     STATUS_CHOICES = (
         ("P", "Pedido realizado"),
         ("F", "Fazendo"),
-        ("E", "Saiu para entrega")
+        ("s", "Saiu para entrega"),
+        ("E", "Foi entregue")
     )
 
     comandaref= models.ForeignKey(
@@ -241,6 +241,7 @@ class Pedido(models.Model):
         null=False,
         default="P"
     )
+
 
     def __str__(self):
         return '{}- {}'.format(self.id, self.status)

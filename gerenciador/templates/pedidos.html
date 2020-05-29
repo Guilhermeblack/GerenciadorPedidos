@@ -4,56 +4,106 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-    <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);height: 602px;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
-        <div class="container align-content-center" style="color: rgb(241,234,72);width: 355px;height: 302px;padding: 5px;margin: 7px;">
+    <header class="text-center justify-content-center align-content-center masthead text-white text-center"
+            style="background-color: rgb(255,255,255);height: 602px;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
+        <div class="container align-content-center"
+             style="color: rgb(241,234,72);width: 355px;height: 302px;padding: 5px;margin: 7px;">
             <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 534px;height: 79px;">PEDIDO</h1>
-            <div class="row text-center justify-content-center m-auto" style="width: 553px;margin: 6px;padding: 5px;margin-right: 0px;">
-                <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;">
-                    <div class="btn-group" role="group" style="height: 229px;width: 334px;padding: 2px;min-width: 8px;"><button class="btn btn-primary border rounded border-dark" type="button" style="width: 169px;padding: 25px;padding-right: 15px;margin: 7px;height: 209px;" data-toggle="modal" data-target="#pedBebidas"><small></small><i class="fa fa-beer" style="height: 70px;width: 66px;font-size: 59px;margin: 15px;padding: -55px;"></i></button>
-                        <button
-                            class="btn btn-primary border rounded border-dark" type="button" style="width: 167px;margin: 10px;height: 206px;" data-toggle="modal" data-target="#pedAlimento"><i class="fa fa-cutlery" style="height: 21px;width: 65px;font-size: 59px;"></i></button>
+            <div class="row text-center justify-content-center m-auto"
+                 style="width: 553px;margin: 6px;padding: 5px;margin-right: 0px;">
+                <div class="col-auto text-center justify-content-center m-auto"
+                     style="width: 554px;margin: 4px;padding: 3px;">
+                    <!--                    # botoes do modal-->
+
+                    <div class="btn-group" role="group" style="height: 229px;width: 334px;padding: 2px;min-width: 8px;">
+                        <button class="btn btn-primary border rounded border-dark" type="button"
+                                style="width: 169px;padding: 25px;padding-right: 15px;margin: 7px;height: 209px;"
+                                data-toggle="modal" data-target="#pedBebidas"><small></small><i class="fa fa-beer"
+                                                                                                style="height: 70px;width: 66px;font-size: 59px;margin: 15px;padding: -55px;"></i>
+                        </button>
+                        <button class="btn btn-primary border rounded border-dark" type="button"
+                                style="width: 167px;margin: 10px;height: 206px;" data-toggle="modal"
+                                data-target="#pedAlimento"><i class="fa fa-cutlery"
+                                                              style="height: 21px;width: 65px;font-size: 59px;"></i>
+                        </button>
                     </div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Modal Title</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                <div class="modal-body">
-                                    <p>The content of your modal.</p>
-                                </div>
-                                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Modal Title</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                <div class="modal-body">
-                                    <p>The content of your modal.</p>
-                                </div>
-                                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
-                            </div>
-                        </div>
-                    </div><small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small><small style="padding: 9px;font-size: 32px;height: 0px;width: 0px;color: rgb(44,62,80);">ALIMENTO</small><button class="btn btn-primary text-center border rounded border-dark"
-                        type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA</button>
-                    <div class="modal fade" role="dialog"
-                        tabindex="-1" id="novaComanda" style="color: rgb(33,37,41);">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <form method="POST" name="newcomanda">
-                                    {% csrf_token %}
+                    <!--                    # modal de aliemtno e bebibas-->
+                    {% for pro in prod %}
+                        <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Nova comanda</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                    <div class="modal-body">
-                                        <p>{{newcomanda..as_p}}</p>
+                                        <h4 class="modal-title">Modal Title</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary " type="submit">Save</button></div>
-                                </form>
+                                    <div class="modal-body">
+                                        <p>The content of your modal.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary" type="button">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    {% if pro.tipo == 'Alimento' %}
+                                    <div class="modal-body">
+                                        <h5 class="modal-title">{{pro.nome}}</h5>
+                                        <h6 class="modal-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                        <p class="modal-text">{{pro.descricao}}</p>
+                                        {% if perms.fazer_pedido %}
+                                        <a href="#" class="button">contato(link inativo)</a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small><small
+                            style="padding: 9px;font-size: 32px;height: 0px;width: 0px;color: rgb(44,62,80);">ALIMENTO</small>
+
+                    <!--                     apenas se tiver permissão para abrir comanda-->
+                        {% if perms.abrir_comanda %}
+                            <button class="btn btn-primary text-center border rounded border-dark"
+                                    type="button"
+                                    style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;"
+                                    data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
+                            </button>
+                            <div class="modal fade" role="dialog"
+                             tabindex="-1" id="novaComanda" style="color: rgb(33,37,41);">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form method="POST" name="newcomanda">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Nova comanda</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>{{newcomanda..as_p}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary " type="submit">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        {% endif %}
+<!--                    {% endfor %}-->
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ class testRenders(TestCase):
             return self.assertTemplateUsed('index.html')
 
     def testLog(self):
-        if self.client.post(loguin, {'nome':'garçom', 'senha':'prontogarçom'}).status_code == 200:
+        if self.client.post(loguin, {'nome':'garçom', 'senha':'prontoadmin'}).status_code == 200:
             return self.assertTemplateUsed('ped')
 
 

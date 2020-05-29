@@ -14,7 +14,7 @@
 
     <body id="page-top">
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
-            <div class="container"><a class="navbar-brand js-scroll-trigger" href="#page-top" style="color: rgb(247,230,86);">empresa</a><button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" data-toggle="collapse" data-target="#navbarResponsive"
+            <div class="container"><a class="navbar-brand js-scroll-trigger" href="{% url 'index' %}" style="color: rgb(247,230,86);">empresa</a><button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" data-toggle="collapse" data-target="#navbarResponsive"
                     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="background-color: rgb(255,255,253);"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="nav navbar-nav ml-auto">
@@ -26,10 +26,9 @@
                         {% if user.is_authenticated %}
                             <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a></li>
                             <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a></li>
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">PEDIDOS</a></li>
                         {% endif %}
 
-                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'cardapio' %}">CARDAPIO</a></li>
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">CARDAPIO</a></li>
 
                     </ul>
                 </div>
