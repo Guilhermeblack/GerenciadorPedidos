@@ -96,6 +96,37 @@ class Cozinha(models.Model):
     objects = models.Manager()
 
 
+
+class Caixa(models.Model):
+    class Meta:
+        permissions = [
+            ('fechar_comanda', 'fechar a comanda'),
+            ('ver_feed', 'visualizar o feed')
+        ]
+
+    def __str__(self):
+        return self.nome
+
+    id = models.AutoField(primary_key=True),
+    nome = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+        default='cheff',
+    )
+    senha = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+    )
+    senha_rep = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+    )
+    objects = models.Manager()
+
+
 class Comanda(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -104,11 +135,13 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default='sôzé'
+        default='cliente {}'.format(id)
+
     )
 
     n_mesa = models.IntegerField(
         default=0,
+        unique=True,
         null=False,
         blank=False,
     )
@@ -124,7 +157,9 @@ class Produtocad(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    nome = models.TextField(
+
+
+    nome = models.CharField(
         max_length=50,
         null=False,
         blank=False
