@@ -20,19 +20,27 @@
                         <button class="btn btn-primary border rounded border-dark" type="button" style="width: 169px;padding: 25px;padding-right: 15px;margin: 7px;height: 209px;"
                                 data-toggle="modal" data-target="#pedBebidas"><small></small><i class="fa fa-beer" style="height: 70px;width: 66px;font-size: 59px;margin: 15px;padding: -55px;"></i>
                         </button>
+
                         <button class="btn btn-primary border rounded border-dark" type="button" style="width: 167px;margin: 10px;height: 206px;" data-toggle="modal"
                                 data-target="#pedAlimento"><i class="fa fa-cutlery" style="height: 21px;width: 65px;font-size: 59px;"></i>
                         </button>
-                    </div>
 
+                    </div>
+                    <div class="group">
+                        <small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small>
+                        <small style="padding: 9px;font-size: 32px;color: rgb(44,62,80);">ALIMENTO</small>
+                    </div>
                     <!--                    # modal de aliemtno e bebibas-->
-                    {% for pro in prod %}
+<!--                    {% for pro in prod %}-->
+<!--                        {{pro.tipo}}-->
+<!--                    {% endfor %}-->
+
                         <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-
-                                        {% for pro in prod %}
-                                            <div class="card" style="width: 18rem;">
+                                    {% for pro in prod %}
+                                        {% if pro.tipo == 'B' %}
+                                            <div class="card border border-secondary" style="width: auto; margin: 4px;">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{pro.nome}}</h5>
                                                     <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
@@ -40,48 +48,34 @@
                                                     <a href="#" class="card-link">contato(link inativo)</a>
                                                 </div>
                                             </div>
-                                        {% endfor %}
-
-<!--                                    <div class="modal-header">-->
-<!--                                        <h4 class="modal-title">Modal Title</h4>-->
-<!--                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span-->
-<!--                                                aria-hidden="true">×</span></button>-->
-<!--                                    </div>-->
-<!--                                    <div class="modal-body">-->
-<!--                                        <p>The content of your modal.</p>-->
-<!--                                    </div>-->
-<!--                                    <div class="modal-footer">-->
-<!--                                        <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>-->
-<!--                                        <button class="btn btn-primary" type="button">Save</button>-->
-<!--                                    </div>-->
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
-
                         </div>
+
+
                         <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-
-                                    {% if pro.tipo == 'Alimento' %}
-                                    <div class="modal-body">
-                                        <h5 class="modal-title">{{pro.nome}}</h5>
-                                        <h6 class="modal-subtitle mb-2 text-muted">{{pro.preco}}</h6>
-                                        <p class="modal-text">{{pro.descricao}}</p>
-                                        {% if perms.fazer_pedido %}
-                                        <a href="#" class="button">contato(link inativo)</a>
+                                    {% for pro in prod %}
+                                        {% if pro.tipo == 'A' %}
+                                            <div class="card border border-secondary" style="width: auto; margin: 4px;">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{pro.nome}}</h5>
+                                                    <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                                    <p class="card-text">{{pro.descricao}}</p>
+                                                    <a href="#" class="card-link">contato(link inativo)</a>
+                                                </div>
+                                            </div>
                                         {% endif %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
-                                    </div>
-                                    {% endif %}
-
+                                    {% endfor %}
                                 </div>
                             </div>
-                            {% endfor %}
                         </div>
-                        <small style="padding: 16px;font-size: 36px;color: rgb(44,62,80);">BEBIDA</small>
-                        <small style="padding: 9px;font-size: 32px;color: rgb(44,62,80);">ALIMENTO</small>
+
+
+                    >
                     <!--                     apenas se tiver permissão para abrir comanda-->
                         {% if perms.gerenciador.abrir_comanda %}
 

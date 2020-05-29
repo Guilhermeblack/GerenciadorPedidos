@@ -184,8 +184,7 @@ class Produtocad(models.Model):
         max_length=1,
         choices=STATUS_CHOICES,
         blank=False,
-        null=False,
-        default="Alimento"
+        null=False
     )
 
     def __str__(self):

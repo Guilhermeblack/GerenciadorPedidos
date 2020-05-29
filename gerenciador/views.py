@@ -42,7 +42,7 @@ def loguin(request):
                 elif 'gerente' == grupo:
                     messages.info(request, 'Bem vindo gerente. \n Data: {}'.format(date.today()))
                     formulario = models.Produtocad.objects.all()
-                    return redirect(adm)
+                    return redirect(adm, {'form': forms.produto(), })
                 elif 'garçons' == str(grupo):
                     messages.info(request, 'Bem vindo garçom. \n Data: {}'.format(date.today()))
                     formComanda = forms.comandas
@@ -106,7 +106,7 @@ def ped(request):
 
 def adm(request):
     messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
-    return render(request, 'adm.html', {})
+    return render(request, 'adm.html', {'form': forms.produto, })
 # >>>>>>> a710f4bdd3c7ff0c989513e622f65bad79f492cc
 
 
