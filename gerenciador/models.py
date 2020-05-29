@@ -137,7 +137,7 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default=''
+        default='cliente'
     )
 
     n_mesa = models.IntegerField(
@@ -193,14 +193,13 @@ class Produtocad(models.Model):
 
     objects = models.Manager()
 
-
-
 class Pedido(models.Model):
 
     STATUS_CHOICES = (
         ("P", "Pedido realizado"),
         ("F", "Fazendo"),
-        ("E", "Saiu para entrega")
+        ("s", "Saiu para entrega"),
+        ("E", "Foi entregue")
     )
 
     comandaref= models.ForeignKey(
@@ -219,12 +218,6 @@ class Pedido(models.Model):
         max_length=1,
         choices=produtosPed,
         blank=False,
-    )
-
-    nome = models.CharField(
-        max_length=50,
-        null=False,
-        default=""
     )
 
     # pro1pra =
@@ -249,11 +242,11 @@ class Pedido(models.Model):
         default="P"
     )
 
+
     def __str__(self):
         return '{}- {}'.format(self.id, self.status)
 
     objects = models.Manager()
-
 
 
 class logform(models.Model):

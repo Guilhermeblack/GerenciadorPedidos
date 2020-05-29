@@ -1,54 +1,59 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>UbrabU!</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Login-Form-Dark.css' %}">
+</head>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>UbrabU!</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
-        <link rel="stylesheet" href="{% static 'fonts/font-awesome.min.css' %}">
-        <link rel="stylesheet" href="{% static 'fonts/ionicons.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/Login-Form-Dark.css' %}">
-    </head>
+<body id="page-top">
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <div class="container"><a class="navbar-brand js-scroll-trigger" href="{% url 'index' %}" style="color: rgb(247,230,86);">empresa</a>
+            <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded"
+                    data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+                    style="background-color: rgb(255,255,253);"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">A EMPRESA</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">CONTATO</a></li>
+                    {% if user.is_anonymous %}
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'loguin' %}">ENTRAR</a></li>
 
-    <body id="page-top">
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
-            <div class="container"><a class="navbar-brand js-scroll-trigger" href="#page-top" style="color: rgb(247,230,86);">empresa</a><button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="background-color: rgb(255,255,253);"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="nav navbar-nav ml-auto">
-                        {% if user.is_anonymous %}
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'loguin' %}">ENTRAR</a></li>
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">A EMPRESA</a></li>
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">CONTATO</a></li>
-                        {% endif %}
-                        {% if user.is_authenticated %}
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a></li>
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a></li>
-                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">PEDIDOS</a></li>
-                        {% endif %}
+                    {% elif user.is_authenticated %}
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a>
+                        </li>
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a>
+                        </li>
+                    {% endif %}
 
-                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'cardapio' %}">CARDAPIO</a></li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <section>
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li
-                    {% if message.tags %} class="{{ message.tags }} alert alert-dismissible fade show" role="alert"{% endif %}>{{ message }}</li>
-                    {% endfor %}
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">CARDAPIO</a>
+                    </li>
                 </ul>
-            {% endif %}
-            {% block content %}
-            {% endblock %}
-        </section>
-    {% include "blocks/footer.html" %}
-    </body>
+            </div>
+        </div>
+    </nav>
+    <section>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }} alert alert-dismissible fade show" role="alert" {% endif %}>{{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </section>
+{% include "blocks/footer.html" %}
+</body>
 
 
 

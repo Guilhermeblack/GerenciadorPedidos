@@ -39,3 +39,5 @@ class comandas(forms.ModelForm):
         model = models.Comanda
         fields = 'nome',"n_mesa"
         name = 'soucomanda'
+
+    nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'}))
