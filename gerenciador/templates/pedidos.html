@@ -4,11 +4,19 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+{% endfor %}
     <header class="text-center justify-content-center align-content-center masthead text-white text-center"
             style="background-color: rgb(255,255,255);height: 602px;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
         <div class="container align-content-center"
              style="color: rgb(241,234,72);width: 355px;height: 302px;padding: 5px;margin: 7px;">
-            <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 534px;height: 79px;">PEDIDO</h1>
+            <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 534px;height: 79px;">PRODUTOS</h1>
             <div class="row text-center justify-content-center m-auto"
                  style="width: 553px;margin: 6px;padding: 5px;margin-right: 0px;">
                 <div class="col-auto text-center justify-content-center m-auto"
@@ -31,54 +39,49 @@
                         <small style="padding: 9px;font-size: 32px;color: rgb(44,62,80);">ALIMENTO</small>
                     </div>
                     <!--                    # modal de aliemtno e bebibas-->
-<!--                    {% for pro in prod %}-->
-<!--                        {{pro.tipo}}-->
-<!--                    {% endfor %}-->
+                    <!--                    {% for pro in prod %}-->
+                    <!--                        {{pro.tipo}}-->
+                    <!--                    {% endfor %}-->
 
-                        <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    {% for pro in prod %}
-                                        {% if pro.tipo == 'B' %}
-                                            <div class="card border border-secondary" style="width: auto; margin: 4px;">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{pro.nome}}</h5>
-                                                    <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
-                                                    <p class="card-text">{{pro.descricao}}</p>
-                                                    <a href="#" class="card-link">contato(link inativo)</a>
-                                                </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                {% for pro in prod %}
+                                    {% if pro.tipo == 'B' %}
+                                        <div class="card border border-secondary" style="width: auto; margin: 4px;">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{pro.nome}}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                                <p class="card-text">{{pro.descricao}}</p>
+                                                <a href="#" class="card-link">contato(link inativo)</a>
                                             </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
-
-
-                        <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    {% for pro in prod %}
-                                        {% if pro.tipo == 'A' %}
-                                            <div class="card border border-secondary" style="width: auto; margin: 4px;">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{pro.nome}}</h5>
-                                                    <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
-                                                    <p class="card-text">{{pro.descricao}}</p>
-                                                    <a href="#" class="card-link">contato(link inativo)</a>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                {% for pro in prod %}
+                                {% if pro.tipo == 'A' %}
+                                <div class="card border border-secondary" style="width: auto; margin: 4px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{pro.nome}}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                        <p class="card-text">{{pro.descricao}}</p>
+                                        <a href="#" class="card-link">contato(link inativo)</a>
+                                    </div>
                                 </div>
+                                {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
+                    </div>
 
-
-                    >
                     <!--                     apenas se tiver permissão para abrir comanda-->
                         {% if perms.gerenciador.abrir_comanda %}
-
 <!--                            bptao da nova comanda-->
                             <div style="margin: 10px;">
                                 <button class="btn btn-primary text-center border rounded border-dark"
@@ -107,7 +110,6 @@
                                 </div>
                             </div>
                         {% endif %}
-<!--                        fim da nova comanda-->
                 </div>
             </div>
         </div>

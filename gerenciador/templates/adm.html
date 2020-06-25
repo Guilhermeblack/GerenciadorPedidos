@@ -13,33 +13,61 @@
             <div class="row text-center justify-content-center m-auto" style="width: 544px;margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
-                    <div class="btn-group justify-content-center align-items-center" role="group" style="height: 229px;width: 334px;padding: 2px;min-width: 8px;"><button class="btn btn-primary border rounded border-dark" type="button" style="width: 167px;margin: 10px;height: 206px;"><i class="fa fa-power-off" style="height: 21px;width: 65px;font-size: 59px;"></i>
-                    </button>
+                    <div class="btn-group btn-group-lg justify-content-center align-items-center" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 8px;">
+                        <input type="checkbox" data-toggle="toggle" id='mov' data-onstyle="success" data-offstyle="outline-secondary" >
+                        <script type="text/javascript">
+
+
+
+                        <!-- parei aqui estou tentando implementar o ajax  -->
+
+                            $(document).ready(function() {
+                                $('#mov').click(
+                                    status = $(this).val();
+                                    ajaxPost('', {'movimento': 'L'}, function liga(content){
+                                        alert('foi', content);
+                                    )
+                                }
+                            })
+                        </script>
                     </div>
 <!--                    aqui o gerente apenas inicia o movimento, a manipulaão é no pedidos-->
 <!--                    funçao de zerar historico-->
-<!--                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">NOVO PRODUTO</button>-->
+                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto; width: 50%;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">PRODUTOS</button>
+                        <div class="modal fade bg-secondary" role="dialog" tabindex="-1" id="novoProduto">
+                            <div class="modal-dialog  " role="document">
+                                {% if form %}
+                                    <form method="POST" id="newprod">
+                                        <div class="modal-content border bg-primary">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    {% csrf_token %}
+                                                    {{ form.as_p }}
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
+                                        </div>
+                                    </form>
+                                {% endif %}
 
-<!--                        <div class="modal fade" role="dialog"-->
-<!--                            tabindex="-1" id="novoProduto">-->
-<!--                            <div class="modal-dialog" role="document">-->
-<!--                                {% if form %}-->
-<!--                                    <form method="POST" id="newprod">-->
-<!--                                        <div class="modal-content">-->
-<!--                                            <div class="modal-header">-->
-<!--                                                <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>-->
-<!--                                            <div class="modal-body">-->
-<!--                                                <p>-->
-<!--                                                    {% csrf_token %}-->
-<!--                                                    {{ form.as_p }}-->
-<!--                                                </p>-->
-<!--                                            </div>-->
-<!--                                            <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button><button class="btn btn-primary" type="submit">Salvar</button></div>-->
-<!--                                        </div>-->
-<!--                                    </form>-->
-<!--                                {% endif %}-->
-<!--                            </div>-->
-<!--                        </div>-->
+                            </div>
+                            <div class="modal-dialog  bg-secondary" role="document">
+                                {% for pro in prod %}
+                                    <div class="card border bg-info" style="width: auto; margin: 4px;">
+                                        <div class="card-body">
+<!--                                            habilitar campo aberto para alteraçoes-->
+                                            <h5 class="card-title">{{pro.nome}}</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                            <p class="card-text">{{pro.descricao}}</p>
+                                            <a href="#" class="card-button">deletar produto</a>
+                                            <a href="#" class="card-button">salvar alterações</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

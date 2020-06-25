@@ -4,6 +4,14 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+{% endfor %}
     {% if user.is_authenticated %}
         <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
             <h1 class="align-items-center text-primary" style="font-size: 62px;margin: 3px;">Bem vindo !</h1>

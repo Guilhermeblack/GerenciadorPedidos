@@ -7,14 +7,14 @@ app_name = 'gerenciador'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    # path('vend/', include('gerenciador.urls', namespace='vend')),
+
     path('loguin', views.loguin, name='loguin'),
     path('logout', views.logoutuser, name='logout'),
     path('feed', views.feed, name='feed'),
     path('ped', views.ped, name='pedidos'),
-    path('adm', views.adm, name='adm'),
-    # path('cardapio', views.cardapio, name='cardapio'),
+    path('adm', views.adm, name='administrador'),
+    # path('loguin', views.cardapio, name='cardapio'),
     path('pedidos', views.ped, name='pedidos'),
-    path('adm', views.adm, name='adm')
+    # path('loguin/', include('urls', namespace='log')),
 
     ]

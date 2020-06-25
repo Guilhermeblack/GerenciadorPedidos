@@ -1,7 +1,14 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+{% endfor %}
     {% for pedido in pedidos %}
     <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
         <div class="container" style="color: rgb(241,234,72);width: 355px;height: 302px;">
