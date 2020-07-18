@@ -1,11 +1,14 @@
 from datetime import date
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import logout, login, authenticate, get_user
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import Permission
+
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
+from Atendgb import settings
 from . import models, forms
 
 
@@ -33,45 +36,51 @@ def loguin(request):
             )
 
             if user is not None:
-                login(request, user)
                 messages.success(request, 'Loguin feito com sucesso !')
-                # separar mensagem para cada user group
-                grupo = request.user.groups.all()[0]
-                print(grupo)
-                if 'caixas' == str(grupo):
-                    messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
-                    return redirect(request,'feed.html',{'pedidos': models.Pedido.objects.all()})  # enviar para as comandas
+                login(request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
-                elif 'cozinha' == str(grupo):
-                    if request.user.has_perm('pedido_pronto'):
-                        messages.info(request, 'Logado como cozinha. \n Data: {}'.format(date.today()))
-                        return redirect(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
-
-                elif 'gerente' == str(grupo):
-                    messages.info(request, 'Bem vindo Gerente. \n Data: {}'.format(date.today()))
-                    formulario = models.Produtocad.objects.all()
-                    # precisa sair daqui para a view de adm
-                    return redirect('administrador')
-
-                elif 'garçons' == str(grupo):
-                    messages.info(request, 'Bem vindo garçom. \n Data: {}'.format(date.today()))
-                    formComanda = forms.comandas
-                    return redirect(request, 'pedidos.html',
-                                  {'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
-
-                # depois de logar ele continua na view/url de loguin,
-                # entao onde ele for pede loguin/algo
-                # sair daqui depois de logar
-
-                messages.error(request, "erro nos grupos")
-                print('cagao')
-                # return redirect('loguin')
             messages.error(request, 'Dados inválidos')
-            # return redirect('loguin')
+            return render(request, 'loguin.html')
         messages.error(request, 'Formulrio inválido')
-        # return render(request, 'loguin.html')
+        return render(request, 'loguin.html')
     else:
+        if request.user.is_authenticated:
+            return redirect('profile')
+
         return render(request, 'loguin.html', {'form': forms.autForm})
+
+
+def profile(request):
+    if get_user(request):
+        usr = get_user(request)
+        grupo = request.user.groups.all()[0]
+
+
+        if 'caixas' == str(grupo):
+            messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
+            return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})  # enviar para as comandas
+
+        elif 'cozinha' == grupo:
+            if request.user.has_perm('pedido_pronto'):
+                messages.info(request, 'Logado como cozinha. \n Data: {}'.format(date.today()))
+                return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
+
+        elif 'gerente' == str(grupo):
+            return redirect('administrador')
+
+        elif 'garçons' == grupo:
+            messages.info(request, 'Bem vindo garçom. \n Data: {}'.format(date.today()))
+            formComanda = forms.comandas
+            return render(request, 'pedidos.html',
+                            {'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
+        else:
+            messages.info(request, 'Usuário nao identificado. \n Data: {}'.format(date.today()))
+            # return redirect('loguin')
+
+        messages.error(request, "erro nos grupos")
+        print('cagao')
+    return redirect('index')
 
 
 @login_required(login_url='loguin')
@@ -101,12 +110,20 @@ def ped(request):
         return render(request, 'pedidos.html', {'newcomanda': formComanda, 'prod': models.Produtocad.objects.all()})
 
 
-@permission_required('iniciar_movimento')
+# @permission_required('iniciar_movimento')
 def adm(request):
-    if request.POST:
-        rq = request.POST
-        print(rq)
-    messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
-    return render(request, 'adm.html', {'form': forms.produto, 'prod': models.Produtocad.objects.all()})
 
+    # print('do adm ', request.user.groups.all()[0])
+    if 'gerente' == str(request.user.groups.all()[0]):
+        if request.POST:
+            rq = request.POST
+
+            print(rq)
+        messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
+        # print('grupos ', request.user.groups.all())
+        return render(request, 'adm.html', {'form': forms.produto,
+                                   'prod': models.Produtocad.objects.all()
+                                   })
+    else:
+        return redirect('profile')
 # Create your views here.

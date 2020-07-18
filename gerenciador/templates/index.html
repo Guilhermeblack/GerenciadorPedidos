@@ -4,9 +4,17 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+<script>
+
+    setTimeout(function() {
+        $('#msg').fadeOut('slow');
+    }, 3500);
+
+
+</script>
 {% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
+        <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         {{ message }}

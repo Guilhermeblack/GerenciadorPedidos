@@ -27,6 +27,13 @@
                         <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'loguin' %}">ENTRAR</a></li>
 
                     {% elif user.is_authenticated %}
+                        {% if perms.gerenciador.iniciar_movimento %}
+
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'administrador' %}">Administração</a>
+                            </li>
+
+                        {% endif %}
                         <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
                                 class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a>
                         </li>

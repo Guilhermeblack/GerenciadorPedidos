@@ -4,6 +4,31 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+    <script>
+        setTimeout(function() {
+            $('#msg').fadeOut('slow');
+        }, 3500);
+
+
+        $(function() {
+            $('#mov').click(
+                console.log('but');
+                $('#alt-mov').show();
+
+            )
+
+        });
+
+
+    </script>
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
+            <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
     <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);height: auto;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
         <div style="margin: 5px;">
             <h1 class="text-center" style="padding: 5px;color: rgb(44,62,80);width: 534px;height: 79px; margin: 4px;">
@@ -13,23 +38,9 @@
             <div class="row text-center justify-content-center m-auto" style="width: 544px;margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
-                    <div class="btn-group btn-group-lg justify-content-center align-items-center" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 8px;">
-                        <input type="checkbox" data-toggle="toggle" id='mov' data-onstyle="success" data-offstyle="outline-secondary" >
-                        <script type="text/javascript">
+                    <div class="btn-group btn-group-lg justify-content-center align-items-center" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
+                        <input style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" id='mov' data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150">
 
-
-
-                        <!-- parei aqui estou tentando implementar o ajax  -->
-
-                            $(document).ready(function() {
-                                $('#mov').click(
-                                    status = $(this).val();
-                                    ajaxPost('', {'movimento': 'L'}, function liga(content){
-                                        alert('foi', content);
-                                    )
-                                }
-                            })
-                        </script>
                     </div>
 <!--                    aqui o gerente apenas inicia o movimento, a manipulaão é no pedidos-->
 <!--                    funçao de zerar historico-->
@@ -67,7 +78,27 @@
                                     </div>
                                 {% endfor %}
                             </div>
+
+                            <div class="modal modal-dialog " tabindex="-1" role="document" id="alt-mov">
+
+                                <div class="modal-content border bg-sucess">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Movimento</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                    <div class="modal-body">
+                                        <p>
+                                        <h2><b>Deseja mesmo realizar esta ação ?</b></h2>
+                                        </p>
+                                            <button type="button" class="btn btn-sucess btn-lg btn-block">Confirmar</button>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
+                                </div>
+
+                            </div>
                         </div>
+                    <script>
+
+
+                    </script>
                 </div>
             </div>
         </div>

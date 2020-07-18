@@ -75,6 +75,10 @@ WSGI_APPLICATION = 'Atendgb.wsgi.application'
 
 LOGOUT_REDIRECT_URL = '/'
 
+LOGIN_URL = '/loguin'
+
+LOGIN_REDIRECT_URL = '/profile'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

@@ -13,7 +13,7 @@ urlpatterns = [
     path('feed', views.feed, name='feed'),
     path('ped', views.ped, name='pedidos'),
     path('adm', views.adm, name='administrador'),
-    # path('loguin', views.cardapio, name='cardapio'),
+    path('profile', views.profile, name='profile'),
     path('pedidos', views.ped, name='pedidos'),
     # path('loguin/', include('urls', namespace='log')),
 

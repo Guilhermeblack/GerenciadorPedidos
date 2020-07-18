@@ -4,9 +4,15 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+<script>
+    setTimeout(function() {
+        $('#msg').fadeOut('slow');
+    }, 3500);
+
+</script>
 {% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
+        <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         {{ message }}
@@ -14,9 +20,9 @@
 {% endfor %}
     <header class="text-center justify-content-center align-content-center masthead text-white text-center"
             style="background-color: rgb(255,255,255);height: 602px;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
-        <div class="container align-content-center"
-             style="color: rgb(241,234,72);width: 355px;height: 302px;padding: 5px;margin: 7px;">
-            <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 534px;height: 79px;">PRODUTOS</h1>
+        <div class="container-fluid align-content-center"
+             style="align-content: center; color: rgb(241,234,72);width: 95%; height: 302px;padding: 5px;margin: 7px;">
+            <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 100% ;height: 79px;">PRODUTOS</h1>
             <div class="row text-center justify-content-center m-auto"
                  style="width: 553px;margin: 6px;padding: 5px;margin-right: 0px;">
                 <div class="col-auto text-center justify-content-center m-auto"
