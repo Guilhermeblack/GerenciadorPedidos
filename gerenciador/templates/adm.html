@@ -9,17 +9,19 @@
             $('#msg').fadeOut('slow');
         }, 3500);
 
+    </script>
+    <script>
 
+
+        # tenho que descobrir por que ao acionar ou desligar o botao
+        #ele abra o modal de confirmação
         $(function() {
-            $('#mov').click(
+            $('#mov').change(function() {
                 console.log('but');
-                $('#alt-mov').show();
+                $('#alt-mov').modal('show');
 
-            )
-
+            });
         });
-
-
     </script>
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
@@ -38,8 +40,8 @@
             <div class="row text-center justify-content-center m-auto" style="width: 544px;margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
-                    <div class="btn-group btn-group-lg justify-content-center align-items-center" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
-                        <input style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" id='mov' data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150">
+                    <div class="btn-group btn-group-lg justify-content-center align-items-center" id="mov" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
+                        <input style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150">
 
                     </div>
 <!--                    aqui o gerente apenas inicia o movimento, a manipulaão é no pedidos-->
