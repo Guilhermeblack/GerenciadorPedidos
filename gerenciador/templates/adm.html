@@ -7,35 +7,35 @@
 
     <script type="text/javascript">
 
-        var usrlog= $('#')
+        var usrlog= $('#movimentar').val();
         $(document).ready(function(){
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
-                $('#confirm').submit(function(){
+<!--                $('#confirm').submit(function(){-->
 
 
 
 
 
-                    var x='';
-                    if( ('#mov').checked('true') ){
-                        x = $('#movimentar').val('L');
+<!--                    var x='';-->
+<!--                    if( ('#mov').checked('true') ){-->
+<!--                        x = $('#movimentar').val('L');-->
 
-                    }elseif( ('#mov').checked('false') ){
-                        x = $('#movimentar').val('D');
+<!--                    }elseif( ('#mov').checked('false') ){-->
+<!--                        x = $('#movimentar').val('D');-->
 
-                    });
+<!--                    });-->
 
-                    $.ajax({
-                         type: "POST",
-                         url: "/adm",
-                         data: {'movimento':x},
-                         dataType: "json",
-                         success: function(json){
-                                    alert('postado');
-                                    }
-                    });
-
+<!--                    $.ajax({-->
+<!--                         type: "POST",-->
+<!--                         url: "/adm",-->
+<!--                         data: {'movimento':x},-->
+<!--                         dataType: "json",-->
+<!--                         success: function(json){-->
+<!--                                    alert('postado');-->
+<!--                                    }-->
+<!--                    });-->
+<!--                });-->
             });
         });
 

@@ -40,9 +40,9 @@ def loguin(request):
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
             messages.error(request, 'Dados inválidos')
-            return render(request, 'loguin.html')
+            return render(request, 'loguin.html', {'form': forms.autForm})
         messages.error(request, 'Formulrio inválido')
-        return render(request, 'loguin.html')
+        return render(request, 'loguin.html', {'form': forms.autForm})
     else:
         if request.user.is_authenticated:
             return redirect('profile')
@@ -51,7 +51,8 @@ def loguin(request):
 
 
 def profile(request):
-    if get_user(request):
+
+    if request.user.is_authenticated:
         usr = get_user(request)
         grupo = request.user.groups.all()[0]
 
@@ -60,7 +61,7 @@ def profile(request):
             messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
             return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})  # enviar para as comandas
 
-        elif 'cozinha' == grupo:
+        elif 'cozinha' == str(grupo):
             if request.user.has_perm('pedido_pronto'):
                 messages.info(request, 'Logado como cozinha. \n Data: {}'.format(date.today()))
                 return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
@@ -68,8 +69,8 @@ def profile(request):
         elif 'gerente' == str(grupo):
             return redirect('administrador')
 
-        elif 'garçons' == grupo:
-            messages.info(request, 'Bem vindo garçom. \n Data: {}'.format(date.today()))
+        elif 'garçons' == str(grupo):
+            messages.info(request, 'Bem vindo Garçom. \n Data: {}'.format(date.today()))
             formComanda = forms.comandas
             return render(request, 'pedidos.html',
                             {'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
@@ -77,8 +78,7 @@ def profile(request):
             messages.info(request, 'Usuário nao identificado. \n Data: {}'.format(date.today()))
             # return redirect('loguin')
 
-        messages.error(request, "erro nos grupos")
-        print('cagao')
+        print(request, "erro nos grupos")
     return redirect('index')
 
 
@@ -88,7 +88,7 @@ def logoutuser(request):
     return redirect('index')
 
 
-@permission_required('ver_feed')
+# @permission_required('ver_feed')
 def feed(request):
     return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
 
