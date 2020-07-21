@@ -4,24 +4,48 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-    <script>
-        setTimeout(function() {
-            $('#msg').fadeOut('slow');
-        }, 3500);
 
-    </script>
-    <script>
+    <script type="text/javascript">
 
-
-        # tenho que descobrir por que ao acionar ou desligar o botao
-        #ele abra o modal de confirmação
-        $(function() {
-            $('#mov').change(function() {
-                console.log('but');
+        var usrlog= $('#')
+        $(document).ready(function(){
+            $('#mov').change(function(){
                 $('#alt-mov').modal('show');
+                $('#confirm').submit(function(){
+
+
+
+
+
+                    var x='';
+                    if( ('#mov').checked('true') ){
+                        x = $('#movimentar').val('L');
+
+                    }elseif( ('#mov').checked('false') ){
+                        x = $('#movimentar').val('D');
+
+                    });
+
+                    $.ajax({
+                         type: "POST",
+                         url: "/adm",
+                         data: {'movimento':x},
+                         dataType: "json",
+                         success: function(json){
+                                    alert('postado');
+                                    }
+                    });
 
             });
         });
+
+
+
+
+
+
+
+
     </script>
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
@@ -40,8 +64,8 @@
             <div class="row text-center justify-content-center m-auto" style="width: 544px;margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
-                    <div class="btn-group btn-group-lg justify-content-center align-items-center" id="mov" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
-                        <input style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150">
+                    <div class="btn-group btn-group-lg justify-content-center align-items-center" id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
+                        <input id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150">
 
                     </div>
 <!--                    aqui o gerente apenas inicia o movimento, a manipulaão é no pedidos-->
@@ -81,26 +105,33 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="modal modal-dialog " tabindex="-1" role="document" id="alt-mov">
 
-                                <div class="modal-content border bg-sucess">
+                        </div>
+                        <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="alt-mov">
+                            <div class="modal-dialog" role="document" >
+
+                                <div class="modal-content border-lg  bg-light">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Movimento</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                    <div class="modal-body">
+                                        <h4 class="modal-title text-light">Movimento</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body text-sucess">
                                         <p>
                                         <h2><b>Deseja mesmo realizar esta ação ?</b></h2>
                                         </p>
-                                            <button type="button" class="btn btn-sucess btn-lg btn-block">Confirmar</button>
+                                        {% if logado %}
+
+                                                <input type="hidden"  id="movimentar">
+                                        {% endif %}
+                                            <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
                                     </div>
-                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
+                                    <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
+                                    </div>
                                 </div>
 
                             </div>
+
                         </div>
-                    <script>
 
-
-                    </script>
                 </div>
             </div>
         </div>

@@ -36,7 +36,6 @@ def loguin(request):
             )
 
             if user is not None:
-                messages.success(request, 'Loguin feito com sucesso !')
                 login(request, user)
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
@@ -117,13 +116,26 @@ def adm(request):
     if 'gerente' == str(request.user.groups.all()[0]):
         if request.POST:
             rq = request.POST
-
             print(rq)
-        messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
-        # print('grupos ', request.user.groups.all())
-        return render(request, 'adm.html', {'form': forms.produto,
-                                   'prod': models.Produtocad.objects.all()
-                                   })
+            breakpoint()
+            user = forms.mov(request.POST)
+            if user.is_valid():
+                ger = get_user(request)
+                env = models.Gerente.objects.all(user=ger)
+                env=user
+                env.save()
+                if(user.cleaned_data('movimento') == 'L'):
+                    messages.alert(request, "{}".format('Movimento iniciado com sucesso'))
+                elif(user.cleaned_data('movimento') == 'D'):
+                    messages.alert(request, "{}".format('Movimento encerrado com sucesso'))
+        else:
+            messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
+            # print('grupos ', request.user.groups.all())
+            print(get_user(request))
+            return render(request, 'adm.html', {'form': forms.produto,
+                                                'prod': models.Produtocad.objects.all(),
+                                                'logado': get_user(request)
+                                                })
     else:
         return redirect('profile')
 # Create your views here.

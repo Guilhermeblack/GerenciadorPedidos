@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user
 
 from . import models
 
@@ -41,3 +42,14 @@ class comandas(forms.ModelForm):
         name = 'soucomanda'
 
     nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'}))
+
+
+
+class mov(forms.ModelForm):
+
+    class Meta:
+
+        model = models.movi
+        fields = {'moviment'}
+        name = 'alteraMov'
+

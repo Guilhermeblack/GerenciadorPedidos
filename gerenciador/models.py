@@ -270,4 +270,15 @@ class logform(models.Model):
         blank=False,
     )
 
+class movi(models.Model):
+    STATUS_CHOICES = (
+        ("L", "Ligado"),
+        ("D", "Desligado"),
+    )
+    moviment = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        blank=False,
+        null=False
+    )
 # Create your models here.
