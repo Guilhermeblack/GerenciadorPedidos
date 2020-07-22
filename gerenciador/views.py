@@ -54,7 +54,8 @@ def profile(request):
 
     if request.user.is_authenticated:
         usr = get_user(request)
-        grupo = request.user.groups.all()[0]
+        grupo = get_user(request)
+        print(grupo)
 
 
         if 'caixas' == str(grupo):
