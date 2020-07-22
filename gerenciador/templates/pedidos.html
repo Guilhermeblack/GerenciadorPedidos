@@ -82,7 +82,7 @@
                     </div>
 
                     <!--                     apenas se tiver permissão para abrir comanda-->
-                        {% if perms.gerenciador.abrir_comanda %}
+                        {% firstof perms.gerenciador.garçom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
 <!--                            bptao da nova comanda-->
                             <div style="margin: 10px;">
                                 <button class="btn btn-primary text-center border rounded border-dark"
@@ -99,18 +99,24 @@
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                                         aria-hidden="true">×</span></button>
                                             </div>
-                                            <div class="modal-body">
-                                                <p>{{newcomanda.as_p}}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
-                                                <button class="btn btn-primary " type="submit">Save</button>
-                                            </div>
+                                            <form method="post">
+                                                <div class="modal-body">
+
+                                                        {% csrf_token %}
+                                                        <p>{{newcomanda.as_p}}</p>
+
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-success btn-lg btn-block" type="submit" data-dismiss="modal">Abrir comanda</button>
+                                                    <button class="btn btn-danger " type="submit">Cancelar</button>
+                                                </div>
+                                            </form>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
+
                 </div>
             </div>
         </div>

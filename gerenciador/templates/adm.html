@@ -11,32 +11,38 @@
         $(document).ready(function(){
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
-<!--                $('#confirm').submit(function(){-->
 
-
-
-
-
-<!--                    var x='';-->
-<!--                    if( ('#mov').checked('true') ){-->
-<!--                        x = $('#movimentar').val('L');-->
-
-<!--                    }elseif( ('#mov').checked('false') ){-->
-<!--                        x = $('#movimentar').val('D');-->
-
-<!--                    });-->
-
-<!--                    $.ajax({-->
-<!--                         type: "POST",-->
-<!--                         url: "/adm",-->
-<!--                         data: {'movimento':x},-->
-<!--                         dataType: "json",-->
-<!--                         success: function(json){-->
-<!--                                    alert('postado');-->
-<!--                                    }-->
-<!--                    });-->
-<!--                });-->
             });
+
+            $('#confirm').click(function(){
+
+                var x='';
+                $(":checkbox").each(function () {
+                    var ischecked = $(this).is(":checked");
+                    console.log($(this).val());
+<!--                    funçao para receber e consultar valor-->
+
+
+
+                    if (ischecked) {
+                        x =  "L";
+                    }else{
+                        x= "D";
+                    }
+                });
+
+
+
+                alert(x);
+
+            });
+            $('#cancel').click(function(){
+                alert(' ação quase cancelada...');
+
+
+            });
+
+
         });
 
 
@@ -55,12 +61,12 @@
             {{ message }}
         </div>
     {% endfor %}
-    <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);height: auto;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
-        <div style="margin: 5px;">
-            <h1 class="text-center" style="padding: 5px;color: rgb(44,62,80);width: 534px;height: 79px; margin: 4px;">
+    <header class="text-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);height: auto;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
+        <div class="align-content-center align-content-cente ">
+            <h1 class="text-center align-content-center m-auto" style="align-content: center; padding: 5px;color: rgb(44,62,80);width: 534px;height: 79px;">
                 Iniciar movimento</h1>
         </div>
-        <div class="container align-content-center" style="color: rgb(241,234,72);width: 355px;height: 302px;padding: 5px;margin: 7px;max-height: auto;">
+        <div class="container-fluid align-content-center" style="color: rgb(241,234,72);width: auto;height: 302px;padding: 5px;margin: 7px;max-height: auto;">
             <div class="row text-center justify-content-center m-auto" style="width: 544px;margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
@@ -124,7 +130,7 @@
                                         {% endif %}
                                             <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
                                     </div>
-                                    <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
+                                    <div class="modal-footer"><button id=cancel class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
                                     </div>
                                 </div>
 

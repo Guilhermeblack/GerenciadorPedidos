@@ -104,16 +104,16 @@ def ped(request):
                 formcom.save()
                 messages.success(request, "pedido feito com sucesso !")
     else:
-        messages.success(request, "{}, Data {}".format('usuario', date.today()))
+        messages.success(request, "{}, Data {}".format(request.user, date.today()))
         formComanda = forms.comandas
         return render(request, 'pedidos.html', {'newcomanda': formComanda, 'prod': models.Produtocad.objects.all()})
 
 
-# @permission_required('iniciar_movimento')
+@permission_required('gerenciador.iniciar_movimento')
 def adm(request):
 
     # print('do adm ', request.user.groups.all()[0])
-    if 'gerente' == str(request.user.groups.all()[0]):
+    if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
             rq = request.POST
             print(rq)
@@ -137,5 +137,6 @@ def adm(request):
                                                 'logado': get_user(request)
                                                 })
     else:
-        return redirect('profile')
+        messages.danger(request, "Você não tem permissão para acessar esta página.")
+        return redirect('index')
 # Create your views here.
