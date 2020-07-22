@@ -54,23 +54,23 @@ def profile(request):
 
     if request.user.is_authenticated:
         usr = get_user(request)
-        grupo = get_user(request)
+        grupo = request.user.groups.all()
         print(grupo)
 
 
-        if 'caixas' == str(grupo):
+        if 'caixas' in str(grupo):
             messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
             return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})  # enviar para as comandas
 
-        elif 'cozinha' == str(grupo):
+        elif 'cozinha' in str(grupo):
             if request.user.has_perm('pedido_pronto'):
                 messages.info(request, 'Logado como cozinha. \n Data: {}'.format(date.today()))
                 return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
 
-        elif 'gerente' == str(grupo):
+        elif 'gerente' in str(grupo):
             return redirect('administrador')
 
-        elif 'garçons' == str(grupo):
+        elif 'garçons' in str(grupo):
             messages.info(request, 'Bem vindo Garçom. \n Data: {}'.format(date.today()))
             formComanda = forms.comandas
             return render(request, 'pedidos.html',
