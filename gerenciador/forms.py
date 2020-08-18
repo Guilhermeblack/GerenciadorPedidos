@@ -50,6 +50,6 @@ class mov(forms.ModelForm):
     class Meta:
 
         model = models.movi
-        fields = {'moviment'}
+        fields = {'movimento'}
         name = 'alteraMov'
 

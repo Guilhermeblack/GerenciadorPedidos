@@ -117,22 +117,45 @@ def adm(request):
     if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
             rq = request.POST
-            print(rq)
-            breakpoint()
-            user = forms.mov(request.POST)
+
+
+
+
+
+
+
+
+
+
+
+            # print(rq['movimento'])
+
+
+
+
+
+
+
+            # enviu a requisiçao, agora preciso enviar para o movimento
+            user = forms.mov(request.POST['movimento'])
+
+            # print('useeeeer')
+            # print(user)
             if user.is_valid():
-                ger = get_user(request)
-                env = models.Gerente.objects.all(user=ger)
-                env=user
+                print('envaq')
+                env = models.movi(user)
+
+                print(env)
                 env.save()
                 if(user.cleaned_data('movimento') == 'L'):
-                    messages.alert(request, "{}".format('Movimento iniciado com sucesso'))
+                    messages.alert(request, "{}".format('Movimento iniciado com sucesso !'))
                 elif(user.cleaned_data('movimento') == 'D'):
-                    messages.alert(request, "{}".format('Movimento encerrado com sucesso'))
+                    messages.alert(request, "{}".format('Movimento encerrado com sucesso !'))
+
         else:
             messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
             # print('grupos ', request.user.groups.all())
-            print(get_user(request))
+            # print(get_user(request))
             return render(request, 'adm.html', {'form': forms.produto,
                                                 'prod': models.Produtocad.objects.all(),
                                                 'logado': get_user(request)

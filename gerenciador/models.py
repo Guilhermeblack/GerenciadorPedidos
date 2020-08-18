@@ -36,16 +36,7 @@ class Gerente(models.Model):
         blank=False,
 
     ),
-    STATUS_CHOICES = (
-        ("L", "Ligado"),
-        ("D", "Desligado"),
-    )
-    movimento = models.CharField(
-        max_length=1,
-        choices=STATUS_CHOICES,
-        blank=False,
-        null=False
-    )
+
     objects = models.Manager()
 
 class Garçom(models.Model):
@@ -275,7 +266,7 @@ class movi(models.Model):
         ("L", "Ligado"),
         ("D", "Desligado"),
     )
-    moviment = models.CharField(
+    movimento = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
         blank=False,
