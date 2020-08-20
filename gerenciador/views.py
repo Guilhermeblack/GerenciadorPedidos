@@ -117,40 +117,31 @@ def adm(request):
     if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
             rq = request.POST
+            # useer = forms.mov(rq)
 
+            # print(useer)
+            # if useer.is_valid():
+            mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
+            print(mov_atual)
 
+            if(mov_atual == 1):
+                if(rq['movimento'] =='L'):
+                    messages.warning(request, "{}".format('Movimento iniciado com sucesso !'))
 
+                elif(rq['movimento'] == 'D'):
+                    messages.warning(request, "{}".format('Movimento encerrado com sucesso !'))
 
-
-
-
-
-
-
-
-            # print(rq['movimento'])
-
-
-
-
-
-
-
-            # enviu a requisiçao, agora preciso enviar para o movimento
-            user = forms.mov(request.POST['movimento'])
-
-            # print('useeeeer')
-            # print(user)
-            if user.is_valid():
-                print('envaq')
-                env = models.movi(user)
-
-                print(env)
-                env.save()
-                if(user.cleaned_data('movimento') == 'L'):
-                    messages.alert(request, "{}".format('Movimento iniciado com sucesso !'))
-                elif(user.cleaned_data('movimento') == 'D'):
-                    messages.alert(request, "{}".format('Movimento encerrado com sucesso !'))
+                return render(request, 'adm.html', {'form': forms.produto,
+                                                    'prod': models.Produtocad.objects.all(),
+                                                    'logado': get_user(request),
+                                                    'mov': models.movi.objects.filter(pk=3)
+                                                    })
+            else:
+                return render(request, 'adm.html', {'form': forms.produto,
+                                                    'prod': models.Produtocad.objects.all(),
+                                                    'logado': get_user(request)
+                                                    })
+                messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
 
         else:
             messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
@@ -158,7 +149,8 @@ def adm(request):
             # print(get_user(request))
             return render(request, 'adm.html', {'form': forms.produto,
                                                 'prod': models.Produtocad.objects.all(),
-                                                'logado': get_user(request)
+                                                'logado': get_user(request),
+
                                                 })
     else:
         messages.danger(request, "Você não tem permissão para acessar esta página.")

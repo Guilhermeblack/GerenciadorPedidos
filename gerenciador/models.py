@@ -272,4 +272,5 @@ class movi(models.Model):
         blank=False,
         null=False
     )
+    objects = models.Manager()
 # Create your models here.
