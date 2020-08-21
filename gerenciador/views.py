@@ -123,6 +123,7 @@ def adm(request):
             # if useer.is_valid():
             mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
             print(mov_atual)
+            print('nudale'.rq['movimento'])
 
             if(mov_atual == 1):
                 if(rq['movimento'] =='L'):
@@ -131,26 +132,33 @@ def adm(request):
                 elif(rq['movimento'] == 'D'):
                     messages.warning(request, "{}".format('Movimento encerrado com sucesso !'))
 
+                estado_mov = models.movi.objects.filter(pk=3)
+                print(estado_mov)
                 return render(request, 'adm.html', {'form': forms.produto,
                                                     'prod': models.Produtocad.objects.all(),
                                                     'logado': get_user(request),
-                                                    'mov': models.movi.objects.filter(pk=3)
+                                                    'mov': estado_mov
                                                     })
             else:
+                messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
+                estado_mov = models.movi.objects.filter(pk=3)
                 return render(request, 'adm.html', {'form': forms.produto,
                                                     'prod': models.Produtocad.objects.all(),
-                                                    'logado': get_user(request)
+                                                    'logado': get_user(request),
+                                                    'mov': estado_mov
                                                     })
-                messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
+
 
         else:
             messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
             # print('grupos ', request.user.groups.all())
             # print(get_user(request))
+            estado_mov = models.movi.objects.filter(pk=3)
+            print(estado_mov)
             return render(request, 'adm.html', {'form': forms.produto,
                                                 'prod': models.Produtocad.objects.all(),
                                                 'logado': get_user(request),
-
+                                                'mov': estado_mov
                                                 })
     else:
         messages.danger(request, "Você não tem permissão para acessar esta página.")
