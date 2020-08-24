@@ -18,31 +18,36 @@
             $('#confirm').click(function(){
 
                 var x='';
+                var cnt=0;
                 $(":checkbox").each(function () {
-                    var ischecked = $(this).is(":checked");
-                    console.log($(this).val());
+                    if(cnt ==0){
 
-                    tkn = '{{ csrf_token }}';
-                    if (ischecked) {
-                        x =  "L";
-                    }else{
-                        x= "D";
+
+                        var ischecked = $(this).is(":checked");
+    <!--                    console.log($(this).val());-->
+
+                        tkn = '{{ csrf_token }}';
+                        if (ischecked) {
+                            x =  "L";
+                        }else{
+                            x= "D";
+                        }
+
+
+                        $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                        type: 'POST',
+                        url: "{% url 'administrador' %}",
+                        data: {'movimento' :x},
+                        success: function (response) {
+
+                        },
+                        error: function (response) {
+    <!--                        alert('moio');-->
+                        }
+                        });
                     }
-
-
-                    $.ajax({
-                    headers: { "X-CSRFToken": '{{csrf_token}}' },
-                    type: 'POST',
-                    url: "{% url 'administrador' %}",
-                    data: {'movimento' :x},
-                    success: function (response) {
-<!--                        alert('deubom');-->
-                    },
-                    error: function (response) {
-<!--                        alert('moio');-->
-                    }
-                    });
-
+                    cnt++;
                 });
             });
             $('#cancel').click(function(){
@@ -80,9 +85,11 @@
 
                 <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
                     <div class="btn-group btn-group-lg justify-content-center align-items-center" id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
-
-                            <input id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" {% if mov.movi.get_movimento_display %} checked {% endif %}>
-                                    <h2>{{ mov.get_movi_display }} </h2>
+                            {% if mov == "L" %}
+                                <input  checked id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
+                            {% else %}
+                                <input  id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
+                            {% endif %}
                     </div>
 <!--                    funçao de zerar historico-->
                     <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto; width: 50%;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">PRODUTOS</button>

@@ -32,7 +32,7 @@ def loguin(request):
             # print(password)
             user = authenticate(
                 username=username,
-                password= formu.cleaned_data.get('senha')
+                password=formu.cleaned_data.get('senha')
             )
 
             if user is not None:
@@ -51,12 +51,10 @@ def loguin(request):
 
 
 def profile(request):
-
     if request.user.is_authenticated:
         usr = get_user(request)
         grupo = request.user.groups.all()
         print(grupo)
-
 
         if 'caixas' in str(grupo):
             messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
@@ -74,7 +72,7 @@ def profile(request):
             messages.info(request, 'Bem vindo Garçom. \n Data: {}'.format(date.today()))
             formComanda = forms.comandas
             return render(request, 'pedidos.html',
-                            {'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
+                          {'newcomanda': formComanda, 'produtos': models.Produtocad.objects.all()})
         else:
             messages.info(request, 'Usuário nao identificado. \n Data: {}'.format(date.today()))
             # return redirect('loguin')
@@ -112,7 +110,6 @@ def ped(request):
 
 @permission_required('gerenciador.iniciar_movimento')
 def adm(request):
-
     # print('do adm ', request.user.groups.all()[0])
     if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
@@ -122,43 +119,54 @@ def adm(request):
             # print(useer)
             # if useer.is_valid():
             mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
-            print(mov_atual)
-            print('nudale'.rq['movimento'])
+            # print(mov_atual, 'movaq')
+            # print('nudale', rq['movimento'])
 
-            if(mov_atual == 1):
-                if(rq['movimento'] =='L'):
-                    messages.warning(request, "{}".format('Movimento iniciado com sucesso !'))
+            if (mov_atual == 1):
+                if (rq['movimento'] == 'L'):
 
-                elif(rq['movimento'] == 'D'):
-                    messages.warning(request, "{}".format('Movimento encerrado com sucesso !'))
+                    messages.info(request, "Movimento iniciado com sucesso !")
+                    # print('nudale', rq['movimento'])
+                    estado_mov = models.movi.objects.filter(pk=3).values()
+                    # print(estado_mov)
+                    return render(request, 'adm.html', {'form': forms.produto,
+                                                        'prod': models.Produtocad.objects.all(),
+                                                        'logado': get_user(request),
+                                                        'mov': estado_mov[0]['movimento']
+                                                        })
 
-                estado_mov = models.movi.objects.filter(pk=3)
-                print(estado_mov)
-                return render(request, 'adm.html', {'form': forms.produto,
-                                                    'prod': models.Produtocad.objects.all(),
-                                                    'logado': get_user(request),
-                                                    'mov': estado_mov
-                                                    })
+                elif (rq['movimento'] == 'D'):
+
+
+                    messages.info(request, "Movimento encerrado com sucesso !")
+                    # print('trerrekcheck', rq['movimento'])
+                    estado_mov = models.movi.objects.filter(pk=3).values()
+                    # print(estado_mov)
+                    return render(request, 'adm.html', {'form': forms.produto,
+                                                        'prod': models.Produtocad.objects.all(),
+                                                        'logado': get_user(request),
+                                                        'mov': estado_mov[0]['movimento']
+                                                        })
             else:
-                messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
-                estado_mov = models.movi.objects.filter(pk=3)
+                # messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
+                rq = models.movi.objects.filter(pk=3).values()
                 return render(request, 'adm.html', {'form': forms.produto,
                                                     'prod': models.Produtocad.objects.all(),
                                                     'logado': get_user(request),
-                                                    'mov': estado_mov
+                                                    'mov': rq[0]['movimento']
                                                     })
-
 
         else:
-            messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
+            # messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
             # print('grupos ', request.user.groups.all())
             # print(get_user(request))
-            estado_mov = models.movi.objects.filter(pk=3)
-            print(estado_mov)
+            rq = models.movi.objects.filter(pk=3).values()
+            # estado_mov = models.movi.objects.filter(pk=3)
+            # print(rq)
             return render(request, 'adm.html', {'form': forms.produto,
                                                 'prod': models.Produtocad.objects.all(),
                                                 'logado': get_user(request),
-                                                'mov': estado_mov
+                                                'mov': rq[0]['movimento']
                                                 })
     else:
         messages.danger(request, "Você não tem permissão para acessar esta página.")
