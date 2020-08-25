@@ -214,12 +214,6 @@ class Pedido(models.Model):
 
     produtosPed= models.ManyToManyField(Produtocad)
 
-    status = models.CharField(
-        max_length=1,
-        choices=produtosPed,
-        blank=False,
-    )
-
     # pro1pra =
 
     quantidade = models.IntegerField(

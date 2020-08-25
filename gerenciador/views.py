@@ -95,13 +95,23 @@ def feed(request):
 def ped(request):
     if request.POST:
         print(request.POST)
-        if 'soucomanda' in request.POST and request.user.has_perm('abrir_comanda'):
-            formcom = forms.pedidos(request.POST)
-            print('tem perm')
-            if formcom.is_valid():
-                print('foi valido')
-                formcom.save()
-                messages.success(request, "pedido feito com sucesso !")
+
+
+        if 'n_mesa' in request.POST:
+            print('kkkkk')
+            usr = get_user(request)
+
+            if usr.has_perm('abrir_comanda'):
+                formcom = forms.comandas(request.POST)
+                print('tem perm')
+                if formcom.is_valid():
+                    print('foi valido')
+                    formcom.save()
+                    messages.success(request, "Comanda aberta !")
+                    formComanda = forms.comandas
+                    return render(request, 'pedidos.html',
+                                  {'newcomanda': formComanda, 'prod': models.Produtocad.objects.all()})
+
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
         formComanda = forms.comandas
