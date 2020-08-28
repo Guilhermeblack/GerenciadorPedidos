@@ -89,10 +89,15 @@ def logoutuser(request):
 
 # @permission_required('ver_feed')
 def feed(request):
-    return render(request, 'feed.html', {'pedidos': models.Pedido.objects.all()})
+    estado_mov = models.movi.objects.filter(pk=3).values()
+    return render(request, 'feed.html', {
+        'pedidos': models.Pedido.objects.all(),
+        'movi': estado_mov[0]['movimento']
+    })
 
 
 def ped(request):
+    estado_mov = models.movi.objects.filter(pk=3).values()
     if request.POST:
         print(request.POST)
 
@@ -110,12 +115,19 @@ def ped(request):
                     messages.success(request, "Comanda aberta !")
                     formComanda = forms.comandas
                     return render(request, 'pedidos.html',
-                                  {'newcomanda': formComanda, 'prod': models.Produtocad.objects.all()})
+                                  {'newcomanda': formComanda,
+                                   'prod': models.Produtocad.objects.all(),
+                                   'movi':estado_mov[0]['movimento']
+                                   })
 
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
         formComanda = forms.comandas
-        return render(request, 'pedidos.html', {'newcomanda': formComanda, 'prod': models.Produtocad.objects.all()})
+        return render(request, 'pedidos.html', {
+            'newcomanda': formComanda,
+            'prod': models.Produtocad.objects.all(),
+            'movi':estado_mov[0]['movimento']
+        })
 
 
 @permission_required('gerenciador.iniciar_movimento')

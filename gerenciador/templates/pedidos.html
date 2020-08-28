@@ -44,7 +44,7 @@
                     <!--                        {{pro.tipo}}-->
                     <!--                    {% endfor %}-->
 
-                    <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="color: rgb(33,37,41);">
+                    <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style="width:90%; color: rgb(33,37,41);">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 {% for pro in prod %}
@@ -54,7 +54,9 @@
                                                 <h5 class="card-title">{{pro.nome}}</h5>
                                                 <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                                 <p class="card-text">{{pro.descricao}}</p>
-                                                <a href="#" class="card-link">contato(link inativo)</a>
+                                                {% if movi == "L" %}
+                                                    <a href="#" type="button" class="card-link">contato(link inativo)</a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     {% endif %}
@@ -62,8 +64,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="color: rgb(33,37,41);">
-                        <div class="modal-dialog" role="document">
+                    <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style="width:90%;color: rgb(33,37,41);">
+                        <div class="modal-dialog" role="document" style="width: 100%">
                             <div class="modal-content">
                                 {% for pro in prod %}
                                     {% if pro.tipo == 'A' %}
@@ -72,7 +74,9 @@
                                             <h5 class="card-title">{{pro.nome}}</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                             <p class="card-text">{{pro.descricao}}</p>
-                                            <a href="#" class="card-link">contato(link inativo)</a>
+                                            {% if movi == "L" %}
+                                                <a href="#" type="button" class="">contato(link inativo)</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% endif %}
@@ -80,9 +84,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--                     apenas se tiver permissão para abrir comanda-->
-                        {% firstof perms.gerenciador.garçom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
+                {%if movi == "L" %}
+                    {% firstof perms.gerenciador.garçom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
 <!--                            bptao da nova comanda-->
                             <div style="margin: 10px;">
                                 <button class="btn btn-primary text-center border rounded border-dark"
@@ -116,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                {% endif %}
                 </div>
             </div>
         </div>
