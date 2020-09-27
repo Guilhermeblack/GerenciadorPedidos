@@ -175,10 +175,12 @@ class Produtocad(models.Model):
         null=False,
         blank=False
     )
-    preco = models.FloatField(
+    preco = models.DecimalField(
         max_length=6,
         null=False,
-        blank=False
+        blank=False,
+        decimal_places=2,
+        max_digits=4
     )
 
     # pedidoProdutos = models.ManyToManyField(Pedido)
@@ -204,8 +206,9 @@ class Pedido(models.Model):
     STATUS_CHOICES = (
         ("P", "Pedido realizado"),
         ("F", "Fazendo"),
-        ("s", "Saiu para entrega"),
-        ("E", "Foi entregue")
+        ("S", "Saiu para entrega"),
+        ("E", "Foi entregue"),
+        ("C", "Cancelado")
     )
 
 

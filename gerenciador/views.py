@@ -90,13 +90,19 @@ def logoutuser(request):
 # @permission_required('ver_feed')
 def feed(request):
     estado_mov = models.movi.objects.filter(pk=3).values()
-    # fil=models.Pedido.objects.all()[0]['observacao']
-    # pprint()
+    STATUS_CHOICES = (
+        "Pedido realizado",
+        "Fazendo",
+        "Saiu para entrega",
+        "Foi entregue",
+        "Cancelado"
+    )
 
     return render(request, 'feed.html', {
 
+
         'pedidos': models.Pedido.objects.all(),
-        # breakpoint()
+        'choices': STATUS_CHOICES,
         'movi': estado_mov[0]['movimento']
     })
 
@@ -122,7 +128,8 @@ def ped(request):
                     return render(request, 'pedidos.html',
                                   {'newcomanda': formComanda,
                                    'prod': models.Produtocad.objects.all(),
-                                   'movi':estado_mov[0]['movimento']
+                                   'movi':estado_mov[0]['movimento'],
+                                   'pedido': forms.pedidos
                                    })
 
     else:
@@ -143,47 +150,57 @@ def adm(request):
     if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
             rq = request.POST
-            # useer = forms.mov(rq)
+            # xaso seja request de alteração de movimento
+            if 'movimento' in rq:
+                # useer = forms.mov(rq)
 
-            # print(useer)
-            # if useer.is_valid():
-            mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
-            # print(mov_atual, 'movaq')
-            # print('nudale', rq['movimento'])
+                # print(useer)
+                # if useer.is_valid():
+                mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
+                # print(mov_atual, 'movaq')
+                # print('nudale', rq['movimento'])
 
-            if (mov_atual == 1):
-                if (rq['movimento'] == 'L'):
+                if (mov_atual == 1):
+                    if (rq['movimento'] == 'L'):
 
-                    messages.info(request, "Movimento iniciado com sucesso !")
-                    # print('nudale', rq['movimento'])
-                    estado_mov = models.movi.objects.filter(pk=3).values()
-                    # print(estado_mov)
+                        messages.info(request, "Movimento iniciado com sucesso !")
+                        # print('nudale', rq['movimento'])
+                        estado_mov = models.movi.objects.filter(pk=3).values()
+                        # print(estado_mov)
+                        return render(request, 'adm.html', {'form': forms.produto,
+                                                            'prod': models.Produtocad.objects.all(),
+                                                            'logado': get_user(request),
+                                                            'mov': estado_mov[0]['movimento']
+                                                            })
+
+                    elif (rq['movimento'] == 'D'):
+
+
+                        messages.info(request, "Movimento encerrado com sucesso !")
+                        # print('trerrekcheck', rq['movimento'])
+                        estado_mov = models.movi.objects.filter(pk=3).values()
+                        # print(estado_mov)
+                        return render(request, 'adm.html', {'form': forms.produto,
+                                                            'prod': models.Produtocad.objects.all(),
+                                                            'logado': get_user(request),
+                                                            'mov': estado_mov[0]['movimento']
+                                                            })
+                else:
+                    # messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
+                    rq = models.movi.objects.filter(pk=3).values()
                     return render(request, 'adm.html', {'form': forms.produto,
                                                         'prod': models.Produtocad.objects.all(),
                                                         'logado': get_user(request),
-                                                        'mov': estado_mov[0]['movimento']
+                                                        'mov': rq[0]['movimento']
                                                         })
-
-                elif (rq['movimento'] == 'D'):
-
-
-                    messages.info(request, "Movimento encerrado com sucesso !")
-                    # print('trerrekcheck', rq['movimento'])
-                    estado_mov = models.movi.objects.filter(pk=3).values()
-                    # print(estado_mov)
-                    return render(request, 'adm.html', {'form': forms.produto,
-                                                        'prod': models.Produtocad.objects.all(),
-                                                        'logado': get_user(request),
-                                                        'mov': estado_mov[0]['movimento']
-                                                        })
-            else:
-                # messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
-                rq = models.movi.objects.filter(pk=3).values()
-                return render(request, 'adm.html', {'form': forms.produto,
-                                                    'prod': models.Produtocad.objects.all(),
-                                                    'logado': get_user(request),
-                                                    'mov': rq[0]['movimento']
-                                                    })
+            if 'tipo' in rq:
+                new_prod = forms.produto(rq)
+                if new_prod.is_valid():
+                    new_prod.save()
+                    messages.success(request, "Produto cadastrado !")
+                    return redirect('administrador')
+                else:
+                    messages.warning(request, "Dados inválidos !")
 
         else:
             # messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))

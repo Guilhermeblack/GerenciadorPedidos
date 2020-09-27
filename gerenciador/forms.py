@@ -18,11 +18,16 @@ class produto(forms.ModelForm):
 
     class Meta:
         model = models.Produtocad
-        fields = 'nome','descricao','preco'
+        fields = 'nome','descricao','preco','tipo'
 
     nome = forms.CharField()
     descricao = forms.CharField()
-    preco = forms.FloatField()
+    # preco = forms.DecimalField(decimal_places=2)
+    tipo = forms.ChoiceField(choices=(
+        ("A", "Alimento"),
+        ("B", "Bebida"),
+    ))
+
 
 
 class pedidos(forms.ModelForm):

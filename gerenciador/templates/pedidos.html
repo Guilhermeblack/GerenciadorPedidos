@@ -21,6 +21,7 @@
 
         });
 
+<!--        $('#id_produtosPed').css('hide');-->
     });
 
 
@@ -121,13 +122,20 @@
                                 <form method="post" name="newpedido">
                                     <div class="modal-body">
 
-                                            {% csrf_token %}
-                                            <p>{{pedido.as_p }}</p>
+                                        {% csrf_token %}
+                                        <p><b>Pedido: {{pedido.produtosPed }}</b></p>
+                                        <hr>
+                                        <p>{{pedido.comandaref }}</p>
+                                        <hr>
+                                        <p>{{pedido.quantidade }}</p>
+                                        <hr>
+                                        <p>{{ pedido.status.as_hidden }}</p>
+                                        <p>{{pedido.observacao }}</p>
 
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>
+                                        <button class="btn btn-success btn-lg btn-block" type="submit" >Confirmar pedido</button>
                                         <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Cancelar</button>
                                     </div>
                                 </form>
