@@ -33,11 +33,13 @@
 
                         <div class="card" style="color: rgb(33,37,41);">
                             <div class="card-header">
-                                <h5 class="mb-0">Comanda - {{pedido.nome}}</h5>
+                                <h5 class="mb-0">Comanda - {{pedido.comandaref}}</h5>
                             </div>
                             <div class="card-body">
-                                <p class="card-text">{{pedido.produtosPedido}}</p>
-                                <p class="card-text">{{pedido.comanda}}</p>
+                                {% for ped in pedido.produtosPed.all %}
+                                    <p class="card-text">{{ped.nome}} </p>
+                                {%endfor%}
+                                <p class="card-text">{{pedido.quantidade}}</p>
                                 <p class="card-text">{{pedido.observacao}}</p>
                             </div>
 

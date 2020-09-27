@@ -29,10 +29,13 @@ class pedidos(forms.ModelForm):
 
     class Meta:
         model = models.Pedido
-        fields = 'quantidade','observacao','status'
+        fields = 'produtosPed','quantidade','observacao','status','comandaref'
         name= 'soupedido'
 
-
+        widgets = {
+            'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
+            # 'produtosPed': forms.TextInput()
+        }
 
 class comandas(forms.ModelForm):
 

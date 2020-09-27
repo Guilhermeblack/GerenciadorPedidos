@@ -52,6 +52,7 @@ class Garçom(models.Model):
         return self.nome
 
     id = models.AutoField(primary_key=True),
+
     nome = models.CharField(
         max_length=50,
         null=False,
@@ -81,6 +82,7 @@ class Cozinha(models.Model):
         return self.nome
 
     id = models.AutoField(primary_key=True),
+
     nome = models.CharField(
         max_length=50,
         null=False,
@@ -111,6 +113,8 @@ class Caixa(models.Model):
         return self.nome
 
     id = models.AutoField(primary_key=True),
+
+
     nome = models.CharField(
         max_length=50,
         null=False,
@@ -133,6 +137,7 @@ class Caixa(models.Model):
 class Comanda(models.Model):
 
     id = models.AutoField(primary_key=True)
+
 
     nome = models.CharField(
         max_length=50,
@@ -158,6 +163,7 @@ class Comanda(models.Model):
 class Produtocad(models.Model):
 
     id = models.AutoField(primary_key=True)
+
 
     nome = models.CharField(
         max_length=50,
@@ -202,6 +208,8 @@ class Pedido(models.Model):
         ("E", "Foi entregue")
     )
 
+
+
     comandaref= models.ForeignKey(
         Comanda,
         null=True,
@@ -212,7 +220,7 @@ class Pedido(models.Model):
     id = models.AutoField(primary_key=True)
 
 
-    produtosPed= models.ManyToManyField(Produtocad)
+    produtosPed= models.ManyToManyField(Produtocad, related_name='produto')
 
     # pro1pra =
 
@@ -225,7 +233,8 @@ class Pedido(models.Model):
         max_length=170,
         null=False,
         blank=True,
-        default=''
+        default='Sem Observações.',
+
     )
 
     status = models.CharField(
@@ -237,8 +246,8 @@ class Pedido(models.Model):
     )
 
 
-    def __str__(self):
-        return '{}- {}'.format(self.id, self.status)
+    # def __str__(self):
+    #     return '{}- {}'.format(self.id, self.status)
 
     objects = models.Manager()
 
@@ -260,6 +269,7 @@ class movi(models.Model):
         ("L", "Ligado"),
         ("D", "Desligado"),
     )
+
     movimento = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,

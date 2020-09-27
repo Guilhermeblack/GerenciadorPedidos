@@ -5,7 +5,7 @@ from django.contrib.auth import logout, login, authenticate, get_user
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
-
+from pprint import pprint
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from Atendgb import settings
@@ -90,8 +90,13 @@ def logoutuser(request):
 # @permission_required('ver_feed')
 def feed(request):
     estado_mov = models.movi.objects.filter(pk=3).values()
+    # fil=models.Pedido.objects.all()[0]['observacao']
+    # pprint()
+
     return render(request, 'feed.html', {
+
         'pedidos': models.Pedido.objects.all(),
+        # breakpoint()
         'movi': estado_mov[0]['movimento']
     })
 
@@ -126,7 +131,9 @@ def ped(request):
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
             'prod': models.Produtocad.objects.all(),
-            'movi':estado_mov[0]['movimento']
+            'movi':estado_mov[0]['movimento'],
+            'pedido': forms.pedidos
+
         })
 
 

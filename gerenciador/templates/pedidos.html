@@ -5,6 +5,27 @@
 {% load static %}
 {% block content %}
 
+    <script>
+
+    $(document).ready(function(){
+        $('.pedB').click(function(){
+
+            $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
+<!--            $(this).siblings('.card-title').text();-->
+
+        });
+        $('.pedA').click(function(){
+
+            $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
+            $(this).siblings();
+
+        });
+
+    });
+
+
+    </script>
+
 {% for message in messages %}
     <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
         <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
@@ -55,7 +76,9 @@
                                                 <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                                 <p class="card-text">{{pro.descricao}}</p>
                                                 {% if movi == "L" %}
-                                                    <a href="#" type="button" class="card-link">contato(link inativo)</a>
+                                                {% if user.is_authenticated %}
+                                                    <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.nome}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
+                                                {% endif %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -75,7 +98,10 @@
                                             <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                             <p class="card-text">{{pro.descricao}}</p>
                                             {% if movi == "L" %}
-                                                <a href="#" type="button" class="">contato(link inativo)</a>
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
+
+                                            {% endif %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -84,41 +110,66 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="novoPedido" style="color: rgb(33,37,41);">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Novo Pedido</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button></div>
+                                <form method="post" name="newpedido">
+                                    <div class="modal-body">
+
+                                            {% csrf_token %}
+                                            <p>{{pedido.as_p }}</p>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>
+                                        <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 {%if movi == "L" %}
                     {% firstof perms.gerenciador.garçom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
 <!--                            bptao da nova comanda-->
-                            <div style="margin: 10px;">
-                                <button class="btn btn-primary text-center border rounded border-dark"
-                                        type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
-                                </button>
-                            </div>
+                            {% if user.is_authenticated %}
+                                <div style="margin: 10px;">
+                                    <button class="btn btn-primary text-center border rounded border-dark"
+                                            type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
+                                    </button>
+                                </div>
+                            {% endif %}
                             <div class="modal fade" role="dialog" tabindex="-1" id="novaComanda" style="color: rgb(33,37,41);">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <form method="POST" name="newcomanda">
-                                            {% csrf_token %}
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Nova comanda</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                        aria-hidden="true">×</span></button>
+
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Nova comanda</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
+                                        </div>
+                                        <form method="post" name="newcomanda">
+                                            <div class="modal-body">
+
+                                                    {% csrf_token %}
+                                                    <p>{{newcomanda.as_p}}</p>
+
                                             </div>
-                                            <form method="post">
-                                                <div class="modal-body">
 
-                                                        {% csrf_token %}
-                                                        <p>{{newcomanda.as_p}}</p>
-
-                                                </div>
-
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>
-                                                    <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Cancelar</button>
-                                                </div>
-                                            </form>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>
+                                                <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Cancelar</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
+
                 {% endif %}
                 </div>
             </div>
