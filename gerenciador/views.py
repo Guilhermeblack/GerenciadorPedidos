@@ -109,32 +109,62 @@ def feed(request):
 
 def ped(request):
     estado_mov = models.movi.objects.filter(pk=3).values()
+    formComanda = forms.comandas
     if request.POST:
-        print(request.POST)
+        # print(request.POST)
 
 
         if 'n_mesa' in request.POST:
-            print('kkkkk')
             usr = get_user(request)
 
             if usr.has_perm('abrir_comanda'):
                 formcom = forms.comandas(request.POST)
-                print('tem perm')
+                # print('tem perm')
                 if formcom.is_valid():
-                    print('foi valido')
                     formcom.save()
                     messages.success(request, "Comanda aberta !")
-                    formComanda = forms.comandas
                     return render(request, 'pedidos.html',
                                   {'newcomanda': formComanda,
                                    'prod': models.Produtocad.objects.all(),
                                    'movi':estado_mov[0]['movimento'],
                                    'pedido': forms.pedidos
                                    })
+                else:
+                    messages.warning(request, "Formulário inválido!")
+
+                    return render(request, 'pedidos.html',
+                                  {'newcomanda': formComanda,
+                                   'prod': models.Produtocad.objects.all(),
+                                   'movi': estado_mov[0]['movimento'],
+                                   'pedido': forms.pedidos
+                                   })
+
+        if 'comandaref' in request.POST:
+            # pprint(request.POST)
+            pedido = forms.pedidos(request.POST)
+            pprint(pedido)
+            if pedido.is_valid():
+                pedido.save()
+                messages.success(request, "Pedido registrado !")
+                return render(request, 'pedidos.html',
+                              {'newcomanda': formComanda,
+                               'prod': models.Produtocad.objects.all(),
+                               'movi': estado_mov[0]['movimento'],
+                               'pedido': forms.pedidos
+                               })
+            else:
+                messages.warning(request, "Dados de registro inválidos !")
+
+                return render(request, 'pedidos.html',
+                              {'newcomanda': formComanda,
+                               'prod': models.Produtocad.objects.all(),
+                               'movi': estado_mov[0]['movimento'],
+                               'pedido': forms.pedidos
+                               })
+
 
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
-        formComanda = forms.comandas
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
             'prod': models.Produtocad.objects.all(),

@@ -11,17 +11,16 @@
         $('.pedB').click(function(){
 
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
-<!--            $(this).siblings('.card-title').text();-->
+            $('#prod_ped').text($(this).siblings('.card-title').text());
 
         });
         $('.pedA').click(function(){
 
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
-            $(this).siblings();
+            $('#prod_ped').text( $(this).siblings('.card-title').text() );
 
         });
 
-<!--        $('#id_produtosPed').css('hide');-->
     });
 
 
@@ -123,11 +122,11 @@
                                     <div class="modal-body">
 
                                         {% csrf_token %}
-                                        <p><b>Pedido: {{pedido.produtosPed }}</b></p>
+                                        <p><b><h2><label id="prod_ped"><u></u></label></h2></b></p>
                                         <hr>
-                                        <p>{{pedido.comandaref }}</p>
+                                        <p><b>Comanda: {{pedido.comandaref }}</b></p>
                                         <hr>
-                                        <p>{{pedido.quantidade }}</p>
+                                        <p><b>Quantidade: {{pedido.quantidade }}</b></p>
                                         <hr>
                                         <p>{{ pedido.status.as_hidden }}</p>
                                         <p>{{pedido.observacao }}</p>
