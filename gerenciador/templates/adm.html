@@ -81,8 +81,8 @@
                     </div>
 <!--                    funçao de zerar historico-->
                     <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto; width: 50%;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">PRODUTOS</button>
-                        <div class="modal fade bg-secondary" role="dialog" tabindex="-1" id="novoProduto">
-                            <div class="modal-dialog  " role="document">
+                        <div class="modal fade" role="dialog" tabindex="-1" id="novoProduto">
+                            <div class="modal-dialog modal-lg " role="document">
                                 {% if form %}
                                     <form method="POST" id="newprod" >
                                         <div class="modal-content border bg-primary">
@@ -100,7 +100,7 @@
                                 {% endif %}
 
                             </div>
-                            <div class="modal-dialog  bg-secondary" role="document">
+                            <div class="modal-dialog modal-lg bg-secondary" role="document">
                                 {% for pro in prod %}
                                     <div class="card border bg-info" style="width: auto; margin: 4px;">
                                         <div class="card-body">

@@ -20,16 +20,47 @@
 
     <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
 
-        <div style="align-self:center; color: rgb(241,234,72);width: 80%;height: 302px; margin-top: 15px;">
+        <div style="align-self:center; color: rgb(241,234,72);width: auto;height: 302px; margin-top: 15px;">
 
 
-                <div class="row" style="width:95%">
-                    <div class="col 70%">
+                <div class="row">
+                    <div class="col m-5" >
+
+                    </div>
+                    <div class="col mr-4">
                         <h1 class="text-primary" style="width:90%; padding: 18px; margin-bottom:17px;">FEED</h1>
                     </div>
-                    <div class="col">
-                        <a class="button" style=" margin-bottom:23px; margin-right:28px;align-content:right" href='#' data-toggle="#"><i class="fa fa"></i><b><span>Comandas</span></b> </a>
+                    <div class="col" style="float">
+                        {% firstof perms.gerenciador.caixa.fechar_comanda  perms.gerenciador.gerente.abrir_comanda %}
+                            <button class="btn btn-primary btn-rounded hover" style=" margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+                            <div class="modal fade" role="dialog" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content ">
 
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">- Comandas -</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
+                                        </div>
+                                        <form method="post" name="newcomanda">
+                                            <div class="modal-body">
+                                                <div class='row text-align-center'>
+                                                        nome
+                                                    {% for com in comandas %}
+                                                        {{ com.nome }}
+                                                    {% endfor %}
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+<!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
+                                                <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Sair</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
 
@@ -70,10 +101,10 @@
 
                                   </div>
                                   <a class="carousel-control-prev " href="#carouselExampleFade" role="button" data-slide="prev">
-                                    <i class="angle-double-left" ></i>
+                                    <div><i class="caret-left-square-fill" ></i></div>
                                   </a>
-                                  <a class="carousel-control-next " href="#carouselExampleFade" role="button" data-slide="next">
-                                    <i class="angle-double-right" ></i>
+                                  <a class="carousel-control-next" href="#carouselExampleFade" role="button" data-slide="next">
+                                    <i class="arrow-alt-circle-right" ></i>
                                   </a>
                                 </div>
 

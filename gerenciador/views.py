@@ -100,7 +100,7 @@ def feed(request):
 
     return render(request, 'feed.html', {
 
-
+        'comandas': models.Comanda.objects.all(),
         'pedidos': models.Pedido.objects.all(),
         'choices': STATUS_CHOICES,
         'movi': estado_mov[0]['movimento']

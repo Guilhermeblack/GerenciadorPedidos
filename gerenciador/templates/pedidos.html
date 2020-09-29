@@ -142,7 +142,7 @@
                         </div>
                     </div>
                 {%if movi == "L" %}
-                    {% firstof perms.gerenciador.garçom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
+                    {% firstof perms.gerenciador.garcom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda %}
 <!--                            bptao da nova comanda-->
                             {% if user.is_authenticated %}
                                 <div style="margin: 10px;">
