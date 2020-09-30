@@ -12,12 +12,16 @@
 
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
             $('#prod_ped').text($(this).siblings('.card-title').text());
+            let val = $(this).val();
+            $('#id_produtosPed').val(val);
 
         });
         $('.pedA').click(function(){
 
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
             $('#prod_ped').text( $(this).siblings('.card-title').text() );
+            let val = $(this).val();
+            $('#id_produtosPed').val(val);
 
         });
 
@@ -77,7 +81,7 @@
                                                 <p class="card-text">{{pro.descricao}}</p>
                                                 {% if movi == "L" %}
                                                 {% if user.is_authenticated %}
-                                                    <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.nome}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
+                                                    <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.id}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
                                                 {% endif %}
                                                 {% endif %}
                                             </div>
@@ -99,7 +103,7 @@
                                             <p class="card-text">{{pro.descricao}}</p>
                                             {% if movi == "L" %}
                                             {% if user.is_authenticated %}
-                                                <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
+                                                <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
 
                                             {% endif %}
                                             {% endif %}
@@ -118,18 +122,14 @@
                                     <h4 class="modal-title">Novo Pedido</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">×</span></button></div>
-                                <form method="post" name="newpedido">
+                                <form method="post" name="newpedido" >
+                                    {% csrf_token %}
                                     <div class="modal-body">
 
-                                        {% csrf_token %}
+
                                         <p><b><h2><label id="prod_ped"><u></u></label></h2></b></p>
                                         <hr>
-                                        <p><b>Comanda: {{pedido.comandaref }}</b></p>
-                                        <hr>
-                                        <p><b>Quantidade: {{pedido.quantidade }}</b></p>
-                                        <hr>
-                                        <p>{{ pedido.status.as_hidden }}</p>
-                                        <p>{{pedido.observacao }}</p>
+                                        <p>{{pedido.as_p}}</p>
 
                                     </div>
 

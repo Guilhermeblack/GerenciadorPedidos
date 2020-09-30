@@ -140,7 +140,7 @@ def ped(request):
                                    })
 
         if 'comandaref' in request.POST:
-            # pprint(request.POST)
+            pprint(request.POST)
             pedido = forms.pedidos(request.POST)
             pprint(pedido)
             if pedido.is_valid():
