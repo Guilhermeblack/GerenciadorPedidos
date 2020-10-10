@@ -151,3 +151,5 @@ import dj_database_url
 DATABASES['desault'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
+
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, '../gerenciador/static'), )
