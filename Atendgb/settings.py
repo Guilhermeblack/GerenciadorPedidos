@@ -144,3 +144,10 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join('/media/')
 STATICFILES_DIRS = ( os.path.join('/static/'), )
+
+#heroku settings
+
+import dj_database_url
+DATABASES['desault'] = dj_database_url.config()
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
