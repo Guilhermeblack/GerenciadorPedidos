@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.timezone import now
 
 class Gerente(models.Model):
 
@@ -153,6 +153,20 @@ class Comanda(models.Model):
         blank=False,
     )
 
+    # date = models.DateTimeField(auto_now_add=True, blank=True)
+
+    # STATUS_CHOICES = (
+    #     ("A", "Aberto"),
+    #     ("F", "Fechado"),
+    # )
+    # status = models.CharField(
+    #     max_length=1,
+    #     choices=STATUS_CHOICES,
+    #     default="A",
+    #     blank=False,
+    #     null=False
+    # )
+
 
     def __str__(self):
         return '{} <> {}'.format(self.id, self.nome)
@@ -248,6 +262,7 @@ class Pedido(models.Model):
         default="P"
     )
 
+    # date = models.DateTimeField(auto_now_add=True, blank=True)
 
     # def __str__(self):
     #     return '{}- {}'.format(self.id, self.status)

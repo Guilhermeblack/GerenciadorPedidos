@@ -47,9 +47,11 @@
                         <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
                                 class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a>
                         </li>
-                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
-                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a>
-                        </li>
+                        {% if perms.gerenciador.ver_feed %}
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                    class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a>
+                            </li>
+                        {%endif%}
                     {% endif %}
                     <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">CARDAPIO</a>
                     </li>

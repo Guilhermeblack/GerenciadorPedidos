@@ -89,7 +89,7 @@ def logoutuser(request):
 
 # @permission_required('ver_feed')
 def feed(request):
-    estado_mov = models.movi.objects.filter(pk=3).values()
+    estado_mov = models.movi.objects.filter(pk=1).values()
     STATUS_CHOICES = (
         "Pedido realizado",
         "Fazendo",
@@ -97,7 +97,7 @@ def feed(request):
         "Foi entregue",
         "Cancelado"
     )
-
+    messages.success(request, "{}, Data {}".format(request.user, date.today()))
     return render(request, 'feed.html', {
 
         'comandas': models.Comanda.objects.all(),
@@ -108,7 +108,7 @@ def feed(request):
 
 
 def ped(request):
-    estado_mov = models.movi.objects.filter(pk=3).values()
+    estado_mov = models.movi.objects.filter(pk=1).values()
     formComanda = forms.comandas
     if request.POST:
         # print(request.POST)
@@ -117,32 +117,32 @@ def ped(request):
         if 'n_mesa' in request.POST:
             usr = get_user(request)
 
-            if usr.has_perm('abrir_comanda'):
-                formcom = forms.comandas(request.POST)
-                # print('tem perm')
-                if formcom.is_valid():
-                    formcom.save()
-                    messages.success(request, "Comanda aberta !")
-                    return render(request, 'pedidos.html',
-                                  {'newcomanda': formComanda,
-                                   'prod': models.Produtocad.objects.all(),
-                                   'movi':estado_mov[0]['movimento'],
-                                   'pedido': forms.pedidos
-                                   })
-                else:
-                    messages.warning(request, "Formulário inválido!")
+            # if usr.has_perm('abrir_comanda'):
+            formcom = forms.comandas(request.POST)
+            # print('tem perm')
+            if formcom.is_valid():
+                formcom.save()
+                messages.success(request, "Comanda aberta !")
+                return render(request, 'pedidos.html',
+                              {'newcomanda': formComanda,
+                               'prod': models.Produtocad.objects.all(),
+                               'movi':estado_mov[0]['movimento'],
+                               'pedido': forms.pedidos
+                               })
+            else:
+                messages.warning(request, "Formulário inválido!")
 
-                    return render(request, 'pedidos.html',
-                                  {'newcomanda': formComanda,
-                                   'prod': models.Produtocad.objects.all(),
-                                   'movi': estado_mov[0]['movimento'],
-                                   'pedido': forms.pedidos
-                                   })
+                return render(request, 'pedidos.html',
+                              {'newcomanda': formComanda,
+                               'prod': models.Produtocad.objects.all(),
+                               'movi': estado_mov[0]['movimento'],
+                               'pedido': forms.pedidos
+                               })
 
         if 'comandaref' in request.POST:
-            pprint(request.POST)
+            # pprint(request.POST)
             pedido = forms.pedidos(request.POST)
-            pprint(pedido)
+            # pprint(pedido)
             if pedido.is_valid():
                 pedido.save()
                 messages.success(request, "Pedido registrado !")
@@ -195,7 +195,7 @@ def adm(request):
 
                         messages.info(request, "Movimento iniciado com sucesso !")
                         # print('nudale', rq['movimento'])
-                        estado_mov = models.movi.objects.filter(pk=3).values()
+                        estado_mov = models.movi.objects.filter(pk=1).values()
                         # print(estado_mov)
                         return render(request, 'adm.html', {'form': forms.produto,
                                                             'prod': models.Produtocad.objects.all(),
@@ -208,7 +208,7 @@ def adm(request):
 
                         messages.info(request, "Movimento encerrado com sucesso !")
                         # print('trerrekcheck', rq['movimento'])
-                        estado_mov = models.movi.objects.filter(pk=3).values()
+                        estado_mov = models.movi.objects.filter(pk=1).values()
                         # print(estado_mov)
                         return render(request, 'adm.html', {'form': forms.produto,
                                                             'prod': models.Produtocad.objects.all(),
@@ -217,7 +217,7 @@ def adm(request):
                                                             })
                 else:
                     # messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
-                    rq = models.movi.objects.filter(pk=3).values()
+                    rq = models.movi.objects.filter(pk=1).values()
                     return render(request, 'adm.html', {'form': forms.produto,
                                                         'prod': models.Produtocad.objects.all(),
                                                         'logado': get_user(request),
@@ -236,8 +236,8 @@ def adm(request):
             # messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
             # print('grupos ', request.user.groups.all())
             # print(get_user(request))
-            rq = models.movi.objects.filter(pk=3).values()
-            # estado_mov = models.movi.objects.filter(pk=3)
+            rq = models.movi.objects.filter(pk=1).values()
+            # estado_mov = models.movi.objects.filter(pk=1)
             # print(rq)
             return render(request, 'adm.html', {'form': forms.produto,
                                                 'prod': models.Produtocad.objects.all(),
