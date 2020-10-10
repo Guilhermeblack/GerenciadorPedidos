@@ -139,16 +139,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/pt/2.2/howto/static-files/
 
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+STATIC_URL = '../gerenciador/static/'
+MEDIA_URL = '../gerenciador/media/'
 
 MEDIA_ROOT = os.path.join('/media/')
-STATICFILES_DIRS = ( os.path.join('/static/'), )
+# STATICFILES_DIRS = ( os.path.join('/static/'), )
 
 #heroku settings
 
 import dj_database_url
-DATABASES['desault'] = dj_database_url.config()
+DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
