@@ -117,8 +117,11 @@ def ped(request):
         if 'n_mesa' in request.POST:
             usr = get_user(request)
 
+            pprint(request.POST)
+
             # if usr.has_perm('abrir_comanda'):
             formcom = forms.comandas(request.POST)
+            pprint(formcom)
             # print('tem perm')
             if formcom.is_valid():
                 formcom.save()
@@ -140,18 +143,17 @@ def ped(request):
                                })
 
         if 'comandaref' in request.POST:
-            newped = forms.pedidos
+            newped = forms.pedidos(request.POST)
 
-            pedido = newped(request.POST)
             pprint(request.POST)
             pprint(newped)
-            pprint(pedido)
-            if pedido.is_valid():
-                pedido.save()
-                add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
-                prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
-                add_comanda.valor += prod.preco
-                add_comanda.save()
+            if newped.is_valid():
+                print('vaaaaaaai krai')
+                newped.save()
+                # add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
+                # prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
+                # add_comanda.valor += prod.preco
+                # add_comanda.save()
                 messages.success(request, "Pedido registrado !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,

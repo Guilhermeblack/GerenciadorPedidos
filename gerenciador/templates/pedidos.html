@@ -13,6 +13,7 @@
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
             $('#prod_ped').text($(this).siblings('.card-title').text());
             let val = $(this).val();
+            console.log(val);
             $('#id_produtosPed').val(val).prop('required',false);
 
         });
@@ -21,9 +22,14 @@
             $('#id_produtosPed').text($(this).siblings('.card-title').text()).change();
             $('#prod_ped').text( $(this).siblings('.card-title').text() );
             let val = $(this).val();
+            console.log(val);
             $('#id_produtosPed').val(val).prop('required',false);
 
         });
+        $('#n_comanda').click(function(){
+            $("#id_valor").val(0.0)
+        });
+
 
     });
 
@@ -120,13 +126,14 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">×</span></button></div>
                                 <form method="post" name="newpedido" >
-                                    {% csrf_token %}
+
                                     <div class="modal-body">
 
 
                                         <p><b><h2><label id="prod_ped"><u></u></label></h2></b></p>
                                         <hr>
-                                        <p>{{pedido.as_p}}</p>
+                                        {% csrf_token %}
+                                        <p>{{ pedido.as_p }}</p>
 
                                     </div>
 
@@ -143,7 +150,7 @@
 <!--                            bptao da nova comanda-->
                             {% if user.is_authenticated and perms.gerenciador.abrir_comanda %}
                                 <div style="margin: 10px;">
-                                    <button class="btn btn-primary text-center border rounded border-dark"
+                                    <button class="btn btn-primary text-center border rounded border-dark" id="n_comanda"
                                             type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
                                     </button>
                                 </div>

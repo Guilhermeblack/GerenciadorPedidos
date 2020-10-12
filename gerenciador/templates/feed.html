@@ -45,9 +45,11 @@
                                         <form method="post" name="newcomanda">
                                             <div class="modal-body">
                                                 <div class='row text-align-center'>
-                                                        nome
+
                                                     {% for com in comandas %}
-                                                        {{ com.nome }}
+                                                        <div class='col text-align-left'>{{ com.n_mesa }}</div>
+                                                        <div class='col text-align-center'>{{ com.nome }}</div>
+                                                        <div class='col text-align-center'>{{ com.valor }}</div>
                                                     {% endfor %}
                                                 </div>
 

@@ -156,11 +156,11 @@ class Comanda(models.Model):
     valor = models.FloatField(
         default=0.0,
         null=True,
-        blank=True,
+        blank=True
 
     )
 
-    data = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    data = models.DateTimeField(auto_now_add=True, blank=True)
 
     # STATUS_CHOICES = (
     #     ("A", "Aberto"),
@@ -244,8 +244,6 @@ class Pedido(models.Model):
 
     produtosPed= models.ManyToManyField(Produtocad, related_name='produto')
 
-    # pro1pra =
-
     quantidade = models.IntegerField(
         null=False,
         blank=False,
@@ -267,7 +265,7 @@ class Pedido(models.Model):
         default="P"
     )
 
-    data = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    data = models.DateTimeField(auto_now_add=True , blank=True)
 
     # def __str__(self):
     #     return '{}- {}'.format(self.id, self.status)

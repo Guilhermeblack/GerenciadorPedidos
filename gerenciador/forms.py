@@ -34,27 +34,25 @@ class pedidos(forms.ModelForm):
 
     class Meta:
         model = models.Pedido
-        fields = 'comandaref','observacao','produtosPed','quantidade','status'
+        fields = 'comandaref','produtosPed','observacao','quantidade','status'
         name= 'soupedido'
 
         widgets = {
             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
             'produtosPed': forms.HiddenInput(),
             'status': forms.HiddenInput(),
-            'date': forms.HiddenInput()
+            # 'date': forms.HiddenInput()
         }
 
 class comandas(forms.ModelForm):
 
     class Meta:
         model = models.Comanda
-        fields = 'nome',"n_mesa", 'valor'
+        fields = 'nome',"n_mesa",'valor'
         name = 'soucomanda'
 
     nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'})),
-    widgets = {
-        'valor': forms.HiddenInput(),
-    }
+    valor= forms.FloatField(widget=forms.HiddenInput())
 
 
 class mov(forms.ModelForm):
