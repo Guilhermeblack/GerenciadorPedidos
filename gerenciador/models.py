@@ -39,7 +39,7 @@ class Gerente(models.Model):
 
     objects = models.Manager()
 
-class Garçom(models.Model):
+class Garcom(models.Model):
     class Meta:
         permissions = [
             ('fazer_pedido', 'incluir pedido'),
