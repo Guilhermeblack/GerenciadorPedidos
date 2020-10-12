@@ -3,10 +3,43 @@
 {% block content %}
 
     <script type="text/javascript">
-    $(document).ready(function(){
-        console.log($('.status_pedido').text());
 
-    })
+    function color_bg(stat){
+        switch (stat) {
+            case 'Pedido realizado':
+                $('#feedbg').addClass('bg-primary');
+                console.log('dindindon');
+            break;
+            case 'Fazendo':
+                $('#feedbg').addClass('bg-warning');
+            break;
+            case 'Saiu para entrega':
+                $('#feedbg').addClass('bg-info');
+            break;
+            case 'Foi entregue':
+                $('#feedbg').addClass('bg-success');
+            break;
+            case 'Cancelado':
+                $('#feedbg').addClass('bg-danger');
+            break;
+            default:
+                $(this).parents('.card-body').addClass('bg-transparent');
+        };
+    };
+
+    $(document).on('click', '.cp',function(){
+        let stat = $(this).parent().find('.status_pedido').parent('.active').prev().text();
+        color_bg(stat);
+        console.log(stat);
+
+    });
+    $(document).on('click', '.cn',function(){
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text();
+        color_bg(stat);
+        console.log(stat);
+
+    });
+
 
     </script>
     {% for message in messages %}
@@ -18,12 +51,12 @@
         </div>
     {% endfor %}
 
-    <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
+    <header class="masthead text-white text-center " >
 
-        <div style="align-self:center; color: rgb(241,234,72);width: auto;height: 302px; margin-top: 15px;">
+        <div style="align-self:center;width: auto;height: 302px; margin-top: 15px;">
 
 
-                <div class="row">
+                <div class="row bg-white">
                     <div class="col m-5" >
 
                     </div>
@@ -44,16 +77,16 @@
                                         </div>
                                         <form method="post" name="newcomanda">
                                             <div class="modal-body">
-                                                <div class='row text-align-center'>
 
-                                                    {% for com in comandas %}
+
+                                                {% for com in comandas %}
+                                                    <div class='row text-align-center pb-1'>
                                                         <div class='col text-align-left'>{{ com.n_mesa }}</div>
                                                         <div class='col text-align-center'>{{ com.nome }}</div>
                                                         <div class='col text-align-center'>{{ com.valor }}</div>
-                                                    {% endfor %}
+                                                    </div>
+                                                {% endfor %}
                                                 </div>
-
-                                            </div>
 
                                             <div class="modal-footer">
 <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
@@ -67,56 +100,55 @@
                     </div>
                 </div>
 
-                </row>
-            </div>
+
                 {% for pedido in pedidos %}
-                <div class="row">
-                    <div class="col">
+                    <div class="row mb-3 ">
+                        <div class="col mb-2">
 
-                        <div class="card" style="color: rgb(33,37,41);">
-                            <div class="card-header">
-                                <h5 class="mb-0">Comanda - {{pedido.comandaref}}</h5>
-                            </div>
-                            <div class="card-body"><b>
-                                {% for ped in pedido.produtosPed.all %}
-                                    <p class="card-text">{{ped.nome}} </p>
-                                {%endfor%}
-                                <p class="card-text">{{pedido.quantidade}}</p>
-                                <p class="card-text">{{pedido.observacao}}</p>
-                            </b></div>
-                            <hr>
-
-                            <div class="pb-4">
-
-                                <div id="carouselExampleFade" class="carousel slide" data-interval="false" data-ride="carousel">
-                                  <div class="carousel-inner">
-<!--                                    {{choices}}-->
-                                    {% for choice in choices%}
-<!--                                      {{choice}}-->
-                                      {% if choice == pedido.get_status_display %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{%endif%}
-                                            <div class="d-block status_pedido" >{{choice }}</div>
-                                          </div>
-
-
-
-                                    {%endfor%}
-
-
-                                  </div>
-                                  <a class="carousel-control-prev " href="#carouselExampleFade" role="button" data-slide="prev">
-                                    <div><i class="caret-left-square-fill" ></i></div>
-                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                  </a>
-                                  <a class="carousel-control-next " href="#carouselExampleFade" role="button" data-slide="next">
-                                    <i class="arrow-alt-circle-right" ></i>
-                                  </a>
+                            <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <div class="card-header bg-primary">
+                                    <h5 class="mb-0">Comanda - {{pedido.comandaref}}</h5>
                                 </div>
+                                <div class="card-body" id="feedbg"><b>
+                                    {% for ped in pedido.produtosPed.all %}
+                                        <p class="card-text">{{ped.nome}} </p>
+                                    {%endfor%}
+                                    <p class="card-text">{{pedido.quantidade}}</p>
+                                    <p class="card-text">{{pedido.observacao}}</p>
+                                </b></div>
+                                <hr>
+
+                                <div class="pb-2 bg-light mb-3">
+
+                                    <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
+                                      <div class="carousel-inner">
+    <!--                                    {{choices}}-->
+                                        {% for choice in choices%}
+    <!--                                      {{choice}}-->
+                                          {% if choice == pedido.get_status_display %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{%endif%}
+                                                <div class="d-block status_pedido" >{{choice }}</div>
+                                              </div>
 
 
+
+                                        {%endfor%}
+
+                                      </div>
+                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
+                                            <div><i class="caret-left-square-fill dark" ></i></div>
+                                              <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                          </a>
+                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
+                                            <i class="arrow-alt-circle-right bg-dark" ></i>
+                                              <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                          </a>
+                                      </div>
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
         </div>
     </header>

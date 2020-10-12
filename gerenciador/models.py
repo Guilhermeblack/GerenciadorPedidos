@@ -242,7 +242,7 @@ class Pedido(models.Model):
     id = models.AutoField(primary_key=True)
 
 
-    produtosPed= models.ManyToManyField(Produtocad, related_name='produto')
+    produtosPed= models.ManyToManyField(Produtocad, related_name='produto', blank=True)
 
     quantidade = models.IntegerField(
         null=False,

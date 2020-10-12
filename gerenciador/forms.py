@@ -39,7 +39,7 @@ class pedidos(forms.ModelForm):
 
         widgets = {
             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-            'produtosPed': forms.HiddenInput(),
+            # 'produtosPed': forms.HiddenInput(),
             'status': forms.HiddenInput(),
             # 'date': forms.HiddenInput()
         }
