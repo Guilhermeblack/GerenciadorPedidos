@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'Atendgb.urls'
@@ -122,6 +123,7 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.CryptPasswordHasher',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 LANGUAGE_CODE = 'pt-br'
@@ -139,12 +141,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/pt/2.2/howto/static-files/
 
 
-STATIC_URL = '../gerenciador/static/'
-MEDIA_URL = '../gerenciador/media/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join('/media/')
 # STATICFILES_DIRS = ( os.path.join('/static/'), )
 
+# print(BASE_DIR)
+#heroku settings
 #heroku settings
 
 import dj_database_url
@@ -152,4 +156,20 @@ DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
-STATICFILES_DIRS = ( os.path.join(BASE_DIR, '../gerenciador/static'), )
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static'), )
+
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/')
+
+# STATIC_URL = '../gerenciador/static/'
+
+
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/static'),
+)
+

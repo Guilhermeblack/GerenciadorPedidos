@@ -38,15 +38,12 @@
         {{ message }}
     </div>
 {% endfor %}
-    <header class="text-center justify-content-center align-content-center masthead text-white text-center"
-            style="background-color: rgb(255,255,255);height: 602px;min-height: 600px;max-height: 700px;margin: 11px;padding: 7px;padding-top: 70px;">
-        <div class="container-fluid align-content-center"
+    <header class="masthead text-white text-center mb-5" style="background-color: rgb(255,255,255);">
+        <div class="container-fluid align-content-center pb-1 mb-2"
              style="align-content: center; color: rgb(241,234,72);width: 95%; height: 302px;padding: 5px;margin: 7px;">
             <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 100% ;height: 79px;">PRODUTOS</h1>
-            <div class="row text-center justify-content-center m-auto"
-                 style="width: 553px;margin: 6px;padding: 5px;margin-right: 0px;">
-                <div class="col-auto text-center justify-content-center m-auto"
-                     style="width: 554px;margin: 4px;padding: 3px;">
+            <div class="row text-center justify-content-center mb-2">
+                <div class="col-auto text-center justify-content-center m-auto">
 
                     <!--                    # botoes do modal-->
 
@@ -80,9 +77,9 @@
                                                 <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                                 <p class="card-text">{{pro.descricao}}</p>
                                                 {% if movi == "L" %}
-                                                {% if user.is_authenticated %}
-                                                    <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.id}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
-                                                {% endif %}
+                                                    {% if user.is_authenticated and perms.gerenciador.fazer_pedido  %}
+                                                        <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.id}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -102,10 +99,10 @@
                                             <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
                                             <p class="card-text">{{pro.descricao}}</p>
                                             {% if movi == "L" %}
-                                            {% if user.is_authenticated %}
-                                                <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
+                                                {% if user.is_authenticated and perms.gerenciador.fazer_pedido %}
+                                                    <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
 
-                                            {% endif %}
+                                                {% endif %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -142,9 +139,9 @@
                         </div>
                     </div>
                 {%if movi == "L" %}
-                    {% firstof perms.gerenciador.garcom.abrir_comanda  perms.gerenciador.gerente.abrir_comanda  %}
+                    {% if perms.gerenciador.abrir_comanda %}
 <!--                            bptao da nova comanda-->
-                            {% if user.is_authenticated %}
+                            {% if user.is_authenticated and perms.gerenciador.abrir_comanda %}
                                 <div style="margin: 10px;">
                                     <button class="btn btn-primary text-center border rounded border-dark"
                                             type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
@@ -176,7 +173,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                    {%endif%}
                 {% endif %}
                 </div>
             </div>

@@ -1,8 +1,10 @@
 <head>
+     {% load static %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>UbrabU!</title>
-    {% load static %}
+    <title>Gerenciador de Pedidos</title>
+    <link  rel="shortcut icon"  type = "image/png"  href="{% static 'favicon/favicon.ico' %} " />
+
 <!--    <script type="text/javascript" src="{% static 'django_ajax/js/jquery.ajax.min.js' %}"></script>-->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
@@ -11,6 +13,10 @@
     <link rel="stylesheet" href="{% static 'fonts/ionicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/Login-Form-Dark.css' %}">
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
+
+</head>
+
+<body id="page-top" class="align-items-center">
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
         <script type="text/javascript" >
 
@@ -21,9 +27,6 @@
 
 
     </script>
-</head>
-
-<body id="page-top">
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
         <div class="container"><a class="navbar-brand js-scroll-trigger" href="{% url 'index' %}" style="color: rgb(247,230,86);">empresa</a>
             <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded"

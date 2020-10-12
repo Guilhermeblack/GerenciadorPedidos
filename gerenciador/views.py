@@ -140,11 +140,18 @@ def ped(request):
                                })
 
         if 'comandaref' in request.POST:
-            # pprint(request.POST)
-            pedido = forms.pedidos(request.POST)
-            # pprint(pedido)
+            newped = forms.pedidos
+
+            pedido = newped(request.POST)
+            pprint(request.POST)
+            pprint(newped)
+            pprint(pedido)
             if pedido.is_valid():
                 pedido.save()
+                add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
+                prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
+                add_comanda.valor += prod.preco
+                add_comanda.save()
                 messages.success(request, "Pedido registrado !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
