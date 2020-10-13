@@ -4,23 +4,32 @@
 
     <script type="text/javascript">
 
-    function color_bg(stat){
+    $(document).ready(function(){
+
+        $('.card-body').each(function(){
+            let id = $(this).attr("id");
+            let stat = $(this).siblings().find('.active').text().trim();
+
+            color_bg(stat, id);
+        });
+
+    });
+    function color_bg(stat, id){
         switch (stat) {
-            case 'Pedido realizado':
-                $('#feedbg').addClass('bg-primary');
-                console.log('dindindon');
+            case "Pedido realizado":
+                $('#'+id).css('background-color','#D8FBDA');
             break;
-            case 'Fazendo':
-                $('#feedbg').addClass('bg-warning');
+            case "Fazendo":
+                $('#'+id).css('background-color','#F4FA8A');
             break;
-            case 'Saiu para entrega':
-                $('#feedbg').addClass('bg-info');
+            case "Saiu para entrega":
+                $('#'+id).css('background-color','#ADDCF6');
             break;
-            case 'Foi entregue':
-                $('#feedbg').addClass('bg-success');
+            case "Foi entregue":
+                $('#'+id).css('background-color','#B1FBAE ');
             break;
-            case 'Cancelado':
-                $('#feedbg').addClass('bg-danger');
+            case "Cancelado":
+                $('#'+id).css('background-color','#ECAEAA');
             break;
             default:
                 $(this).parents('.card-body').addClass('bg-transparent');
@@ -28,15 +37,82 @@
     };
 
     $(document).on('click', '.cp',function(){
-        let stat = $(this).parent().find('.status_pedido').parent('.active').prev().text();
-        color_bg(stat);
-        console.log(stat);
+        let stat = $(this).parent().find('.status_pedido').parent('.active').prev().text().trim();
+        let st='';
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+            break;
+            case "Foi entregue":
+                st = "E";
+            break;
+            case "Cancelado":
+                st = "C";
+            break;
+            default: st = "P";
+        };
+        let id = $(this).parents().find('#idped').text().trim();
+        let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
+        console.log(csrf);
+        $.ajax({
+            headers: { "X-CSRFToken": csrf },
+            type: 'POST',
+            url: "{% url 'feed' %}",
+            data: {'stats' :st, 'idstat': id},
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+            }
+        });
+        color_bg(stat, id);
+
 
     });
     $(document).on('click', '.cn',function(){
-        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text();
-        color_bg(stat);
-        console.log(stat);
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
+        let st='';
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+            break;
+            case "Foi entregue":
+                st = "E";
+            break;
+            case "Cancelado":
+                st = "C";
+            break;
+            default: st = "P";
+        };
+        let id = $(this).parents().find('#idped').text().trim();
+        let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
+        console.log(csrf);
+        $.ajax({
+            headers: { "X-CSRFToken": csrf },
+            type: 'POST',
+            url: "{% url 'feed' %}",
+            data: {'stats' :st, 'idstat': id},
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+            }
+        });
+        color_bg(stat, id);
+
+
 
     });
 
@@ -53,7 +129,7 @@
 
     <header class="masthead text-white text-center " >
 
-        <div style="align-self:center;width: auto;height: 302px; margin-top: 15px;">
+        <div class='base' style="align-self:center;width: auto;height: auto; margin-top: 15px;">
 
 
                 <div class="row bg-white">
@@ -106,10 +182,10 @@
                         <div class="col mb-2">
 
                             <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
-                                <div class="card-header bg-primary">
+                                <div class="card-header bg-dark text-white">
                                     <h5 class="mb-0">Comanda - {{pedido.comandaref}}</h5>
                                 </div>
-                                <div class="card-body" id="feedbg"><b>
+                                <div class="card-body" id="bodybg{{pedido.id}}"><b>
                                     {% for ped in pedido.produtosPed.all %}
                                         <p class="card-text">{{ped.nome}} </p>
                                     {%endfor%}
@@ -117,7 +193,8 @@
                                     <p class="card-text">{{pedido.observacao}}</p>
                                 </b></div>
                                 <hr>
-
+                                {% csrf_token %}
+                                <div id="idped" style="display: none;">{{pedido.id}}</div>
                                 <div class="pb-2 bg-light mb-3">
 
                                     <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">

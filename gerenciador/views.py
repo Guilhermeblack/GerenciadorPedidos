@@ -97,14 +97,34 @@ def feed(request):
         "Foi entregue",
         "Cancelado"
     )
-    messages.success(request, "{}, Data {}".format(request.user, date.today()))
-    return render(request, 'feed.html', {
 
-        'comandas': models.Comanda.objects.all(),
-        'pedidos': models.Pedido.objects.all(),
-        'choices': STATUS_CHOICES,
-        'movi': estado_mov[0]['movimento']
-    })
+    if request.POST:
+        # print(request.POST)
+        if 'stats' in request.POST:
+            print(request.POST)
+            ped= models.Pedido.objects.filter(pk=request.POST['idstat'])
+            pprint(ped)
+            ped.update(status=request.POST['stats'])
+            # ped.save()
+            messages.success(request, "{}, status alterado com sucesso.".format(request.user))
+            return render(request, 'feed.html', {
+
+                'comandas': models.Comanda.objects.all(),
+                'pedidos': models.Pedido.objects.all(),
+                'choices': STATUS_CHOICES,
+                'movi': estado_mov[0]['movimento']
+            })
+
+    else:
+        messages.success(request, "{}, Data {}".format(request.user, date.today()))
+
+        return render(request, 'feed.html', {
+
+            'comandas': models.Comanda.objects.all(),
+            'pedidos': models.Pedido.objects.all(),
+            'choices': STATUS_CHOICES,
+            'movi': estado_mov[0]['movimento']
+        })
 
 
 def ped(request):
