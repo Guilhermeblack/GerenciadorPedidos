@@ -109,8 +109,8 @@ def feed(request):
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
             return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.all(),
-                'pedidos': models.Pedido.objects.all(),
+                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
                 'movi': estado_mov[0]['movimento']
             })
@@ -120,8 +120,8 @@ def feed(request):
 
         return render(request, 'feed.html', {
 
-            'comandas': models.Comanda.objects.all(),
-            'pedidos': models.Pedido.objects.all(),
+            'comandas': models.Comanda.objects.all().order_by('id', 'data'),
+            'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
             'choices': STATUS_CHOICES,
             'movi': estado_mov[0]['movimento']
         })
@@ -163,15 +163,19 @@ def ped(request):
                                })
 
         if 'comandaref' in request.POST:
+            # produto = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
             newped = forms.pedidos(request.POST)
 
+            # jogar campo por campo e jogar o produto depois
             pprint(request.POST)
             pprint(newped)
             if newped.is_valid():
-                print('vaaaaaaai krai')
                 newped.save()
+
                 # add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
                 # prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
+                # pprint(prod)
+                # pprint(add_comanda)
                 # add_comanda.valor += prod.preco
                 # add_comanda.save()
                 messages.success(request, "Pedido registrado !")
@@ -198,7 +202,7 @@ def ped(request):
             'newcomanda': formComanda,
             'prod': models.Produtocad.objects.all(),
             'movi':estado_mov[0]['movimento'],
-            'pedido': forms.pedidos
+            'pedido': forms.pedidos()
 
         })
 

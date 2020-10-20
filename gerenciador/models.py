@@ -162,17 +162,17 @@ class Comanda(models.Model):
 
     data = models.DateTimeField(auto_now_add=True, blank=True)
 
-    # STATUS_CHOICES = (
-    #     ("A", "Aberto"),
-    #     ("F", "Fechado"),
-    # )
-    # status = models.CharField(
-    #     max_length=1,
-    #     choices=STATUS_CHOICES,
-    #     default="A",
-    #     blank=False,
-    #     null=False
-    # )
+    STATUS_CHOICES = (
+        ("A", "Aberto"),
+        ("F", "Fechado"),
+    )
+    status = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        default="A",
+        blank=False,
+        null=False
+    )
 
 
     def __str__(self):

@@ -39,10 +39,14 @@ class pedidos(forms.ModelForm):
 
         widgets = {
             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-            # 'produtosPed': forms.HiddenInput(),
+
             'status': forms.HiddenInput(),
             # 'date': forms.HiddenInput()
         }
+
+    def __init__(self, *args, **kwargs):
+        super(pedidos, self).__init__(*args, **kwargs)
+        self.fields['produtosPed'].label =''
 
 class comandas(forms.ModelForm):
 
