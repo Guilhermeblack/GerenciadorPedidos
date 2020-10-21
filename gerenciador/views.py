@@ -167,17 +167,16 @@ def ped(request):
             newped = forms.pedidos(request.POST)
 
             # jogar campo por campo e jogar o produto depois
-            pprint(request.POST)
-            pprint(newped)
+
             if newped.is_valid():
                 newped.save()
+                add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
+                prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
 
-                # add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
-                # prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
-                # pprint(prod)
-                # pprint(add_comanda)
-                # add_comanda.valor += prod.preco
-                # add_comanda.save()
+                qnt = int(request.POST['quantidade'])
+                pprint(qnt)
+                add_comanda.valor += (prod.preco* qnt)
+                add_comanda.save()
                 messages.success(request, "Pedido registrado !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,

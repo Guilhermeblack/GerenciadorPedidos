@@ -12,6 +12,7 @@
         $(document).ready(function(){
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
+
             });
             $('#confirm').click(function(){
                 var x='';
@@ -39,9 +40,12 @@
                 });
             });
             $('#cancel').click(function(){
-                alert(' ação quase cancelada...');
+                location.reload();
 
 
+            });
+            $('.close').click(function(){
+                location.reload();
             });
 
 
@@ -68,10 +72,10 @@
             <h1 class="text-center align-content-center p-1 m-auto" style="align-content: center; padding: 5px;color: rgb(44,62,80)">
                 Iniciar movimento</h1>
         </div>
-        <div class="container-fluid align-content-center" style="color: rgb(241,234,72);width: auto;height: 302px;padding: 5px;margin: 7px;max-height: auto;">
-            <div class="row text-center justify-content-center m-auto" style="margin: 6px;padding: 5px;margin-right: 0px;max-height: auto;min-height: auto;">
+        <div class="container-fluid align-content-center" style="color: rgb(241,234,72);width: auto;padding: 5px;margin: 7px;">
+            <div class="row text-center justify-content-center m-auto" style="margin: 6px;padding: 5px;min-height: auto;">
 
-                <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;max-height: auto;min-height: 21px;height: 395px;">
+                <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;min-height: 21px;">
                     <div class="btn-group btn-group-lg justify-content-center align-items-center" id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
                             {% if mov == "L" %}
                                 <input  checked id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
@@ -80,67 +84,67 @@
                             {% endif %}
                     </div>
 <!--                    funçao de zerar historico-->
-                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto; width: 50%;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">PRODUTOS</button>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="novoProduto">
-                            <div class="modal-dialog modal-lg " role="document">
-                                {% if form %}
-                                    <form method="POST" id="newprod" >
-                                        <div class="modal-content border bg-primary">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                            <div class="modal-body">
-                                                <p>
-                                                    {% csrf_token %}
-                                                    {{ form.as_p }}
-                                                </p>
-                                            </div>
-                                            <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
-                                        </div>
-                                    </form>
-                                {% endif %}
-
-                            </div>
-                            <div class="modal-dialog modal-lg bg-secondary" role="document">
-                                {% for pro in prod %}
-                                    <div class="card border bg-info" style="width: auto; margin: 4px;">
-                                        <div class="card-body">
-<!--                                            habilitar campo aberto para alteraçoes-->
-                                            <h5 class="card-title">{{pro.nome}}</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
-                                            <p class="card-text">{{pro.descricao}}</p>
-                                            <a href="#" class="card-button">deletar produto</a>
-                                            <a href="#" class="card-button">salvar alterações</a>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-
-                        </div>
-                        <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="alt-mov">
-                            <div class="modal-dialog modal-dialog-centered" role="document" >
-
-                                <div class="modal-content bg-light">
+                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">PRODUTOS</button>
+                    <div class="modal mx-6 px-6" role="document" tabindex="-1" id="novoProduto">
+                        <div class="card">
+                            {% if form %}
+                            <form method="POST" id="newprod" >
+                                <div class="modal-content border bg-secondary">
                                     <div class="modal-header">
-                                        <h4 class="modal-title text-light">Movimento</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body text-sucess">
+                                    <div class="modal-body">
                                         <p>
-                                        <h2><b>Deseja mesmo realizar esta ação ?</b></h2>
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
                                         </p>
-                                        {% if logado %}
-
-                                                <input type="hidden"  id="movimentar">
-                                        {% endif %}
-                                            <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
                                     </div>
-                                    <div class="modal-footer"><button id=cancel class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
+                                    <div class="modal-footer"><div><button class="btn btn-primary" type="submit">Salvar</button></div><div><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button></div></div>
+                                </div>
+                            </form>
+                            {% endif %}
+
+
+                            {% for pro in prod %}
+                                <div class="card border bg-secondary mt-2" >
+                                    <div class="card-body">
+<!--                                            habilitar campo aberto para alteraçoes-->
+                                        <h5 class="card-title">{{pro.nome}}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted" font-italic>{{pro.preco}}</h6>
+                                        <p class="card-text font-weight-bold text-capitalize"><h7>{{pro.descricao}}</h7></p>
+                                        <button class="btn btn-danger del_prod" value="{{ pro.id }}" >Deletar</button>
+<!--                                            <a href="#" class="card-button">salvar alterações</a>-->
                                     </div>
                                 </div>
+                            {% endfor %}
+                        </div>
 
+
+                    </div>
+                    <div class="modal bg-danger text-danger" role="dialog" tabindex="-1" id="alt-mov">
+                        <div class="modal-dialog modal-dialog-centered" role="document" >
+
+                            <div class="modal-content bg-light">
+                                <div class="modal-header">
+                                    <h4 class="modal-title text-light">Movimento</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body text-sucess">
+                                    <p>
+                                    <h2><b>Deseja mesmo realizar esta ação ?</b></h2>
+                                    </p>
+                                    {% if logado %}
+
+                                            <input type="hidden"  id="movimentar">
+                                    {% endif %}
+                                        <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
+                                </div>
+                                <div class="modal-footer"><button id=cancel class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
+                                </div>
                             </div>
 
                         </div>
+
+                    </div>
 
                 </div>
             </div>
