@@ -176,7 +176,7 @@ class Comanda(models.Model):
 
 
     def __str__(self):
-        return '{} <> {}'.format(self.id, self.nome)
+        return '{} - {}'.format(self.id, self.nome)
 
     objects = models.Manager()
 

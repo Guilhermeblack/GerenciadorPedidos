@@ -164,28 +164,84 @@
                     <div class="col" style="float">
                         {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
                             <button class="btn btn-primary btn-rounded hover" style=" margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+
                             <div class="modal fade" role="dialog" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content ">
 
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">- Comandas -</h4>
+                                        <div class="modal-header"> Comandas </h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                                     aria-hidden="true">×</span></button>
                                         </div>
-                                        <form method="post" name="newcomanda">
+                                        <form method="post" name="comandas">
                                             <div class="modal-body">
-
+                                                <h6 class="modal-title">
+                                                    <div class="row align-items-center">
+                                                        <div class='col text-align-left font-weight-bold'>{{ 'Nº Mesa' }}</div>
+                                                        <div class='col text-align-center font-weight-bold'>{{ 'Nome Cliente' }}</div>
+                                                        <div class='col text-align-right font-weight-bold'>{{ 'Total Comanda' }}</div>
+                                                    </div>
+                                                </h6>
 
                                                 {% for com in comandas %}
-                                                <p>
-                                                    <div class='row text-align-center pb-1' onclick="location.href='#';" style="cursor: pointer;">
+                                                    <p>
+                                                    <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli" style="cursor: pointer;">
+
+
                                                         <div class='col text-align-left'>{{ com.n_mesa }}</div>
                                                         <div class='col text-align-center'>{{ com.nome }}</div>
-                                                        <div class='col text-align-center'>{{ com.valor }}</div>
-                                                    </a></div>
+                                                        <div class='col text-align-right'>{{ com.valor }}</div>
+                                                    </div>
+                                                    <div class="modal fade" role="dialog" tabindex="-1" id="comanda_cli" style="color: rgb(33,37,41);">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content ">
+
+                                                                <div class="modal-header"> Pedidos </h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                                        aria-hidden="true">×</span></button>
+                                                                </div>
+                                                                <form method="post" name="comanda_cli">
+                                                                    <div class="modal-body">
+                                                                        <h6 class="modal-title">
+                                                                            <div class="row align-items-center">
+                                                                                <div class='col text-align-left font-weight-bold'>{{ 'Produto' }}</div>
+                                                                                <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
+                                                                                <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
+                                                                                <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
+                                                                            </div>
+                                                                        </h6>
+                                                                        {% for ped in pedidos %}
+
+                                                                            {{  ped.produtosPed}}
+<!--                                                                            {{ com.id }}-->
+                                                                            {% if ped.comandaref.id == com.id %}
+
+                                                                                <p>
+                                                                                <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+
+
+
+<!--                                                                                    <div class='col text-align-left'>{{ ped.produtosPed.id }}</div>-->
+<!--                                                                                    <div class='col text-align-center'>{{ ped.quantidade }}</div>-->
+<!--                                                                                    <div class='col text-align-center'>{{ ped.produtosPed.preco }}</div>-->
+<!--                                                                                    <div class='col text-align-right'>{{ ped.status }}</div>-->
+                                                                                </div>
+                                                                            {%endif%}
+
+                                                                        {% endfor %}
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                            <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
+                                                                        <button class="btn btn-danger cancel" type="button" data-target="comanda_cli" data-dismiss="modal" >Sair</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 {% endfor %}
-                                                </div>
+
+                                            </div>
 
                                             <div class="modal-footer">
 <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
@@ -250,27 +306,27 @@
                         </div>
                     </div>
                 {% endfor %}
-                        <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
-                            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
+                    <div class="modal-dialog modal-dialog-centered" role="document" >
 
-                                <div class="modal-content bg-light">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title text-light">Cancelar Pedido</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body text-sucess">
-                                        <p>
-                                        <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
-                                        </p>
-
-                                            <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
-                                    </div>
-                                    <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
-                                    </div>
-                                </div>
-
+                        <div class="modal-content bg-light">
+                            <div class="modal-header">
+                                <h4 class="modal-title text-light">Cancelar Pedido</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
+                            <div class="modal-body text-sucess">
+                                <p>
+                                <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
+                                </p>
 
+                                    <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
+                            </div>
+                            <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
+                            </div>
                         </div>
+
+                    </div>
+
+                </div>
         </div>
     </header>
 

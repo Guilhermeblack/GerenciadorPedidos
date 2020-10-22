@@ -100,6 +100,7 @@ def feed(request):
 
     if request.POST:
         # print(request.POST)
+
         if 'stats' in request.POST:
             print(request.POST)
             ped= models.Pedido.objects.filter(pk=request.POST['idstat'])
@@ -200,6 +201,7 @@ def ped(request):
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
             'prod': models.Produtocad.objects.all(),
+
             'movi':estado_mov[0]['movimento'],
             'pedido': forms.pedidos()
 
