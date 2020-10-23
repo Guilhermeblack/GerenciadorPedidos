@@ -212,19 +212,20 @@
                                                                         </h6>
                                                                         {% for ped in pedidos %}
 
-                                                                            {{  ped.produtosPed}}
-<!--                                                                            {{ com.id }}-->
                                                                             {% if ped.comandaref.id == com.id %}
 
                                                                                 <p>
                                                                                 <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
 
 
-
-<!--                                                                                    <div class='col text-align-left'>{{ ped.produtosPed.id }}</div>-->
-<!--                                                                                    <div class='col text-align-center'>{{ ped.quantidade }}</div>-->
-<!--                                                                                    <div class='col text-align-center'>{{ ped.produtosPed.preco }}</div>-->
-<!--                                                                                    <div class='col text-align-right'>{{ ped.status }}</div>-->
+                                                                                    {% for prod in ped.produtosPed.all%}
+                                                                                        <div class='col text-align-left'>{{ prod.nome }}</div>
+                                                                                    {% endfor %}
+                                                                                    <div class='col text-align-center'>{{ ped.quantidade }}</div>
+                                                                                    {% for prod in ped.produtosPed.all%}
+                                                                                        <div class='col text-align-center'>{{ prod.preco }}</div>
+                                                                                    {% endfor %}
+                                                                                    <div class='col text-align-right'>{{ ped.status }}</div>
                                                                                 </div>
                                                                             {%endif%}
 
