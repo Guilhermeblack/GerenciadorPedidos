@@ -4,6 +4,10 @@
 
     <script type="text/javascript">
 
+       $(document).on("click",".close-filho",function() {
+            $(this).parents().find('.mod-filho').modal('hide');
+<!--            $('#comanda_cli').modal('hide');-->
+         });
     $(document).ready(function(){
 
         $('.card-body').each(function(){
@@ -136,6 +140,7 @@
 
 
 
+
     });
 
 
@@ -185,19 +190,19 @@
 
                                                 {% for com in comandas %}
                                                     <p>
-                                                    <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli" style="cursor: pointer;">
+                                                    <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
 
 
                                                         <div class='col text-align-left'>{{ com.n_mesa }}</div>
                                                         <div class='col text-align-center'>{{ com.nome }}</div>
                                                         <div class='col text-align-right'>{{ com.valor }}</div>
                                                     </div>
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="comanda_cli" style="color: rgb(33,37,41);">
+                                                    <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content ">
 
                                                                 <div class="modal-header"> Pedidos </h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                                    <button type="button" class="close close-filho" data-target="comanda_cli" aria-label="Close"><span
                                                                         aria-hidden="true">×</span></button>
                                                                 </div>
                                                                 <form method="post" name="comanda_cli">
@@ -210,20 +215,22 @@
                                                                                 <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
                                                                             </div>
                                                                         </h6>
-                                                                        {% for ped in pedidos %}
 
+                                                                        {% for ped in pedidos %}
+<!--                                                                            {{ ped.comandaref.id }}-->
+<!--                                                                            {{ com.id }}-->
                                                                             {% if ped.comandaref.id == com.id %}
 
-                                                                                <p>
+
                                                                                 <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
 
 
-                                                                                    {% for prod in ped.produtosPed.all%}
-                                                                                        <div class='col text-align-left'>{{ prod.nome }}</div>
+                                                                                    {% for prod in ped.produtosPed.all %}
+                                                                                            <div class='col text-align-left'>{{ prod.nome }}</div>
                                                                                     {% endfor %}
                                                                                     <div class='col text-align-center'>{{ ped.quantidade }}</div>
-                                                                                    {% for prod in ped.produtosPed.all%}
-                                                                                        <div class='col text-align-center'>{{ prod.preco }}</div>
+                                                                                    {% for prod in ped.produtosPed.all %}
+                                                                                            <div class='col text-align-center'>{{ prod.preco }}</div>
                                                                                     {% endfor %}
                                                                                     <div class='col text-align-right'>{{ ped.status }}</div>
                                                                                 </div>
@@ -233,8 +240,8 @@
                                                                     </div>
 
                                                                     <div class="modal-footer">
-                            <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
-                                                                        <button class="btn btn-danger cancel" type="button" data-target="comanda_cli" data-dismiss="modal" >Sair</button>
+                                                                        <button class="btn btn-warning btn-lg btn-block" type="submit" >Fechar Comanda</button>
+                                                                        <button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
                                                                     </div>
                                                                 </form>
                                                             </div>

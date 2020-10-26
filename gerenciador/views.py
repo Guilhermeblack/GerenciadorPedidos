@@ -119,10 +119,11 @@ def feed(request):
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
 
+        pprint(models.Pedido.objects.all().order_by('id'))
         return render(request, 'feed.html', {
 
             'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-            'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+            'pedidos': models.Pedido.objects.all().order_by('id'),
             'choices': STATUS_CHOICES,
             'movi': estado_mov[0]['movimento']
         })
