@@ -6,7 +6,6 @@
 
        $(document).on("click",".close-filho",function() {
             $(this).parents().find('.mod-filho').modal('hide');
-<!--            $('#comanda_cli').modal('hide');-->
          });
     $(document).ready(function(){
 
@@ -143,6 +142,15 @@
 
     });
 
+    $(document).on('click', '.x_c',function(){
+
+        let nome = $(this).val();
+        let vlr = $(this).attr('name');
+        $('#cli_com').text( nome);
+        $('#vlr_com').text( vlr );
+        $('#x_comanda').modal('show');
+
+    });
 
     </script>
     {% for message in messages %}
@@ -174,7 +182,7 @@
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content ">
 
-                                        <div class="modal-header"> Comandas </h4>
+                                        <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                                     aria-hidden="true">×</span></button>
                                         </div>
@@ -190,18 +198,19 @@
 
                                                 {% for com in comandas %}
                                                     <p>
+                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                     <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
 
 
                                                         <div class='col text-align-left'>{{ com.n_mesa }}</div>
                                                         <div class='col text-align-center'>{{ com.nome }}</div>
-                                                        <div class='col text-align-right'>{{ com.valor }}</div>
+                                                        <div class='col text-align-right' id="vlr_comanda">{{ com.valor }}</div>
                                                     </div>
                                                     <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content ">
 
-                                                                <div class="modal-header"> Pedidos </h4>
+                                                                <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
                                                                     <button type="button" class="close close-filho" data-target="comanda_cli" aria-label="Close"><span
                                                                         aria-hidden="true">×</span></button>
                                                                 </div>
@@ -221,7 +230,7 @@
 <!--                                                                            {{ com.id }}-->
                                                                             {% if ped.comandaref.id == com.id %}
 
-
+                                                                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                 <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
 
 
@@ -235,17 +244,26 @@
                                                                                     <div class='col text-align-right'>{{ ped.status }}</div>
                                                                                 </div>
                                                                             {%endif%}
-
+                                                                        {% empty %}
+                                                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                            <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
+                                                                                    <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
+                                                                            </div>
                                                                         {% endfor %}
                                                                     </div>
 
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-warning btn-lg btn-block" type="submit" >Fechar Comanda</button>
+                                                                    <div class="modal-footer" >
+                                                                        {% if com.status == "A" and pedidos %}<button class="btn btn-warning btn-lg btn-block x_c" type="button" id="_{{com.nome}}" name="{{com.valor}}" value="{{com.nome}}" >Fechar Comanda</button>{% endif %}
                                                                         <button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                {% empty %}
+                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                    <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+                                                            <div class='col text-align-left'><strong> Não Existem Clientes !</strong></div>
                                                     </div>
                                                 {% endfor %}
 
@@ -256,6 +274,39 @@
                                                 <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Sair</button>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content bg-alert">
+
+                                        <div class="modal-header"> <strong><h4 class="text-align-center ">ENCERRAR COMANDA </h4></strong>
+                                            <button type="button" class="close close-filho" data-target="modal" aria-label="Close"><span
+                                                aria-hidden="true">×</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>
+                                                O Cliente:
+                                            </h4>
+                                            <h3 style="text-transform:uppercase"><u><p id="cli_com">
+
+                                            </p></u></h3>
+                                            <h4>
+                                                Pagou o valor de:
+                                            </h4>
+                                            <h3 style="text-transform:uppercase"><u><p id="vlr_com">
+
+                                            </p></u></h3>
+                                            <form>
+                                                <input class="hidden" id="comanda_x">
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-success btn-lg btn-block" type="submit" >Pagou !</button>
+                                            <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" >Não pagou !</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,6 +364,22 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                        <div class="row mb-3 ">
+                            <div class="col mb-2">
+                                <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <div class='text-align-center '>
+                                            <div class='text-align-center'><strong><p><h2>
+                                                {{ 'Não existem pedidos no momento !'}}
+
+                                            </h2></p></strong></div>
+                                    </div>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                </div>
+                            </div>
+                        </div>
+
                 {% endfor %}
                 <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
                     <div class="modal-dialog modal-dialog-centered" role="document" >
