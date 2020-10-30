@@ -115,6 +115,19 @@ def feed(request):
                 'choices': STATUS_CHOICES,
                 'movi': estado_mov[0]['movimento']
             })
+        if 'comanda_x' in request.POST:
+            com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])
+            pprint(com)
+            com.update(status="F")
+            # ped.save()
+            messages.success(request, "{}, Comanda fechada com sucesso.".format(request.user))
+            return render(request, 'feed.html', {
+
+                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                'choices': STATUS_CHOICES,
+                'movi': estado_mov[0]['movimento']
+            })
 
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))

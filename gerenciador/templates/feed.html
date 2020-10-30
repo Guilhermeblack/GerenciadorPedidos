@@ -144,11 +144,32 @@
 
     $(document).on('click', '.x_c',function(){
 
+        $('#comanda_x').val($(this).val());
         let nome = $(this).val();
         let vlr = $(this).attr('name');
         $('#cli_com').text( nome);
         $('#vlr_com').text( vlr );
+        $('#comanda_x').val();
         $('#x_comanda').modal('show');
+
+    });
+
+    $(document).on('click','#comanda_fecha', function(){
+        let com  = $('#comanda_x').val();
+        let csrf = $(this).parent().siblings().children('#tkn').find("input[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            headers: { "X-CSRFToken": csrf },
+            type: 'POST',
+            url: "{% url 'feed' %}",
+            data: {'comanda_x' :com},
+            success: function (response) {
+                    location.reload();
+            },
+            error: function (response) {
+            }
+        });
+
 
     });
 
@@ -197,69 +218,71 @@
                                                 </h6>
 
                                                 {% for com in comandas %}
-                                                    <p>
-                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                    <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
+                                                    {% if com.status == 'A' %}
+                                                        <p>
+                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                        <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
 
 
-                                                        <div class='col text-align-left'>{{ com.n_mesa }}</div>
-                                                        <div class='col text-align-center'>{{ com.nome }}</div>
-                                                        <div class='col text-align-right' id="vlr_comanda">{{ com.valor }}</div>
-                                                    </div>
-                                                    <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
-                                                        <div class="modal-dialog modal-lg" role="document">
-                                                            <div class="modal-content ">
+                                                            <div class='col text-align-left'>{{ com.n_mesa }}</div>
+                                                            <div class='col text-align-center'>{{ com.nome }}</div>
+                                                            <div class='col text-align-right' id="vlr_comanda">{{ com.valor }}</div>
+                                                        </div>
+                                                        <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
+                                                            <div class="modal-dialog modal-lg" role="document">
+                                                                <div class="modal-content ">
 
-                                                                <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
-                                                                    <button type="button" class="close close-filho" data-target="comanda_cli" aria-label="Close"><span
-                                                                        aria-hidden="true">×</span></button>
-                                                                </div>
-                                                                <form method="post" name="comanda_cli">
-                                                                    <div class="modal-body">
-                                                                        <h6 class="modal-title">
-                                                                            <div class="row align-items-center">
-                                                                                <div class='col text-align-left font-weight-bold'>{{ 'Produto' }}</div>
-                                                                                <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
-                                                                                <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
-                                                                                <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
-                                                                            </div>
-                                                                        </h6>
-
-                                                                        {% for ped in pedidos %}
-<!--                                                                            {{ ped.comandaref.id }}-->
-<!--                                                                            {{ com.id }}-->
-                                                                            {% if ped.comandaref.id == com.id %}
-
-                                                                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
-
-
-                                                                                    {% for prod in ped.produtosPed.all %}
-                                                                                            <div class='col text-align-left'>{{ prod.nome }}</div>
-                                                                                    {% endfor %}
-                                                                                    <div class='col text-align-center'>{{ ped.quantidade }}</div>
-                                                                                    {% for prod in ped.produtosPed.all %}
-                                                                                            <div class='col text-align-center'>{{ prod.preco }}</div>
-                                                                                    {% endfor %}
-                                                                                    <div class='col text-align-right'>{{ ped.status }}</div>
+                                                                    <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
+                                                                        <button type="button" class="close close-filho" data-target="comanda_cli" aria-label="Close"><span
+                                                                            aria-hidden="true">×</span></button>
+                                                                    </div>
+                                                                    <form method="post" name="comanda_cli">
+                                                                        <div class="modal-body">
+                                                                            <h6 class="modal-title">
+                                                                                <div class="row align-items-center">
+                                                                                    <div class='col text-align-left font-weight-bold'>{{ 'Produto' }}</div>
+                                                                                    <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
+                                                                                    <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
+                                                                                    <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
                                                                                 </div>
-                                                                            {%endif%}
-                                                                        {% empty %}
-                                                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                            <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
-                                                                                    <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
-                                                                            </div>
-                                                                        {% endfor %}
-                                                                    </div>
+                                                                            </h6>
 
-                                                                    <div class="modal-footer" >
-                                                                        {% if com.status == "A" and pedidos %}<button class="btn btn-warning btn-lg btn-block x_c" type="button" id="_{{com.nome}}" name="{{com.valor}}" value="{{com.nome}}" >Fechar Comanda</button>{% endif %}
-                                                                        <button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
-                                                                    </div>
-                                                                </form>
+                                                                            {% for ped in pedidos %}
+    <!--                                                                            {{ ped.comandaref.id }}-->
+    <!--                                                                            {{ com.id }}-->
+                                                                                {% if ped.comandaref.id == com.id %}
+
+                                                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                                    <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+
+
+                                                                                        {% for prod in ped.produtosPed.all %}
+                                                                                                <div class='col text-align-left'>{{ prod.nome }}</div>
+                                                                                        {% endfor %}
+                                                                                        <div class='col text-align-center'>{{ ped.quantidade }}</div>
+                                                                                        {% for prod in ped.produtosPed.all %}
+                                                                                                <div class='col text-align-center'>{{ prod.preco }}</div>
+                                                                                        {% endfor %}
+                                                                                        <div class='col text-align-right'>{{ ped.status }}</div>
+                                                                                    </div>
+                                                                                {%endif%}
+                                                                            {% empty %}
+                                                                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                                <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
+                                                                                        <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+
+                                                                        <div class="modal-footer" >
+                                                                            {% if com.status == "A" and pedidos %}<button class="btn btn-warning btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Fechar Comanda</button>{% endif %}
+                                                                            <button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    {% endif %}
                                                 {% empty %}
                                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                     <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
@@ -298,14 +321,17 @@
                                             <h3 style="text-transform:uppercase"><u><p id="vlr_com">
 
                                             </p></u></h3>
-                                            <form>
-                                                <input class="hidden" id="comanda_x">
-                                            </form>
+                                            <div id="tkn">
+                                                <input type="hidden" id="comanda_x" disabled >
+                                                {%csrf_token%}
+
+
+                                            </div>
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-success btn-lg btn-block" type="submit" >Pagou !</button>
-                                            <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" >Não pagou !</button>
+                                            <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pagou !</button>
+                                            <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" > Não pagou !</button>
                                         </div>
                                     </div>
                                 </div>
