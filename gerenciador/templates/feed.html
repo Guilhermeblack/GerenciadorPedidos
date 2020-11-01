@@ -11,6 +11,7 @@
 
         setTimeout( function() {
             location.reload();
+            $("#set_pg_top").click();
 
         }, 80000);
         $('.card-body').each(function(){
@@ -31,6 +32,7 @@
                         console.log(uai);
 
                         uai.fadeOut('slow');
+                        $("#set_pg_top").click();
 
                     }, 8500);
                 };
@@ -90,6 +92,7 @@
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
                     location.reload();
+                    $("#set_pg_top").click();
             },
             error: function (response) {
             }
@@ -133,6 +136,7 @@
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
                     location.reload();
+                    $("#set_pg_top").click();
             },
             error: function (response) {
             }
@@ -168,6 +172,7 @@
             data: {'comanda_x' :com},
             success: function (response) {
                     location.reload();
+                    $("#set_pg_top").click();
             },
             error: function (response) {
             }
@@ -361,7 +366,7 @@
                 </div>
 
 
-                {% for pedido in pedidos|dictsortreversed:"status" %}
+                {% for pedido in pedidos|dictsortreversed:"data" %}
                     {% if pedido.status != "C" %}
                         <div class="row mb-3 ped_" id="vamofi">
                             <div class="col mb-2">

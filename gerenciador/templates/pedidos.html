@@ -8,6 +8,11 @@
     <script>
 
     $(document).ready(function(){
+        setTimeout( function() {
+            location.reload();
+            $("#set_pg_top").click();
+
+        }, 80000);
         $('.pedB').click(function(){
 
             $('#prod_ped').text($(this).siblings('.card-title').text());

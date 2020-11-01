@@ -41,16 +41,23 @@
             });
             $('#cancel').click(function(){
                 location.reload();
+                $("#set_pg_top").click();
 
 
             });
             $('.close').click(function(){
                 location.reload();
+                $("#set_pg_top").click();
             });
 
 
         });
+        $(document).on('click','.del_prod', function(){
 
+            $('#x_pedido').val($(this.val()));
+
+
+        });
 
 
 
@@ -112,7 +119,13 @@
                                         <h5 class="card-title">{{pro.nome}}</h5>
                                         <h6 class="card-subtitle mb-2 text-muted" font-italic>{{pro.preco}}</h6>
                                         <p class="card-text font-weight-bold text-capitalize"><h7>{{pro.descricao}}</h7></p>
-                                        <button class="btn btn-danger del_prod" value="{{ pro.id }}" >Deletar</button>
+                                        <form action="{% url 'administrador' %}" method="post" name="prod_x">
+
+                                            <input hidden name="prod_x" id="x_pedido" value="{{pro.id}}">
+                                            {% csrf_token%}
+                                            <button type="submit" class="btn btn-danger del_prod" value="{{ pro.id }}" >Deletar</button>
+                                        </form>
+
 <!--                                            <a href="#" class="card-button">salvar alterações</a>-->
                                     </div>
                                 </div>

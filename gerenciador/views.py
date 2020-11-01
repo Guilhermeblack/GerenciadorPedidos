@@ -102,10 +102,15 @@ def feed(request):
         # print(request.POST)
 
         if 'exc_ped' in request.POST:
-            pprint(request.POST)
+            # pprint(request.POST)
             ped = models.Pedido.objects.filter(pk=request.POST['exc_ped'])
             ped.update(status="C")
-            messages.success(request, "{}, Comanda cancelada com sucesso!".format(request.user))
+            pprint(ped[0].comandaref.id)
+            produto_ped = models.Produtocad.objects.filter(pk=ped[0].produtosPed.all()[0].id)
+
+            comanda = models.Comanda.objects.filter(pk=ped[0].comandaref.id)
+            comanda[0].valor = comanda[0].valor - produto_ped[0].preco
+            messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
                 'comandas': models.Comanda.objects.all().order_by('id', 'data'),
@@ -244,7 +249,18 @@ def adm(request):
     if request.user.has_perm("gerenciador.iniciar_movimento"):
         if request.POST:
             rq = request.POST
-            # xaso seja request de alteração de movimento
+            pprint(rq)
+            if 'prod_x' in rq:
+
+                models.Produtocad.objects.filter(pk=request.POST['prod_x']).delete()
+                estado_mov = models.movi.objects.filter(pk=1).values()
+                messages.info(request, "Produto deletado com sucesso!")
+                return render(request, 'adm.html', {'form': forms.produto,
+                                                    'prod': models.Produtocad.objects.all(),
+                                                    'logado': get_user(request),
+                                                    'mov': estado_mov[0]['movimento']
+                                                    })
+
             if 'movimento' in rq:
                 # useer = forms.mov(rq)
 
