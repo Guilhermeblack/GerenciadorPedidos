@@ -41,7 +41,6 @@ class pedidos(forms.ModelForm):
             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
 
             'status': forms.HiddenInput(),
-            # 'date': forms.HiddenInput()
         }
 
     def __init__(self, *args, **kwargs):

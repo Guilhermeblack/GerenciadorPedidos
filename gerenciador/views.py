@@ -101,6 +101,18 @@ def feed(request):
     if request.POST:
         # print(request.POST)
 
+        if 'exc_ped' in request.POST:
+            pprint(request.POST)
+            ped = models.Pedido.objects.filter(pk=request.POST['exc_ped'])
+            ped.update(status="C")
+            messages.success(request, "{}, Comanda cancelada com sucesso!".format(request.user))
+            return render(request, 'feed.html', {
+
+                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                'choices': STATUS_CHOICES,
+                'movi': estado_mov[0]['movimento']
+            })
         if 'stats' in request.POST:
             print(request.POST)
             ped= models.Pedido.objects.filter(pk=request.POST['idstat'])
@@ -132,7 +144,7 @@ def feed(request):
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
 
-        pprint(models.Pedido.objects.all().order_by('id'))
+        # pprint(models.Pedido.objects.all().order_by('id'))
         return render(request, 'feed.html', {
 
             'comandas': models.Comanda.objects.all().order_by('id', 'data'),
@@ -165,6 +177,7 @@ def ped(request):
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.all(),
                                'movi':estado_mov[0]['movimento'],
+                               'comandas': models.Comanda.objects.filter(status="A"),
                                'pedido': forms.pedidos
                                })
             else:
@@ -174,6 +187,7 @@ def ped(request):
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.all(),
                                'movi': estado_mov[0]['movimento'],
+                               'comandas': models.Comanda.objects.filter(status="A"),
                                'pedido': forms.pedidos
                                })
 
@@ -197,6 +211,7 @@ def ped(request):
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.all(),
                                'movi': estado_mov[0]['movimento'],
+                               'comandas': models.Comanda.objects.filter(status="A"),
                                'pedido': forms.pedidos
                                })
             else:
@@ -206,6 +221,7 @@ def ped(request):
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.all(),
                                'movi': estado_mov[0]['movimento'],
+                               'comandas': models.Comanda.objects.filter(status="A"),
                                'pedido': forms.pedidos
                                })
 
@@ -215,7 +231,7 @@ def ped(request):
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
             'prod': models.Produtocad.objects.all(),
-
+            'comandas': models.Comanda.objects.filter(status= "A"),
             'movi':estado_mov[0]['movimento'],
             'pedido': forms.pedidos()
 

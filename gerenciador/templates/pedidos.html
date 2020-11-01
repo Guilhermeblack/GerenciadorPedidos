@@ -89,6 +89,7 @@
                                             </div>
                                         </div>
                                     {% endif %}
+                                {% empty %}
                                 <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                     <div class='text-align-center mt-8'>
                                             <div class='col text-align-center'><strong>
@@ -149,7 +150,20 @@
                                         <p><b><h2><label id="prod_ped"><u></u></label></h2></b></p>
                                         <hr>
                                         {% csrf_token %}
-                                        <p>{{ pedido.as_p }}</p>
+                                        <p><select class="mdb-select md-form" id="comandaref" name="comandaref">
+                                          <option value="" disabled selected>Escolha a comanda</option>
+                                            {{comandas}}
+                                            {% for com in comandas %}
+                                                <option value="{{com.id}}">{{com.nome}}</option>
+
+                                            {%empty%}
+                                                <option value="{{com.id}}">{{ 'Não existem comandas abertas' }}</option>
+                                            {%endfor%}
+                                        </select></p>
+                                        <p>{{ pedido.quantidade }}</p>
+                                        <p>{{ pedido.observacao }}</p>
+                                        <p>{{ pedido.status }}</p>
+                                        <p>{{ pedido.produtosPed }}</p>
 
                                     </div>
 

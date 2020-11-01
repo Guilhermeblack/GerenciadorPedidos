@@ -6,9 +6,13 @@
 
        $(document).on("click",".close-filho",function() {
             $(this).parents().find('.mod-filho').modal('hide');
-         });
+       });
     $(document).ready(function(){
 
+        setTimeout( function() {
+            location.reload();
+
+        }, 80000);
         $('.card-body').each(function(){
             let id = $(this).attr("id");
             let stat = $(this).siblings().find('.active').text().trim();
@@ -16,7 +20,24 @@
             color_bg(stat, id);
         });
 
+        $('.carousel-item').each(function(){
+            if($(this).hasClass("active") ){
+
+                if($(this).find('.status_pedido').text() == "Foi entregue"){
+
+                    var uai = $(this).closest('.ped_');
+<!--                    console.log(uai);-->
+                    setTimeout( function() {
+                        console.log(uai);
+
+                        uai.fadeOut('slow');
+
+                    }, 8500);
+                };
+            };
+        });
     });
+
     function color_bg(stat, id){
         switch (stat) {
             case "Pedido realizado":
@@ -30,11 +51,10 @@
             break;
             case "Foi entregue":
                 $('#'+id).css('background-color','#B1FBAE ');
-            break;
-            case "Cancelado":
 
-                $('#'+id).css('background-color','#ECAEAA');
+
             break;
+
             default:
                 $(this).parents('.card-body').addClass('bg-transparent');
         };
@@ -57,21 +77,12 @@
                 st = "E";
             break;
             case "Cancelado":
-
-                st = "C";
+                st = "P";
             break;
             default: st = "P";
         };
         let id = $(this).parent().parent().siblings('#idped').text().trim();
         let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
-        if(st == "C"){
-            $('#modal_cancelapedido').find('#cancela').val($('#idped').text());
-            $('#modal_cancelapedido').modal('show');
-
-        }else{
-
-
-        };
         $.ajax({
             headers: { "X-CSRFToken": csrf },
             type: 'POST',
@@ -107,22 +118,14 @@
 
             break;
             case "Cancelado":
-
-                st = "C";
-
+                st = "E";
             break;
+
             default: st = "P";
         };
         let id = $(this).parent().parent().siblings('#idped').text().trim();
         let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
-        if(st == "C"){
-            $('#modal_cancelapedido').find('#cancela').val($('#idped').text());
-            $('#modal_cancelapedido').modal('show');
 
-        }else{
-
-
-        };
         $.ajax({
             headers: { "X-CSRFToken": csrf },
             type: 'POST',
@@ -172,6 +175,23 @@
 
 
     });
+
+    $(document).on('click','.cancela_ped', function(){
+
+        $('#modal_cancelapedido').find('#cancela').val($('#idped').text());
+        $('#modal_cancelapedido').modal('show');
+        let com_x = $(this).parents('.ped_').first().find('.idped').text();
+
+
+        $("#can_ped").val(com_x);
+<!--        console.log($("#can_ped").val());-->
+
+    });
+
+
+
+
+
 
     </script>
     {% for message in messages %}
@@ -341,55 +361,61 @@
                 </div>
 
 
-                {% for pedido in pedidos|dictsort:"data" %}
-                    <div class="row mb-3 ">
-                        <div class="col mb-2">
+                {% for pedido in pedidos|dictsortreversed:"status" %}
+                    {% if pedido.status != "C" %}
+                        <div class="row mb-3 ped_" id="vamofi">
+                            <div class="col mb-2">
 
-                            <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
-                                <div class="card-header bg-dark text-white">
-                                    <h5 class="mb-0">Comanda - {{pedido.comandaref}}</h5>
-                                </div>
-                                <div class="card-body" id="bodybg{{pedido.id}}"><b>
-                                    {% for ped in pedido.produtosPed.all %}
-                                        <p class="card-text">{{ped.nome}} </p>
-                                    {%endfor%}
-                                    <p class="card-text">{{pedido.quantidade}}</p>
-                                    <p class="card-text">{{pedido.observacao}}</p>
-                                </b></div>
-                                <hr>
-                                {% csrf_token %}
-                                <div id="idped" style="display: none;">{{pedido.id}}</div>
-                                <div class="pb-2 bg-light mb-3">
+                                <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5 class="mb-0">Comanda - {{pedido.comandaref}}
+                                            <button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
+                                        </h5>
 
-                                    <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
-                                      <div class="carousel-inner">
-    <!--                                    {{choices}}-->
-                                        {% for choice in choices%}
-    <!--                                      {{choice}}-->
-                                          {% if choice == pedido.get_status_display %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{% endif %}
-                                            <div class="d-block status_pedido" >{{ choice }}</div>
-                                            </div>
+                                    </div>
+                                    <div class="card-body" id="bodybg{{pedido.id}}"><b>
+                                        {% for ped in pedido.produtosPed.all %}
+                                            <p class="card-text">{{ped.nome}} </p>
+                                        {%endfor%}
+                                        <p class="card-text">{{pedido.quantidade}}</p>
+                                        <p class="card-text">{{pedido.observacao}}</p>
+                                    </b></div>
+                                    <hr>
+                                    {% csrf_token %}
+                                    <div id="idped" class="idped" style="display: none;">{{pedido.id}}</div>
+                                    <div class="pb-2 bg-light mb-3">
 
-
-
-                                        {% endfor %}
-
-                                      </div>
-                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
-                                            <div><i class="caret-left-square-fill dark" ></i></div>
-                                              <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                                          </a>
-                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
-                                            <i class="arrow-alt-circle-right bg-dark" ></i>
-                                              <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                                          </a>
-                                      </div>
+                                        <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
+                                          <div class="carousel-inner">
+        <!--                                    {{choices}}-->
+                                            {% for choice in choices%}
+        <!--                                      {{choice}}-->
+                                              {% if choice == pedido.get_status_display %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{% endif %}
+                                                <div class="d-block status_pedido" >{{ choice }}</div>
+                                                </div>
 
 
+
+                                            {% endfor %}
+
+                                          </div>
+                                              <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
+                                                <div><i class="caret-left-square-fill dark" ></i></div>
+                                                  <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                              </a>
+                                              <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
+                                                <i class="arrow-alt-circle-right bg-dark" ></i>
+                                                  <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                              </a>
+                                          </div>
+
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {%endif%}
                 {% empty %}
                         <div class="row mb-3 ">
                             <div class="col mb-2">
@@ -418,8 +444,11 @@
                                 <p>
                                 <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
                                 </p>
-
-                                    <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
+                                <form name="exc_ped" class="post-form" method="post" action="{% url 'feed' %}">
+                                    <input class="hidden can_ped" name="exc_ped" hidden id="can_ped">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" id="confirm_cancel">Confirmar</button>
+                                </form>
                             </div>
                             <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
                             </div>
