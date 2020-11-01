@@ -155,7 +155,7 @@ class Comanda(models.Model):
 
     valor = models.FloatField(
         default=0.0,
-        null=True,
+        null=False,
         blank=True
 
     )

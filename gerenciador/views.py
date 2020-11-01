@@ -105,11 +105,14 @@ def feed(request):
             # pprint(request.POST)
             ped = models.Pedido.objects.filter(pk=request.POST['exc_ped'])
             ped.update(status="C")
-            pprint(ped[0].comandaref.id)
+            # pprint(ped[0].comandaref.id)
             produto_ped = models.Produtocad.objects.filter(pk=ped[0].produtosPed.all()[0].id)
 
             comanda = models.Comanda.objects.filter(pk=ped[0].comandaref.id)
-            comanda[0].valor = comanda[0].valor - produto_ped[0].preco
+
+            vlr = comanda[0].valor - produto_ped[0].preco
+            pprint(vlr)
+            comanda.update(valor=vlr)
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
