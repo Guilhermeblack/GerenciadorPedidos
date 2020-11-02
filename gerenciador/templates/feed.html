@@ -221,7 +221,7 @@
                         <h1 class="text-primary" style="width:90%; padding: 18px; margin-bottom:17px;">FEED</h1>
                     </div>
                     <div class="col" style="float">
-                        {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
+
                             <button class="btn btn-primary btn-rounded hover" style=" margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
 
                             <div class="modal fade" role="dialog" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
@@ -299,9 +299,9 @@
                                                                             {% endfor %}
                                                                         </div>
 
-                                                                        <div class="modal-footer" >
+                                                                        <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
                                                                             {% if com.status == "A" and pedidos %}<button class="btn btn-warning btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Fechar Comanda</button>{% endif %}
-                                                                            <button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
+                                                                            {% endif %}<button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
@@ -361,7 +361,7 @@
                                     </div>
                                 </div>
                             </div>
-                        {%endif%}
+
                     </div>
                 </div>
 
@@ -374,8 +374,8 @@
                                 <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
                                     <div class="card-header bg-dark text-white">
                                         <h5 class="mb-0">Comanda - {{pedido.comandaref}}
-                                            <button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
-                                                    aria-hidden="true">×</span></button>
+                                            {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>{% endif %}
                                         </h5>
 
                                     </div>

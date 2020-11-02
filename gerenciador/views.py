@@ -317,8 +317,10 @@ def adm(request):
                 else:
                     messages.warning(request, "Dados inválidos !")
         else:
-            if 'prod_x' in request.GET:
-                pass
+            if 'pesq_prod' in request.GET:
+                pprint(request.GET)
+
+
             rq = models.movi.objects.filter(pk=1).values()
             # estado_mov = models.movi.objects.filter(pk=1)
             # print(rq)

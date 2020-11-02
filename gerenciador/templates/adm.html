@@ -7,10 +7,14 @@
 
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js" integrity="sha512-vSyPWqWsSHFHLnMSwxfmicOgfp0JuENoLwzbR+Hf5diwdYTJraf/m+EKrMb4ulTYmb/Ra75YmckeTQ4sHzg2hg==" crossorigin="anonymous"></script>
 <script type="text/javascript">
+
 
         var usrlog= $('#movimentar').val();
         $(document).ready(function(){
+
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
 
@@ -60,7 +64,130 @@
 
         });
 
+        $(document).on('change','#comandas_rel', function(){
+            $('#blocks').empty();
+            var form ='';
+            form += '<div class="row justify-content-center ">';
 
+            form += '<div class=" col"><label for="nome_comanda">Nome</label><input type="text" class="form-control" id="nome_comanda" placeholder="Nome"></div>';
+
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+
+            form += '</div>';
+            form += '<div class="row pt-4 justify-content-around">';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="status_comanda">Status</label>';
+            form += '<select id="status_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="A" >Aberto</option><option value="F">Fechado</option>';
+            form += '</select></div>';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="cat_comanda">Categoria</label><select id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '</select></div>';
+
+            form += '</div>';
+
+            $('.select_date').show();
+            $('#blocks').append(form);
+
+
+
+        });
+        $(document).on('change','#pedidos_rel', function(){
+            $('#blocks').empty();
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class=" col"><label for="nome_pedido">Nome</label><input type="text" class="form-control" id="nome_comanda" placeholder="Nome"></div>';
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+            form += '</div>';
+
+            form += '<div class="row pt-4 justify-content-around">';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="status_pedido">Status</label>';
+
+            form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" id="statsped" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Status Pedido</button>';
+            form+='<div class="dropdown-menu  pr-6" aria-labelledby="statsped">';
+            form+='<ul style="list-style: none;" >';
+
+            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="1"> Pedido realizado</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="2"> Fazendo</label></li>';
+            form+='<li class="ms-select-all"><label><input class="" type="checkbox" data-name="selec_pedido[]" value="3"> Saiu para entrega</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="4"> Foi entregue</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="5"> Cancelado</label></li>';
+            form+='</ul></div></div></div>';
+
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="cat_comanda">Categoria</label><select id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '</select></div>';
+
+            form+='';
+            form+='</div>';
+
+            $('.select_date').show();
+            $('#blocks').append(form);
+
+
+        });
+
+
+
+        $(document).on('change','#produtos_rel', function(){
+            $('#blocks').empty();
+            $('.select_date').hide();
+
+
+
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+<!--            form += '<label for="tipo_prod">Por produto</label>';-->
+            form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" id="tipo_prod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Por produto</button>';
+            form+='<div class="dropdown-menu" aria-labelledby="tipo_prod">';
+            form+='<ul style="list-style: none;" >';
+
+            {% for p in prod %}
+                form+='<li style="list-style: none;" class="ms-select-all"><label><input type="checkbox" data-name="selec_produto[]" value={{p.id}}> {{p.nome}}</label></li>';
+            {% endfor %}
+            form+='</ul></div></div></div>';
+
+
+            form += '<div class="row pt-4 justify-content-center">';
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="tipo_prod">Ordenação</label><select id="tipo_prod" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '</select></div>';
+
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="cat_comanda">Tipo do produto</label><select id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value=1 >Alimento</option><option value=2>Bebida</option>';
+            form += '</select></div>';
+
+            form+='</div>';
+
+
+            $('#blocks').append(form);
+
+        });
+        $(document).on('change','#recebimentos_rel', function(){
+            $('#blocks').empty();
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class=" col"><label for="nome_comanda">Nome da comanda</label><input type="text" class="form-control" id="nome_comanda" placeholder="Nome da comanda"></div>';
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+            form += '</div>';
+
+            $('.select_date').show();
+            $('#blocks').append(form);
+
+        });
 
 
 
@@ -148,32 +275,32 @@
                                     <p>
                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                         <div class="custom-control custom-radio custom-control-inline">
-                                          <input type="radio" id="comandas" name="radio_opc" class="custom-control-input" required>
-                                          <label class="custom-control-label" for="comandas">Comandas</label>
+                                          <input type="radio" id="comandas_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="comandas_rel">Comandas</label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline">
-                                          <input type="radio" id="pedidos" name="radio_opc" class="custom-control-input" required>
-                                          <label class="custom-control-label" for="pedidos">Pedidos</label>
+                                          <input type="radio" id="pedidos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="pedidos_rel">Pedidos</label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline">
-                                          <input type="radio" id="produtos" name="radio_opc" class="custom-control-input" required>
-                                          <label class="custom-control-label" for="produtos">Produtos</label>
+                                          <input type="radio" id="produtos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="produtos_rel">Produtos</label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline">
-                                          <input type="radio" id="recebimentos" name="radio_opc" class="custom-control-input" required>
-                                          <label class="custom-control-label" for="recebimentos">Recebimentos</label>
+                                          <input type="radio" id="recebimentos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="recebimentos_rel">Recebimentos</label>
                                         </div>
                                     <p>
                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                     <form name="consulta_adm" method="get">
-                                        <div class="row justify-content-center">
+                                        <div class="row justify-content-center select_date">
                                             <div class="form-group form-group-inline d-lg-inline-flex flex-column row">
                                               <h6><label for="date_de" class="col-4 col-form-label d-inline">DE</label></h6>
                                               <div class="col-12">
                                                 <input class="form-control" type="date" id="date_de">
                                               </div>
                                             </div>
-                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column ">
+                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column">
                                               <h6><label for="date_ate" class="col-4 col-form-label d-inline ">ATÉ</label></h6>
                                               <div class="col-12">
                                                 <input class="form-control" type="date" id="date_ate">
