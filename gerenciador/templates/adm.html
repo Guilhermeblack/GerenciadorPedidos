@@ -64,6 +64,7 @@
 
         });
 
+
         $(document).on('change','#comandas_rel', function(){
             $('#blocks').empty();
             var form ='';
@@ -95,6 +96,8 @@
 
 
         });
+
+
         $(document).on('change','#pedidos_rel', function(){
             $('#blocks').empty();
             var form ='';
@@ -145,7 +148,7 @@
 
             var form ='';
             form += '<div class="row justify-content-center ">';
-<!--            form += '<label for="tipo_prod">Por produto</label>';-->
+
             form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" id="tipo_prod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Por produto</button>';
             form+='<div class="dropdown-menu" aria-labelledby="tipo_prod">';
             form+='<ul style="list-style: none;" >';
@@ -175,6 +178,7 @@
             $('#blocks').append(form);
 
         });
+
         $(document).on('change','#recebimentos_rel', function(){
             $('#blocks').empty();
             var form ='';
@@ -189,7 +193,7 @@
 
         });
 
-        $(document).on('change','#rel_btn', function(){
+        $(document).on('click','#rel_btn', function(){
 
             $('.select_date').hide();
         });
