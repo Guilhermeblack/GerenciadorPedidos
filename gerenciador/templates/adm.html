@@ -6,7 +6,8 @@
 {% block content %}
 
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
-    <script type="text/javascript">
+
+<script type="text/javascript">
 
         var usrlog= $('#movimentar').val();
         $(document).ready(function(){
@@ -66,6 +67,7 @@
 
 
     </script>
+
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
             <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -142,9 +144,51 @@
                             <div class="card border bg-secondary mt-2" >
                                 <div class="card-body">
 <!--                                            habilitar campo aberto para alteraçoes-->
-                                    <h3 class="card-title">{{'Em desenvolvimento...'}}</h3>
+                                    <h3 class="card-title">{{'Relatórios'}}</h3>
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="comandas" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="comandas">Comandas</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="pedidos" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="pedidos">Pedidos</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="produtos" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="produtos">Produtos</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="recebimentos" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="recebimentos">Recebimentos</label>
+                                        </div>
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <form name="consulta_adm" method="get">
+                                        <div class="row justify-content-center">
+                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column row">
+                                              <h6><label for="date_de" class="col-4 col-form-label d-inline">DE</label></h6>
+                                              <div class="col-12">
+                                                <input class="form-control" type="date" id="date_de">
+                                              </div>
+                                            </div>
+                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column ">
+                                              <h6><label for="date_ate" class="col-4 col-form-label d-inline ">ATÉ</label></h6>
+                                              <div class="col-12">
+                                                <input class="form-control" type="date" id="date_ate">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <p>
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div id="blocks">
 
-<!--                                            <a href="#" class="card-button">salvar alterações</a>-->
+                                        </div>
+                                        <p>
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="consulta">Consultar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

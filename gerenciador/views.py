@@ -110,7 +110,7 @@ def feed(request):
 
             comanda = models.Comanda.objects.filter(pk=ped[0].comandaref.id)
 
-            vlr = comanda[0].valor - produto_ped[0].preco
+            vlr = comanda[0].valor - (ped.quantidade *produto_ped[0].preco)
             pprint(vlr)
             comanda.update(valor=vlr)
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
@@ -211,7 +211,6 @@ def ped(request):
                 prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
 
                 qnt = int(request.POST['quantidade'])
-                pprint(qnt)
                 add_comanda.valor += (prod.preco* qnt)
                 add_comanda.save()
                 messages.success(request, "Pedido registrado !")
@@ -250,9 +249,12 @@ def ped(request):
 def adm(request):
     # print('do adm ', request.user.groups.all()[0])
     if request.user.has_perm("gerenciador.iniciar_movimento"):
+        rq = request.POST
         if request.POST:
-            rq = request.POST
+
             pprint(rq)
+            # if 'prod_x' in rq:
+
             if 'prod_x' in rq:
 
                 models.Produtocad.objects.filter(pk=request.POST['prod_x']).delete()
@@ -314,11 +316,9 @@ def adm(request):
                     return redirect('administrador')
                 else:
                     messages.warning(request, "Dados inválidos !")
-
         else:
-            # messages.success(request, "Bem vindo Gerente ! Data {}".format(date.today()))
-            # print('grupos ', request.user.groups.all())
-            # print(get_user(request))
+            if 'prod_x' in request.GET:
+                pass
             rq = models.movi.objects.filter(pk=1).values()
             # estado_mov = models.movi.objects.filter(pk=1)
             # print(rq)
