@@ -189,6 +189,11 @@
 
         });
 
+        $(document).on('change','#rel_btn', function(){
+
+            $('.select_date').hide();
+        });
+
 
 
 
@@ -263,7 +268,7 @@
 
 
                     </div>
-                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#relatorio">Relatórios</button>
+                    <button class="btn btn-primary text-center border rounded border-dark" id="rel_btn" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#relatorio">Relatórios</button>
                     <div class="modal mx-6 px-6" role="document" tabindex="-1" id="relatorio">
                         <div class="card">
 
