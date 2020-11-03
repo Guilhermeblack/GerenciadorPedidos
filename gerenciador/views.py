@@ -110,7 +110,7 @@ def feed(request):
 
             comanda = models.Comanda.objects.filter(pk=ped[0].comandaref.id)
 
-            vlr = comanda[0].valor - (ped.quantidade *produto_ped[0].preco)
+            vlr = comanda[0].valor - (ped[0].quantidade *produto_ped[0].preco)
             pprint(vlr)
             comanda.update(valor=vlr)
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
