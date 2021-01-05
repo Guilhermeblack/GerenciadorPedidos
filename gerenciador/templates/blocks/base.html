@@ -18,9 +18,9 @@
 
 </head>
 
-<body id="page-top" class="align-items-center">
+<body id="page-top" >
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-        <script type="text/javascript" >
+    <script type="text/javascript" >
 
 
         setInterval(function() {
@@ -64,12 +64,15 @@
             </div>
         </div>
     </nav>
-    <section>
+    <section >
 
         {% block content %}
         {% endblock %}
+
     </section>
-{% include "blocks/footer.html" %}
+    {% include "blocks/footer.html" %}
+
+
 </body>
 
 
