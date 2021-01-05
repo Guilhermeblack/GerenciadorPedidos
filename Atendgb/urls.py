@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib import admin
 from gerenciador import views
 
@@ -7,7 +7,7 @@ app_name = 'gerenciador'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-
+    path('', include('pwa.urls')),
     path('loguin', views.loguin, name='loguin'),
     path('logout', views.logoutuser, name='logout'),
     path('feed', views.feed, name='feed'),
