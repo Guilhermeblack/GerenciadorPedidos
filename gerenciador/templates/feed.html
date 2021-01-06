@@ -4,6 +4,8 @@
 
     <script type="text/javascript">
 
+    var armazena_ped = [];
+
        $(document).on("click",".close-filho",function() {
             $(this).parents().find('.mod-filho').modal('hide');
        });
@@ -151,11 +153,15 @@
 
     $(document).on('click', '.x_c',function(){
 
-        $('#comanda_x').val($(this).val());
         let nome = $(this).val();
         let vlr = $(this).attr('name');
+        $('#comanda_x').val($(this).val());
+
+
+        console.log(parseFloat(vlr));
         $('#cli_com').text( nome);
-        $('#vlr_com').text( vlr );
+        $('#valou').val( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+
         $('#comanda_x').val();
         $('#x_comanda').modal('show');
 
@@ -194,8 +200,44 @@
     });
 
 
+    function guarda_ped(ped){
+        if(!armazena_ped.indexOf(ped)){
+            armazena_ped.push(ped);
+        };
+
+    };
+
+    $(document).on('click','.c_cli', function(){
+
+        armazena_ped.length = 0;
+
+    });
+
+    function converter(valor){
+      var numero = parseFloat(valor);
+
+      document.getElementById('valori').value = numero;
+    }
+    function converter2(valor){
 
 
+
+
+<!--            TO AKIII-->
+
+
+
+
+
+        let vvval = $('#valou').val();
+        console.log(vvval);
+        if (vvval.incl("R$")){
+            vvval = vvval.replace("R$ ", '');
+        };
+
+        console.log(vvval);
+        $('#valou').val( parseFloat(vvval).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+    };
 
 
     </script>
@@ -244,7 +286,7 @@
                                                     {% if com.status == 'A' %}
                                                         <p>
                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                        <div class='row text-align-center pb-1 hover' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
+                                                        <div class='row text-align-center pb-1 hover c_cli' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
 
 
                                                             <div class='col text-align-left'>{{ com.n_mesa }}</div>
@@ -276,7 +318,7 @@
                                                                                 {% if ped.comandaref.id == com.id %}
 
                                                                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                    <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+                                                                                    <div class='row text-align-center pb-1 hover' id="ped_{{ped.comandaref.id}}" style="cursor: pointer;" onclick="guarda_ped({{ped.comandaref.id}})">
 
 
                                                                                         {% for prod in ped.produtosPed.all %}
@@ -332,29 +374,47 @@
                                                 aria-hidden="true">×</span></button>
                                         </div>
                                         <div class="modal-body">
-                                            <h4>
-                                                O Cliente:
-                                            </h4>
-                                            <h3 style="text-transform:uppercase"><u><p id="cli_com">
+                                            <div class="row">
+                                                <h4>
+                                                    Total:
+                                                </h4>
+                                                <h3 style="text-transform:uppercase"><u><p id="cli_com">
 
-                                            </p></u></h3>
-                                            <h4>
-                                                Pagou o valor de:
-                                            </h4>
-                                            <h3 style="text-transform:uppercase"><u><p id="vlr_com">
-
-                                            </p></u></h3>
+                                                </p></u></h3>
+                                            </div>
+                                            <div class="row">
+                                                <h4>
+                                                    Dividir em:
+                                                </h4>
+                                                <h3 style="width:70%"><u>
+                                                    <input type="range" min="1" max="20" style="width:17%" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
+                                                    <p>
+                                                    <input type="text" name="valori" style="width:17%" value="1" id="valori">
+                                                </u></h3>
+                                                <b>
+                                                <h4> Ou </h4>
+                                                <b>
+                                                <h4>
+                                                    Pagar a Quantidade:
+                                                </h4>
+                                                <h3><u>
+                                                    <input id="valou" name="valou" onblur="converter2(this.value)" >
+                                                </u></h3>
+                                                <span><u><i>
+                                                    O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
+                                                </i></u></span>
+                                            </div>
                                             <div id="tkn">
-                                                <input type="hidden" id="comanda_x" disabled >
-                                                {%csrf_token%}
+                                            <input type="hidden" id="comanda_x" disabled >
+                                            {%csrf_token%}
 
 
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pagou !</button>
-                                            <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" > Não pagou !</button>
+                                            <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pago !</button>
+                                            <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" > Não pago !</button>
                                         </div>
                                     </div>
                                 </div>

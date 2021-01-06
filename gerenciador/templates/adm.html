@@ -8,8 +8,8 @@
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js" integrity="sha512-vSyPWqWsSHFHLnMSwxfmicOgfp0JuENoLwzbR+Hf5diwdYTJraf/m+EKrMb4ulTYmb/Ra75YmckeTQ4sHzg2hg==" crossorigin="anonymous"></script>
-<script type="text/javascript">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js" integrity="sha512-vSyPWqWsSHFHLnMSwxfmicOgfp0JuENoLwzbR+Hf5diwdYTJraf/m+EKrMb4ulTYmb/Ra75YmckeTQ4sHzg2hg==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
 
 
         var usrlog= $('#movimentar').val();
@@ -212,16 +212,16 @@
             {{ message }}
         </div>
     {% endfor %}
-    <header class="text-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);padding-top: 70px;">
+    <header class="masthead text-white" style="background-color: rgb(255,255,255)">
         <div class="align-content-center ">
             <h1 class="text-center align-content-center p-1 m-auto" style="align-content: center; padding: 5px;color: rgb(44,62,80)">
                 Iniciar movimento</h1>
         </div>
-        <div class="container-fluid align-content-center" style="color: rgb(241,234,72);width: auto;padding: 5px;margin: 7px;">
-            <div class="row text-center justify-content-center m-auto" style="margin: 6px;padding: 5px;min-height: auto;">
+        <div class="flex-fill" style="color: rgb(241,234,72);width: auto;padding: 5px;">
+            <div class="row text-center d-inline-flex" >
 
-                <div class="col-auto text-center justify-content-center m-auto" style="width: 554px;margin: 4px;padding: 3px;min-height: 21px;">
-                    <div class="btn-group btn-group-lg justify-content-center align-items-center" id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
+                <div class="col-auto text-center m-auto flex-fill" style="margin: 4px;padding: 3px;min-height: 21px;">
+                    <div class="btn-group btn-group-lg justify-content-center " id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
                             {% if mov == "L" %}
                                 <input  checked id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
                             {% else %}
@@ -230,7 +230,7 @@
                     </div>
 <!--                    funçao de zerar historico-->
                     <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">Produtos</button>
-                    <div class="modal mx-6 px-6" role="document" tabindex="-1" id="novoProduto">
+                    <div class="modal px-6" role="document" tabindex="-1" id="novoProduto">
                         <div class="card">
                             {% if form %}
                             <form method="POST" id="newprod" >

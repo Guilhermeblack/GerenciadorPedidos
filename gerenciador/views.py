@@ -176,6 +176,7 @@ def ped(request):
 
             # if usr.has_perm('abrir_comanda'):
             formcom = forms.comandas(request.POST)
+
             pprint(formcom)
             # print('tem perm')
             if formcom.is_valid():

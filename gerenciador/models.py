@@ -143,11 +143,10 @@ class Comanda(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        default='cliente'
+
     )
 
     n_mesa = models.IntegerField(
-        default=0,
         unique=True,
         null=False,
         blank=False,
@@ -170,7 +169,7 @@ class Comanda(models.Model):
         max_length=1,
         choices=STATUS_CHOICES,
         default="A",
-        blank=False,
+        blank=True,
         null=False
     )
 
