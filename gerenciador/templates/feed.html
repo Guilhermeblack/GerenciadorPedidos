@@ -289,6 +289,14 @@
 
     };
 
+    $(document).on('click','#prodd', function(e){
+        var marcar = e.target.checked;
+        var lista = document.querySelectorAll(".selec");
+        for ( var i = 0 ; i < lista.length ; i++ ){
+            lista[i].checked = marcar;
+        };
+    });
+
 
     </script>
     {% for message in messages %}
@@ -356,6 +364,9 @@
                                                                             <div class="modal-body">
                                                                                 <h6 class="modal-title">
                                                                                     <div class="row align-items-center">
+                                                                                        <div class='col text-align-left font-weight-bold'>
+                                                                                            <input type="checkbox" class="" name="prodd" id="prodd" >
+                                                                                        </div>
                                                                                         <div class='col text-align-left font-weight-bold'>{{ 'Produto' }}</div>
                                                                                         <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
                                                                                         <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
@@ -370,17 +381,19 @@
 
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                         <div class='row text-align-center pb-1 hover' id="ped_{{ped.comandaref.id}}" style="cursor: pointer;" onclick="guarda_ped({{ped.comandaref.id}})">
+                                                                                                <div class='col text-align-center'>
+                                                                                                    <input type="checkbox" class="selec" id="prod_{{ped.id}}">
+                                                                                                </div>
+                                                                                                {% for prod in ped.produtosPed.all %}
+                                                                                                        <div class='col text-align-left'>{{ prod.nome }}</div>
+                                                                                                {% endfor %}
+                                                                                                <div class='col text-align-center'>{{ ped.quantidade }}</div>
+                                                                                                {% for prod in ped.produtosPed.all %}
+                                                                                                        <div class='col text-align-center'>{{ prod.preco }}</div>
+                                                                                                {% endfor %}
+                                                                                                <div class='col text-align-right'>{{ ped.status }}</div>
 
-
-                                                                                            {% for prod in ped.produtosPed.all %}
-                                                                                                    <div class='col text-align-left'>{{ prod.nome }}</div>
-                                                                                            {% endfor %}
-                                                                                            <div class='col text-align-center'>{{ ped.quantidade }}</div>
-                                                                                            {% for prod in ped.produtosPed.all %}
-                                                                                                    <div class='col text-align-center'>{{ prod.preco }}</div>
-                                                                                            {% endfor %}
-                                                                                            <div class='col text-align-right'>{{ ped.status }}</div>
-                                                                                        </div>
+                                                                                            </div>
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                     {%endif%}
                                                                                 {% empty %}
@@ -445,8 +458,7 @@
                                                             <input type="text" class="form-control p-2 justify-content-center" name="valori"  value="1" id="valori">
                                                         </div>
                                                     </b></h2>
-                                                    <b>
-                                                    <h4> Ou </h4>
+                                                    <b><h4> Ou </h4></b>
                                                     <b>
                                                     <h2  class="d-flex justify-content-center 33" ><b>
                                                         <div class="form-group p-2 flex-fill bd-highlight">
@@ -462,6 +474,8 @@
                                                     <span><u><i>
                                                         O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
                                                     </i></u></span>
+
+                                                    </b>
                                                 </div>
                                                 <div id="tkn">
                                                 <input type="hidden" id="comanda_x" disabled >
