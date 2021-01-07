@@ -12,7 +12,7 @@
     $(document).ready(function(){
 
         setTimeout( function() {
-            location.reload();
+<!--            location.reload();-->
             $("#set_pg_top").click();
 
         }, 80000);
@@ -156,11 +156,12 @@
         let nome = $(this).val();
         let vlr = $(this).attr('name');
         $('#comanda_x').val($(this).val());
+        $('#val_ini').val($(this).attr('name'));
 
 
-        console.log(parseFloat(vlr));
-        $('#cli_com').text( nome);
-        $('#valou').val( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+<!--        console.log(parseFloat(vlr));-->
+        $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+        $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
 
         $('#comanda_x').val();
         $('#x_comanda').modal('show');
@@ -214,10 +215,28 @@
     });
 
     function converter(valor){
-      var numero = parseFloat(valor);
 
-      document.getElementById('valori').value = numero;
+        var numero = parseFloat(valor);
+        document.getElementById('valori').value = numero;
+
+
+
+        var tot = parseFloat($('#val_ini').val());
+
+        var div = $('#divisor_tot').val();
+        console.log(div);
+        tot = tot/div;
+
+        $('.22').removeClass("bg-secondary");
+        $('.33').addClass("bg-secondary");
+        $('#valou').prop('disabled', true);
+
+
+        $('#valou').val(parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+        $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
     }
+
     function converter2(valor){
 
         let vvval = $('#valou').val();
@@ -229,7 +248,47 @@
             vvval = vvval.replace(-3, ',');
         };
 
+        var tot = parseFloat($('#val_ini').val());
+
+        tot = tot- vvval
+
+
+        $('#divisor_tot').val(1);
+        $('#divisor_tot').prop('disabled', true);
+        $('#valori').val(1);
+        $('#valori').prop('disabled', true);
+
+        $('.33').removeClass("bg-secondary");
+        $('.22').addClass("bg-secondary");
+
         $('#valou').val( parseFloat(vvval).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+        $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
+    };
+
+    function pagtot(){
+        let val = $('#val_ini').val();
+
+        if (val.includes("R$")){
+            val = val.replace("R$", '');
+        };
+        if (val.substr(-3) == '.'){
+            val = val.replace(-3, ',');
+        };
+
+        console.log(val);
+
+        $('#divisor_tot').val(1);
+        $('#divisor_tot').prop('disabled', true);
+        $('#valori').val(1);
+        $('#valori').prop('disabled', true);
+
+        $('.33').removeClass("bg-secondary");
+        $('.22').addClass("bg-secondary");
+        $('#valou').val( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+        $('#cli_com').text( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
+
     };
 
 
@@ -324,6 +383,7 @@
                                                                                             {% endfor %}
                                                                                             <div class='col text-align-right'>{{ ped.status }}</div>
                                                                                         </div>
+                                                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                     {%endif%}
                                                                                 {% empty %}
                                                                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
@@ -368,33 +428,39 @@
                                                     aria-hidden="true">×</span></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="row">
-
-                                                    <label for="cli_com"><h4> Total: </h4></label>
-                                                    <h3 style="text-transform:uppercase"><u><p id="cli_com"></p></u>
-                                                    </h3>
+                                                <div class="row d-flex justify-content-center">
+                                                    <h2 style="width:70%" class="d-flex justify-content-center">
+                                                        <div class="form-group p-2 flex-fill bd-highlight">
+                                                            <label for="cli_com"> Total: </label>
+                                                            <h2 style="text-transform:uppercase"><p id="cli_com"></p></h2>
+                                                        </div>
+                                                    </h2>
+                                                    </h2>
                                                 </div>
-                                                <div class="row  d-flex justify-content-center">
+                                                <div class="row d-flex justify-content-center">
 
-                                                    <h3 style="width:70%" class="d-flex justify-content-center"><u>
+                                                    <h2 style="width:70%" class="d-flex justify-content-center 22"><b>
                                                         <div class="form-group p-2 flex-fill bd-highlight">
                                                             <label for="valori"><h4> Dividir em: </h4></label>
-                                                            <input type="range" class="form-control p-2 flex-fill" min="1" max="20" style="width:17%" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
-
-                                                            <input type="text" class="form-control p-2 flex-fill" name="valori" style="width:17%" value="1" id="valori">
+                                                            <input type="range" id="divisor_tot" class="form-control p-2 justify-content-center" min="1" max="20" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
+                                                            <input type="hidden" class="form-control p-2 justify-content-center" name="val_ini" id="val_ini">
+                                                            <input type="text" class="form-control p-2 justify-content-center" name="valori"  value="1" id="valori">
                                                         </div>
-                                                    </u></h3>
+                                                    </b></h2>
                                                     <b>
                                                     <h4> Ou </h4>
                                                     <b>
-                                                    <div class="form-group">
-                                                        <h3><u>
+                                                    <h2  class="d-flex justify-content-center 33" ><b>
+                                                        <div class="form-group p-2 flex-fill bd-highlight">
+
                                                             <label for="valou"><h4> Pagar a Quantidade: </h4></label>
+                                                            <row class="d-flex p-3 ">
+                                                                <input id="valou" class="form-control ml-3 p-2 justify-content-center" name="valou" onblur="converter2(this.value)" >
+                                                                <button type="button" id="pag_tot" onclick="pagtot()" style="width:33%" aria-pressed="false" class="btn btn-primary form-control p-2 mx-3 justify-content-end" > pagar total</button>
+                                                            </row>
 
-                                                            <input id="valou" class="form-control" name="valou" onblur="converter2(this.value)" >
-                                                        </u></h3>
-                                                    </div>
-
+                                                        </div>
+                                                    </b></h2>
                                                     <span><u><i>
                                                         O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
                                                     </i></u></span>
