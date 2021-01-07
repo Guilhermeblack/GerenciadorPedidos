@@ -254,12 +254,10 @@
 
 
         $('#divisor_tot').val(1);
-        $('#divisor_tot').prop('disabled', true);
         $('#valori').val(1);
-        $('#valori').prop('disabled', true);
 
-        $('.33').removeClass("bg-secondary");
-        $('.22').addClass("bg-secondary");
+<!--        $('.33').removeClass("bg-secondary");-->
+<!--        $('.22').addClass("bg-secondary");-->
 
         $('#valou').val( parseFloat(vvval).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
         $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
@@ -279,12 +277,12 @@
         console.log(val);
 
         $('#divisor_tot').val(1);
-        $('#divisor_tot').prop('disabled', true);
-        $('#valori').val(1);
-        $('#valori').prop('disabled', true);
 
-        $('.33').removeClass("bg-secondary");
-        $('.22').addClass("bg-secondary");
+        $('#valori').val(1);
+
+
+<!--        $('.33').removeClass("bg-secondary");-->
+<!--        $('.22').addClass("bg-secondary");-->
         $('#valou').val( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
         $('#cli_com').text( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
 
