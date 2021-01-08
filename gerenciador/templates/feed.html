@@ -158,8 +158,8 @@
         $('.selec').each(function(){
 
 
-            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") ){
-<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<<');-->
+            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').siblings('.stt').text() != "C"){
+                console.log($(this).parent('div').siblings('.stt').text()+'  <<< loop');
                 armazena_ped.push( parseInt($(this).parent('div').siblings('.qnt').text()) * parseFloat($(this).parent('div').siblings('.prec').text()) );
             };
         });
@@ -167,8 +167,11 @@
 
         let nome = $(this).val();
         let vlr = 0;
+        console.log(armazena_ped+'  array comp');
         for (i = 0; i < armazena_ped.length; i++) {
           vlr += armazena_ped[i];
+<!--          console.log(parseFloat(vlr+' tot'));-->
+<!--          console.log(parseFloat(armazena_ped[i]+'  linha'));-->
         }
 
         $('#comanda_x').val($(this).val());
@@ -402,7 +405,7 @@
                                                                                                 {% for prod in ped.produtosPed.all %}
                                                                                                         <div class='col text-align-center prec' >{{ prod.preco }}</div>
                                                                                                 {% endfor %}
-                                                                                                <div class='col text-align-right'>{{ ped.status }}</div>
+                                                                                                <div class='col text-align-right stt'>{{ ped.status }}</div>
 
                                                                                             </div>
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
