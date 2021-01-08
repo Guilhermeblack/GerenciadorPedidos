@@ -153,13 +153,30 @@
 
     $(document).on('click', '.x_c',function(){
 
+<!--        pegar todos os valores dos campos selecionados-->
+        var ped;
+        $('.selec').each(function(){
+
+
+            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") ){
+<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<<');-->
+                armazena_ped.push( parseInt($(this).parent('div').siblings('.qnt').text()) * parseFloat($(this).parent('div').siblings('.prec').text()) );
+            };
+        });
+
+
         let nome = $(this).val();
-        let vlr = $(this).attr('name');
+        let vlr = 0;
+        for (i = 0; i < armazena_ped.length; i++) {
+          vlr += armazena_ped[i];
+        }
+
         $('#comanda_x').val($(this).val());
         $('#val_ini').val($(this).attr('name'));
 
 
 <!--        console.log(parseFloat(vlr));-->
+
         $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
 
@@ -201,12 +218,6 @@
     });
 
 
-    function guarda_ped(ped){
-        if(!armazena_ped.indexOf(ped)){
-            armazena_ped.push(ped);
-        };
-
-    };
 
     $(document).on('click','.c_cli', function(){
 
@@ -361,7 +372,7 @@
                                                                                 aria-hidden="true">×</span></button>
                                                                         </div>
                                                                         <form method="post" name="comanda_cli">
-                                                                            <div class="modal-body">
+                                                                            <div class="modal-body" id="pedidos_cli">
                                                                                 <h6 class="modal-title">
                                                                                     <div class="row align-items-center">
                                                                                         <div class='col text-align-left font-weight-bold'>
@@ -380,16 +391,16 @@
                                                                                     {% if ped.comandaref.id == com.id %}
 
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                        <div class='row text-align-center pb-1 hover' id="ped_{{ped.comandaref.id}}" style="cursor: pointer;" onclick="guarda_ped({{ped.comandaref.id}})">
+                                                                                        <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer;" >
                                                                                                 <div class='col text-align-center'>
-                                                                                                    <input type="checkbox" class="selec" id="prod_{{ped.id}}">
+                                                                                                    <input type="checkbox" class="selec" id="prod_{{ped.id}}" value="{{ped.id}}">
                                                                                                 </div>
                                                                                                 {% for prod in ped.produtosPed.all %}
                                                                                                         <div class='col text-align-left'>{{ prod.nome }}</div>
                                                                                                 {% endfor %}
-                                                                                                <div class='col text-align-center'>{{ ped.quantidade }}</div>
+                                                                                                <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
                                                                                                 {% for prod in ped.produtosPed.all %}
-                                                                                                        <div class='col text-align-center'>{{ prod.preco }}</div>
+                                                                                                        <div class='col text-align-center prec' >{{ prod.preco }}</div>
                                                                                                 {% endfor %}
                                                                                                 <div class='col text-align-right'>{{ ped.status }}</div>
 
