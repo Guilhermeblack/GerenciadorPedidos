@@ -1,6 +1,8 @@
 from django.urls import path, include
 from django.contrib import admin
 from gerenciador import views
+from django.conf import urls, settings
+from django.conf.urls.static import static
 
 app_name = 'gerenciador'
 
@@ -17,4 +19,4 @@ urlpatterns = [
     path('pedidos', views.ped, name='pedidos'),
     # path('loguin/', include('urls', namespace='log')),
 
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

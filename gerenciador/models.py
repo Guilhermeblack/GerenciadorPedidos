@@ -214,6 +214,8 @@ class Produtocad(models.Model):
         null=False
     )
 
+    img_prod = models.ImageField(upload_to='img/produtos', null=True, blank=True)
+
     def __str__(self):
         return self.nome
 

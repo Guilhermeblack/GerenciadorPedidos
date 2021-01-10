@@ -256,8 +256,12 @@
                                     <div class="card-body">
 <!--                                            habilitar campo aberto para alteraçoes-->
                                         <h5 class="card-title">{{pro.nome}}</h5>
+                                          <img class="card-img-top pb-5" style="width: 18rem;" src="{{pro.img_prod.url}}" alt="">
+
+
                                         <h6 class="card-subtitle mb-2 text-muted" font-italic>{{pro.preco}}</h6>
                                         <p class="card-text font-weight-bold text-capitalize"><h7>{{pro.descricao}}</h7></p>
+
                                         <form action="{% url 'administrador' %}" method="post" name="prod_x">
 
                                             <input hidden name="prod_x" id="x_pedido" value="{{pro.id}}">

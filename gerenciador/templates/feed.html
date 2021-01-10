@@ -452,7 +452,7 @@
                                                 <button type="button" class="close close-filho" data-target="modal" aria-label="Close"><span
                                                     aria-hidden="true">×</span></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body"  class="d-flex justify-content-center">
                                                 <div class="row d-flex justify-content-center">
                                                     <h2 style="width:70%" class="d-flex justify-content-center">
                                                         <div class="form-group p-2 flex-fill bd-highlight">
@@ -472,7 +472,11 @@
                                                             <input type="text" class="form-control p-2 justify-content-center" name="valori"  value="1" id="valori">
                                                         </div>
                                                     </b></h2>
-                                                    <b><h4> Ou </h4></b>
+                                                    <h2 style="width:70%" class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
+                                                        <div class="form-group p-2 flex-fill bd-highlight ">
+                                                            <label > OU </label>
+                                                        </div>
+                                                    </b></h2>
                                                     <b>
                                                     <h2  class="d-flex justify-content-center 33" ><b>
                                                         <div class="form-group p-2 flex-fill bd-highlight">
@@ -528,7 +532,10 @@
                                     <div class="card-body" id="bodybg{{pedido.id}}"><b>
                                         {% for ped in pedido.produtosPed.all %}
                                             <p class="card-text">{{ped.nome}} </p>
+                                            <img class="card-img-top pb-5" style="width: 18rem;" src="{{ped.img_prod.url}}" alt="">
                                         {%endfor%}
+
+                                        <hr>
                                         <p class="card-text">{{pedido.quantidade}}</p>
                                         <p class="card-text">{{pedido.observacao}}</p>
                                     </b></div>
