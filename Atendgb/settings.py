@@ -135,10 +135,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/pt/2.2/howto/static-files/
 
 
-# STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'/media/')
+MEDIA_ROOT = os.path.join('/media/')
 STATICFILES_DIRS = ( os.path.join('/static/'), )
 
 # print(BASE_DIR)
@@ -167,7 +167,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/')
 
 # essa linha
-STATIC_URL = '../gerenciador/static/'
+# STATIC_URL = '../gerenciador/static/'
 
 
 
