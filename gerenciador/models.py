@@ -231,6 +231,11 @@ class Pedido(models.Model):
         ("C", "Cancelado")
     )
 
+    STATUS_PGT = (
+        ("P", "Pago"),
+        ("R", "Resto"),
+        ("N", "Não pago")
+    )
 
 
     comandaref= models.ForeignKey(
@@ -265,6 +270,15 @@ class Pedido(models.Model):
         null=False,
         default="P"
     )
+
+    status_pago = models.CharField(
+        max_length=1,
+        choices=STATUS_PGT,
+        blank=False,
+        null=False,
+        default="N"
+    )
+
 
     data = models.DateTimeField(auto_now_add=True , blank=True)
 

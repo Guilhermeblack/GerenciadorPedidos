@@ -136,10 +136,49 @@ def feed(request):
                 'movi': estado_mov[0]['movimento']
             })
         if 'comanda_x' in request.POST:
+            # tirar do total da comanda
+            pprint(request.POST)
             com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])
             pprint(com)
-            com.update(status="F")
-            # ped.save()
+            valo_ped = request.POST['valo']
+            peed= request.POST['pedi[]']
+            pprint(com.valor,' valor comadna')
+            valo= valo_ped
+            for p in peed:
+                pedido_prod = models.Pedido.objects.filter(pk=p)
+                pedid = pedido_prod.status_pago
+
+
+
+                resto = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed[0])
+                res = resto.preco
+                valo = valo - res
+                # valor total dos itens selecionados do pedido foi abatido
+                if valo <= 0:
+                    pedid.update(status_pago="P")
+                    com.valor = com.valor - valo_ped
+                    # os itens do pedido que sobraram recebem o resto
+                    # caso o valor dos itens selecionados zere a comanda
+                    if com.valor <= 0:
+                        com.update(status="F")
+                        messages.success(request, "{}, Comanda fechada com sucesso.".format(request.user))
+                        return render(request, 'feed.html', {
+
+                            'comandas': models.Comanda.objects.all().order_by('id', 'data'),
+                            'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                            'choices': STATUS_CHOICES,
+                            'movi': estado_mov[0]['movimento']
+                        })
+                    #tirar da comanda
+
+                    # tirar da comanda o valor do item
+                    pedid.update(status_pago="R")
+
+                    com.valor = com.valor - res
+
+            if com.valor <= 0:
+                com.update(status="F")
+
             messages.success(request, "{}, Comanda fechada com sucesso.".format(request.user))
             return render(request, 'feed.html', {
 

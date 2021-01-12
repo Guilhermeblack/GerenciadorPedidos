@@ -158,27 +158,33 @@
         $('.selec').each(function(){
 
 
+<!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
             if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').siblings('.stt').text() != "C"){
-                console.log($(this).parent('div').siblings('.stt').text()+'  <<< loop');
-                armazena_ped.push( parseInt($(this).parent('div').siblings('.qnt').text()) * parseFloat($(this).parent('div').siblings('.prec').text()) );
+                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');
+                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');
+                armazena_ped.push( [parseInt($(this).parent('div').siblings('.qnt').text()) * parseFloat($(this).parent('div').siblings('.prec').text()), $(this).val()] );
             };
         });
+
+        console.log(' nudale peds',armazena_ped);
 
 
         let nome = $(this).val();
         let vlr = 0;
-        console.log(armazena_ped+'  array comp');
+        let prod = [];
+
         for (i = 0; i < armazena_ped.length; i++) {
-          vlr += armazena_ped[i];
-<!--          console.log(parseFloat(vlr+' tot'));-->
-<!--          console.log(parseFloat(armazena_ped[i]+'  linha'));-->
+          vlr += armazena_ped[i][0];
+
+
         }
 
+<!--        console.log(parseFloat(vlr+' tot'));-->
         $('#comanda_x').val($(this).val());
-        $('#val_ini').val($(this).attr('name'));
+        $('#val_ini').val(vlr);
 
 
-<!--        console.log(parseFloat(vlr));-->
+<!--        console.log(parseFloat(vlr)+' que vai mostrar');-->
 
         $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
@@ -189,14 +195,49 @@
     });
 
     $(document).on('click','#comanda_fecha', function(){
-        let com  = $('#comanda_x').val();
+
+        let pedidu=[];
+        for (i = 0; i < armazena_ped.length; i++) {
+            pedidu[i]= armazena_ped[i][1] ;
+
+        }
+
+
+
+        let vall = $('#valou').val();
+        if (vall.includes("R$")){
+            vall = vall.replace("R$", '');
+        };
+        if (vall.substr(-3) == '.'){
+            vall = vall.replace(-3, ',');
+        };
+        vall=parseFloat(vall);
+        if (vall == 0){
+
+            vall = $('#cli_com').val();
+            if (vall.includes("R$")){
+                vall = vall.replace("R$", '');
+            };
+            if (vall.substr(-3) == '.'){
+                vall = vall.replace(-3, ',');
+            };
+            vall=parseFloat(vall);
+        };
+
+         let com = $('#comanda_x').val();
+
+
         let csrf = $(this).parent().siblings().children('#tkn').find("input[name=csrfmiddlewaretoken]").val();
 
         $.ajax({
             headers: { "X-CSRFToken": csrf },
             type: 'POST',
             url: "{% url 'feed' %}",
-            data: {'comanda_x' :com},
+            data: {
+                'comanda_x' :com,
+                'valo':vall,
+                'pedi':pedidu
+                },
             success: function (response) {
                     location.reload();
                     $("#set_pg_top").click();
@@ -233,18 +274,16 @@
         var numero = parseFloat(valor);
         document.getElementById('valori').value = numero;
 
-
+        console.log( $('#val_ini').val() +'  val_ini');
 
         var tot = parseFloat($('#val_ini').val());
 
         var div = $('#divisor_tot').val();
-        console.log(div);
         tot = tot/div;
 
 <!--        $('.22').removeClass("bg-secondary");-->
 <!--        $('.33').addClass("bg-secondary");-->
 <!--        $('#valou').prop('disabled', true);-->
-
 
         $('#valou').val(parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
@@ -270,9 +309,6 @@
         $('#divisor_tot').val(1);
         $('#valori').val(1);
 
-<!--        $('.33').removeClass("bg-secondary");-->
-<!--        $('.22').addClass("bg-secondary");-->
-
         $('#valou').val( parseFloat(vvval).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
         $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
 
@@ -288,15 +324,14 @@
             val = val.replace(-3, ',');
         };
 
-        console.log(val);
+<!--        console.log(val);-->
 
         $('#divisor_tot').val(1);
 
         $('#valori').val(1);
 
 
-<!--        $('.33').removeClass("bg-secondary");-->
-<!--        $('.22').addClass("bg-secondary");-->
+
         $('#valou').val( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
         $('#cli_com').text( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
 
@@ -385,6 +420,7 @@
                                                                                         <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
                                                                                         <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
                                                                                         <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
+                                                                                        <div class='col text-align-right font-weight-bold'>{{ 'recebimento' }}</div>
                                                                                     </div>
                                                                                 </h6>
 
@@ -406,6 +442,7 @@
                                                                                                         <div class='col text-align-center prec' >{{ prod.preco }}</div>
                                                                                                 {% endfor %}
                                                                                                 <div class='col text-align-right stt'>{{ ped.status }}</div>
+                                                                                                <div class='col text-align-right stt_pgt'>{{ ped.status_pago }}</div>
 
                                                                                             </div>
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
@@ -469,7 +506,7 @@
                                                             <label for="valori"><h4> Dividir em: </h4></label>
                                                             <input type="range" id="divisor_tot" class="form-control p-2 justify-content-center" min="1" max="20" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
                                                             <input type="hidden" class="form-control p-2 justify-content-center" name="val_ini" id="val_ini">
-                                                            <input type="text" class="form-control p-2 justify-content-center" name="valori"  value="1" id="valori">
+                                                            <input type="text" class="form-control p-2 justify-content-center disabled" name="valori"  value="1" id="valori">
                                                         </div>
                                                     </b></h2>
                                                     <h2 style="width:70%" class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
