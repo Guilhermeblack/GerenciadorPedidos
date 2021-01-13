@@ -147,7 +147,6 @@ class Comanda(models.Model):
     )
 
     n_mesa = models.IntegerField(
-        unique=True,
         null=False,
         blank=False,
     )
@@ -214,7 +213,7 @@ class Produtocad(models.Model):
         null=False
     )
 
-    img_prod = models.ImageField(upload_to='img/produtos', null=True, blank=True)
+    # img_prod = models.ImageField(upload_to='img/produtos', null=True, blank=True)
 
     def __str__(self):
         return self.nome

@@ -217,6 +217,9 @@ def ped(request):
             formcom = forms.comandas(request.POST)
 
             pprint(formcom)
+
+            # criar verificação do numero da comanda se nao esta aberta para nao repetir numero
+
             # print('tem perm')
             if formcom.is_valid():
                 formcom.save()
