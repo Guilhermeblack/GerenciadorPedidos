@@ -7,6 +7,7 @@ Django==3.0.8
 django-ajax==0.3.0
 django-pwa==1.0.10
 django-toolbelt==0.0.1
+django-widget-tweaks==1.4.8
 gunicorn==20.0.4
 kiwisolver==1.2.0
 matplotlib==3.3.0

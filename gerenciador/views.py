@@ -121,6 +121,7 @@ def feed(request):
                 'choices': STATUS_CHOICES,
                 'movi': estado_mov[0]['movimento']
             })
+
         if 'stats' in request.POST:
             print(request.POST)
             ped= models.Pedido.objects.filter(pk=request.POST['idstat'])
@@ -135,51 +136,39 @@ def feed(request):
                 'choices': STATUS_CHOICES,
                 'movi': estado_mov[0]['movimento']
             })
+
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
             pprint(request.POST)
-            com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])
+            com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])[0]
             pprint(com)
-            valo_ped = request.POST['valo']
-            peed= request.POST['pedi[]']
-            pprint(com.valor,' valor comadna')
-            valo= valo_ped
-            for p in peed:
-                pedido_prod = models.Pedido.objects.filter(pk=p)
-                pedid = pedido_prod.status_pago
+            valo_ped = float(request.POST['valo'])
+            peed = request.POST['pedi[]']
 
-
-
-                resto = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed[0])
-                res = resto.preco
-                valo = valo - res
-                # valor total dos itens selecionados do pedido foi abatido
-                if valo <= 0:
-                    pedid.update(status_pago="P")
-                    com.valor = com.valor - valo_ped
-                    # os itens do pedido que sobraram recebem o resto
-                    # caso o valor dos itens selecionados zere a comanda
-                    if com.valor <= 0:
-                        com.update(status="F")
-                        messages.success(request, "{}, Comanda fechada com sucesso.".format(request.user))
-                        return render(request, 'feed.html', {
-
-                            'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-                            'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
-                            'choices': STATUS_CHOICES,
-                            'movi': estado_mov[0]['movimento']
-                        })
-                    #tirar da comanda
-
-                    # tirar da comanda o valor do item
-                    pedid.update(status_pago="R")
-
-                    com.valor = com.valor - res
-
+            com.valor -= valo_ped
             if com.valor <= 0:
-                com.update(status="F")
+                com.status = "F"
+                messages.success(request, "{}, Comanda FECHADA com sucesso.".format(request.user))
+            else:
 
-            messages.success(request, "{}, Comanda fechada com sucesso.".format(request.user))
+                # loop itens
+                valo= valo_ped
+                for num, p in peed:
+
+                    pedido_prod = models.Pedido.objects.filter(pk=p)
+                    if valo >= pedido_prod.produtosPed[0].preco:
+
+                        valo -= pedido_prod.produtosPed[0].preco
+                        pedido_prod.status_pago = "P"
+                    else:
+                        if valo > 0:
+                            pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed[0].id)
+                            res = pdt.preco - valo
+                            com.valor += res
+                            pedido_prod.status_pago = "R"
+
+                    messages.success(request, "{}, Comanda ATUALIZADA com sucesso.".format(request.user))
+
             return render(request, 'feed.html', {
 
                 'comandas': models.Comanda.objects.all().order_by('id', 'data'),
