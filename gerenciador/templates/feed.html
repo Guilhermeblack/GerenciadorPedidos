@@ -211,15 +211,17 @@
         if (vall.substr(-3) == '.'){
             vall = vall.replace(-3, ',');
         };
+
         vall=parseFloat(vall);
+        console.log( $('#cli_com').text() );
         if (vall == 0){
 
-            vall = $('#cli_com').val();
+            vall = $('#cli_com').text();
             if (vall.includes("R$")){
                 vall = vall.replace("R$", '');
             };
             if (vall.substr(-3) == '.'){
-                vall = vall.replace(-3, ',');
+            vall = vall.replace(-3, ',');
             };
             vall=parseFloat(vall);
         };
@@ -440,8 +442,27 @@
                                                                                             {% for prod in ped.produtosPed.all %}
                                                                                                     <div class='col text-align-center prec' >{{ prod.preco }}</div>
                                                                                             {% endfor %}
-                                                                                            <div class='col text-align-right stt'>{{ ped.status }}</div>
-                                                                                            <div class='col text-align-right stt_pgt'>{{ ped.status_pago }}</div>
+
+                                                                                            {% if ped.status == "P" %}
+                                                                                                <div class='col text-align-right stt'>{{ 'Pedido realizado' }}</div>
+                                                                                            {% elif ped.status_pago == "F" %}
+                                                                                                <div class='col text-align-right stt'>{{ 'Em preparo' }}</div>
+                                                                                            {% elif ped.status_pago == "S" %}
+                                                                                                <div class='col text-align-right stt'>{{ 'Processo de entrega' }}</div>
+                                                                                            {% elif ped.status_pago == "E" %}
+                                                                                                <div class='col text-align-right stt'>{{ 'Foi entregue' }}</div>
+
+                                                                                            {% endif %}
+
+
+                                                                                            {% if ped.status_pago == "N" %}
+                                                                                                <div class='col text-align-right stt_pgt'>{{ 'Não pago' }}</div>
+                                                                                            {% elif ped.status_pago == "R" %}
+                                                                                                <div class='col text-align-right stt_pgt'>{{ 'Contem restante' }}</div>
+                                                                                            {% elif ped.status_pago == "P" %}
+                                                                                                <div class='col text-align-right stt_pgt'>{{ 'Pago' }}</div>
+                                                                                            {% endif %}
+
                                                                                         </div>
 <!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
 

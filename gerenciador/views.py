@@ -139,9 +139,7 @@ def feed(request):
 
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
-            pprint(request.POST)
             com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])[0]
-            pprint(com)
             valo_ped = float(request.POST['valo'])
             peed = request.POST['pedi[]']
 
@@ -153,19 +151,34 @@ def feed(request):
 
                 # loop itens
                 valo= valo_ped
-                for num, p in peed:
+                if peed.isdigit:
+                    pedido_prod = models.Pedido.objects.filter(pk=peed)
+                    pprint(pedido_prod[0].produtosPed.all()[0].preco)
+                    if valo >= pedido_prod[0].produtosPed.all()[0].preco:
 
-                    pedido_prod = models.Pedido.objects.filter(pk=p)
-                    if valo >= pedido_prod.produtosPed[0].preco:
-
-                        valo -= pedido_prod.produtosPed[0].preco
-                        pedido_prod.status_pago = "P"
+                        valo -= pedido_prod[0].produtosPed.all()[0].preco
+                        pedido_prod[0].status_pago = "P"
                     else:
                         if valo > 0:
-                            pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed[0].id)
+                            pdt = models.Produtocad.objects.filter(pk=peed)
                             res = pdt.preco - valo
                             com.valor += res
-                            pedido_prod.status_pago = "R"
+                            pedido_prod[0].status_pago = "R"
+
+                elif peed.length > 1:
+                    for num, p in peed:
+
+                        pedido_prod = models.Pedido.objects.filter(pk=p)
+                        if valo >= pedido_prod[0].produtosPed.all()[0].preco:
+
+                            valo -= pedido_prod[0].produtosPed.all()[0].preco
+                            pedido_prod.status_pago = "P"
+                        else:
+                            if valo > 0:
+                                pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed.all()[0].id)
+                                res = pdt.preco - valo
+                                com.valor += res
+                                pedido_prod.status_pago = "R"
 
                     messages.success(request, "{}, Comanda ATUALIZADA com sucesso.".format(request.user))
 

@@ -276,6 +276,7 @@ class Pedido(models.Model):
         blank=False,
         null=False,
         default="N"
+
     )
 
 
