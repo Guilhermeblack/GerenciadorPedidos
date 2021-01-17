@@ -146,7 +146,7 @@ def feed(request):
                 peed = request.POST['pedi[]']
                 print(peed,' pediidp')
             print(valo_ped,' valo ped')
-
+            new_status = 'VERIFICADA'
             com.valor -= valo_ped
             if com.valor <= 0:
                 com.status="F"
@@ -157,22 +157,31 @@ def feed(request):
                 # loop itens
                 valo= valo_ped
                 if 'pedi[]' in request.POST:
+
                     if isinstance(peed, str):
+
                         pedido_prod = models.Pedido.objects.filter(pk=peed)
                         pprint(pedido_prod[0].produtosPed.all()[0].preco)
                         if valo >= pedido_prod[0].produtosPed.all()[0].preco:
 
                             valo -= pedido_prod[0].produtosPed.all()[0].preco
+                            pedido_prod[0].valor -= pedido_prod[0].produtosPed.all()[0].preco
                             pedido_prod[0].status_pago = "P"
+                            pedido_prod[0].save()
                         else:
+
                             if valo > 0:
                                 pdt = models.Produtocad.objects.filter(pk=peed)
                                 pprint(pdt)
                                 res = pdt.preco - valo
                                 com.valor += res
+                                com.save()
+                                pedido_prod[0].valor -= pdt.preco
                                 pedido_prod[0].status_pago = "R"
-                        pedido_prod.save()
-                        com.save()
+                                pedido_prod[0].save()
+                        pedido_prod[0].save()
+
+
                     elif peed.length > 0:
                         for num, p in peed:
 
@@ -180,22 +189,26 @@ def feed(request):
                             if valo >= pedido_prod[0].produtosPed.all()[0].preco:
 
                                 valo -= pedido_prod[0].produtosPed.all()[0].preco
-                                pedido_prod.status_pago = "P"
 
+                                pedido_prod.status_pago = "P"
+                                pedido_prod[0].save()
                             else:
                                 if valo > 0:
                                     pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed.all()[0].id)
                                     res = pdt.preco - valo
                                     com.valor += res
-                                    pedido_prod.status_pago = "R"
-
+                                    pedido_prod[0].valor -= res
+                                    pedido_prod[0].status_pago = "R"
+                                    pedido_prod[0].save()
                         new_status = 'ATUALIZADA'
-                        pedido_prod.save()
+                        pedido_prod[0].save()
                         com.save()
                 else:
                     com.status="F"
+                    com.valor = 0
                     com.save()
                     new_status = 'FECHADA'
+
             messages.success(request, "{}, Comanda {} com sucesso.".format(request.user, new_status))
 
 
@@ -271,10 +284,26 @@ def ped(request):
 
                 add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
                 prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
-                newped.valor = prod.preco * abs(request.POST['quantidade'])
-                newped.save()
+
                 qnt = int(request.POST['quantidade'])
-                add_comanda.valor += (prod.preco* qnt)
+                # print(newped)
+
+                valu = prod.preco * qnt
+                newped.cleaned_data['valor'] =float(valu)
+                newped['valor'].value = valu
+                print(newped.cleaned_data, '  <<<')
+                if newped.is_valid():
+                    j= newped.save()
+                    j.save()
+                    ped_val = models.Pedido.objects.get(pk=j.id)
+                    print(ped_val.valor, '  valor q fico d opedido')
+                    ped_val.valor= valu
+                    print(ped_val.valor, '  depois e salv')
+                    ped_val.save()
+
+
+                    # print(newped.cleaned_data['valor'])
+                add_comanda.valor += valu
                 add_comanda.save()
 
                 messages.success(request, "Pedido registrado !")
