@@ -279,11 +279,17 @@ class Pedido(models.Model):
 
     )
 
+    valor = models.FloatField(
+        default=0.0,
+        null=False,
+        blank=True
+
+    )
 
     data = models.DateTimeField(auto_now_add=True , blank=True)
 
-    # def __str__(self):
-    #     return '{}- {}'.format(self.id, self.status)
+    def __str__(self):
+        return '{}- {}'.format(self.id, self.comandaref)
 
     objects = models.Manager()
 

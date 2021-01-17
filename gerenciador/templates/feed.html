@@ -155,11 +155,13 @@
 
 <!--        pegar todos os valores dos campos selecionados-->
         var ped;
+        var vainfo=0;
+        let nome = $(this).val();
+
         $('.selec').each(function(){
 
-
 <!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
-            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').siblings('.stt').text() != "C"){
+            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').first('.stt').text() != "C" && $(this).attr('name') == nome ){
                 console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');
                 console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');
                 armazena_ped.push( [parseInt($(this).parent('div').siblings('.qnt').text()) * parseFloat($(this).parent('div').siblings('.prec').text()), $(this).val()] );
@@ -169,7 +171,7 @@
         console.log(' nudale peds',armazena_ped);
 
 
-        let nome = $(this).val();
+
         let vlr = 0;
         let prod = [];
 
@@ -347,6 +349,17 @@
             lista[i].checked = marcar;
         };
     });
+    $('#comandas').click(function(){
+        $(this).modal('hide');
+    });
+    $(document).on('hide','.mod-filho', function(){
+        console.log(' pego o modal filho');
+        $('.mod-filho').modal('hide');
+    });
+    $('.mod-filho').click(function(){
+        $(this).modal('hide');
+        $('#comandas').modal('hide');
+    });
 
 
     </script>
@@ -403,7 +416,7 @@
                                                                 <div class='col text-align-center'>{{ com.nome }}</div>
                                                                 <div class='col text-align-right' id="vlr_comanda">{{ com.valor }}</div>
                                                             </div>
-                                                            <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
+                                                            <div class="modal fade modal-lg mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
                                                                 <div class="modal-dialog modal-lg" role="document">
                                                                     <div class="modal-content ">
 
@@ -419,7 +432,7 @@
                                                                                             <input type="checkbox" class="" name="prodd" id="prodd" >
                                                                                         </div>
                                                                                         <div class='col text-align-left font-weight-bold'>{{ 'Produto' }}</div>
-                                                                                        <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>
+<!--                                                                                        <div class='col text-align-center font-weight-bold'>{{ 'quantidade' }}</div>-->
                                                                                         <div class='col text-align-center font-weight-bold'>{{ 'Valor' }}</div>
                                                                                         <div class='col text-align-right font-weight-bold'>{{ 'Status' }}</div>
                                                                                         <div class='col text-align-right font-weight-bold'>{{ 'Recebimento' }}</div>
@@ -429,27 +442,27 @@
                                                                                 {% for ped in pedidos %}
         <!--                                                                            {{ ped.comandaref.id }}-->
         <!--                                                                            {{ com.id }}-->
-                                                                                    {% if ped.comandaref.id == com.id and ped.status != "C"%}
+                                                                                    {% if ped.comandaref.id == com.id%}
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                         <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
                                                                                             <div class='col text-align-center'>
-                                                                                                <input type="checkbox" class="selec" id="prod_{{ped.id}}" value="{{ped.id}}">
+                                                                                                <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
                                                                                             </div>
                                                                                             {% for prod in ped.produtosPed.all %}
                                                                                                     <div class='col text-align-left'>{{ prod.nome }}</div>
                                                                                             {% endfor %}
-                                                                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
+<!--                                                                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>-->
                                                                                             {% for prod in ped.produtosPed.all %}
-                                                                                                    <div class='col text-align-center prec' >{{ prod.preco }}</div>
+                                                                                                    <div class='col text-align-center prec' >{{ ped.valor }}</div>
                                                                                             {% endfor %}
 
                                                                                             {% if ped.status == "P" %}
                                                                                                 <div class='col text-align-right stt'>{{ 'Pedido realizado' }}</div>
-                                                                                            {% elif ped.status_pago == "F" %}
+                                                                                            {% elif ped.status == "F" %}
                                                                                                 <div class='col text-align-right stt'>{{ 'Em preparo' }}</div>
-                                                                                            {% elif ped.status_pago == "S" %}
+                                                                                            {% elif ped.status == "S" %}
                                                                                                 <div class='col text-align-right stt'>{{ 'Processo de entrega' }}</div>
-                                                                                            {% elif ped.status_pago == "E" %}
+                                                                                            {% elif ped.status == "E" %}
                                                                                                 <div class='col text-align-right stt'>{{ 'Foi entregue' }}</div>
 
                                                                                             {% endif %}
@@ -458,7 +471,7 @@
                                                                                             {% if ped.status_pago == "N" %}
                                                                                                 <div class='col text-align-right stt_pgt'>{{ 'Não pago' }}</div>
                                                                                             {% elif ped.status_pago == "R" %}
-                                                                                                <div class='col text-align-right stt_pgt'>{{ 'Contem restante' }}</div>
+                                                                                                <div class='col text-align-right stt_pgt'>{{ 'Restante' }}</div>
                                                                                             {% elif ped.status_pago == "P" %}
                                                                                                 <div class='col text-align-right stt_pgt'>{{ 'Pago' }}</div>
                                                                                             {% endif %}

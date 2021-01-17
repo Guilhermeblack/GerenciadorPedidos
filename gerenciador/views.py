@@ -139,48 +139,65 @@ def feed(request):
 
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
+            pprint(request.POST)
             com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])[0]
             valo_ped = float(request.POST['valo'])
-            peed = request.POST['pedi[]']
+            if 'pedi[]' in request.POST:
+                peed = request.POST['pedi[]']
+                print(peed,' pediidp')
+            print(valo_ped,' valo ped')
 
             com.valor -= valo_ped
             if com.valor <= 0:
-                com.status = "F"
-                messages.success(request, "{}, Comanda FECHADA com sucesso.".format(request.user))
+                com.status="F"
+                com.save()
+                new_status = 'FECHADA'
             else:
 
                 # loop itens
                 valo= valo_ped
-                if peed.isdigit:
-                    pedido_prod = models.Pedido.objects.filter(pk=peed)
-                    pprint(pedido_prod[0].produtosPed.all()[0].preco)
-                    if valo >= pedido_prod[0].produtosPed.all()[0].preco:
-
-                        valo -= pedido_prod[0].produtosPed.all()[0].preco
-                        pedido_prod[0].status_pago = "P"
-                    else:
-                        if valo > 0:
-                            pdt = models.Produtocad.objects.filter(pk=peed)
-                            res = pdt.preco - valo
-                            com.valor += res
-                            pedido_prod[0].status_pago = "R"
-
-                elif peed.length > 1:
-                    for num, p in peed:
-
-                        pedido_prod = models.Pedido.objects.filter(pk=p)
+                if 'pedi[]' in request.POST:
+                    if isinstance(peed, str):
+                        pedido_prod = models.Pedido.objects.filter(pk=peed)
+                        pprint(pedido_prod[0].produtosPed.all()[0].preco)
                         if valo >= pedido_prod[0].produtosPed.all()[0].preco:
 
                             valo -= pedido_prod[0].produtosPed.all()[0].preco
-                            pedido_prod.status_pago = "P"
+                            pedido_prod[0].status_pago = "P"
                         else:
                             if valo > 0:
-                                pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed.all()[0].id)
+                                pdt = models.Produtocad.objects.filter(pk=peed)
+                                pprint(pdt)
                                 res = pdt.preco - valo
                                 com.valor += res
-                                pedido_prod.status_pago = "R"
+                                pedido_prod[0].status_pago = "R"
+                        pedido_prod.save()
+                        com.save()
+                    elif peed.length > 0:
+                        for num, p in peed:
 
-                    messages.success(request, "{}, Comanda ATUALIZADA com sucesso.".format(request.user))
+                            pedido_prod = models.Pedido.objects.filter(pk=p)
+                            if valo >= pedido_prod[0].produtosPed.all()[0].preco:
+
+                                valo -= pedido_prod[0].produtosPed.all()[0].preco
+                                pedido_prod.status_pago = "P"
+
+                            else:
+                                if valo > 0:
+                                    pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed.all()[0].id)
+                                    res = pdt.preco - valo
+                                    com.valor += res
+                                    pedido_prod.status_pago = "R"
+
+                        new_status = 'ATUALIZADA'
+                        pedido_prod.save()
+                        com.save()
+                else:
+                    com.status="F"
+                    com.save()
+                    new_status = 'FECHADA'
+            messages.success(request, "{}, Comanda {} com sucesso.".format(request.user, new_status))
+
 
             return render(request, 'feed.html', {
 
@@ -251,13 +268,15 @@ def ped(request):
             # jogar campo por campo e jogar o produto depois
 
             if newped.is_valid():
-                newped.save()
+
                 add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
                 prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
-
+                newped.valor = prod.preco * abs(request.POST['quantidade'])
+                newped.save()
                 qnt = int(request.POST['quantidade'])
                 add_comanda.valor += (prod.preco* qnt)
                 add_comanda.save()
+
                 messages.success(request, "Pedido registrado !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
