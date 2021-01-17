@@ -447,7 +447,7 @@
                                                                                 {% for ped in pedidos %}
         <!--                                                                            {{ ped.comandaref.id }}-->
         <!--                                                                            {{ com.id }}-->
-                                                                                    {% if ped.comandaref.id == com.id%}
+                                                                                    {% if ped.comandaref.id == com.id and com.status == 'A' %}
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                         <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
                                                                                             <div class='col text-align-center'>
@@ -579,7 +579,8 @@
 
 
                 {% for pedido in pedidos|dictsort:"data" %}
-                    {% if pedido.status != "C" %}
+
+                    {% if pedido.status != "C" and pedido.comandaref.status != 'F' %}
                         <div class="row mb-3 ped_" id="vamofi">
                             <div class="col mb-2">
 
@@ -635,6 +636,13 @@
                                 </div>
                             </div>
                         </div>
+                    {% else %}
+                         <div class="row mb-3" >
+                             <div class="col mb-2">
+                                 {{' Comandas já finalizadas ou pedidos entregue'}}
+                                 {{' Aguarde os próximos pedidos '}}
+                             </div>
+                         </div>
                     {%endif%}
                 {% empty %}
                         <div class="row mb-3 ">
