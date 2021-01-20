@@ -139,13 +139,14 @@ def feed(request):
 
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
+
             pprint(request.POST)
+
             com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])[0]
             valo_ped = float(request.POST['valo'])
             if 'pedi[]' in request.POST:
                 peed = request.POST['pedi[]']
-                print(peed,' pediidp')
-            print(valo_ped,' valo ped')
+
             new_status = 'VERIFICADA'
             com.valor -= valo_ped
             if com.valor <= 0:
@@ -157,52 +158,55 @@ def feed(request):
                 # loop itens
                 valo= valo_ped
                 if 'pedi[]' in request.POST:
-
+                    pedido_prod = models.Pedido.objects.get(pk=peed)
                     if isinstance(peed, str):
 
-                        pedido_prod = models.Pedido.objects.filter(pk=peed)
-                        pprint(pedido_prod[0].produtosPed.all()[0].preco)
-                        if valo >= pedido_prod[0].produtosPed.all()[0].preco:
 
-                            valo -= pedido_prod[0].produtosPed.all()[0].preco
-                            pedido_prod[0].valor -= pedido_prod[0].produtosPed.all()[0].preco
-                            pedido_prod[0].status_pago = "P"
-                            pedido_prod[0].save()
+                        if valo >= pedido_prod.produtosPed.all()[0].preco:
+
+                            valo -= pedido_prod.produtosPed.all().preco
+
+                            pedido_prod.valor -= valo
+                            pedido_prod.status_pago = "P"
+                            pedido_prod.save()
                         else:
 
                             if valo > 0:
-                                pdt = models.Produtocad.objects.filter(pk=peed)
-                                pprint(pdt)
-                                res = pdt.preco - valo
-                                com.valor += res
+                                pprint(pedido_prod)
+                                print(valo,'  valoo')
+                                pprint(pedido_prod.produtosPed)
+                                pedido_prod.valor -= valo
+                                print(com.valor,'  comanda valoor')
+                                print(pedido_prod.valor,'  valor do pedido')
+                                pedido_prod.status_pago = "R"
+                                pedido_prod.save()
                                 com.save()
-                                pedido_prod[0].valor -= pdt.preco
-                                pedido_prod[0].status_pago = "R"
-                                pedido_prod[0].save()
-                        pedido_prod[0].save()
+                                print('passo aqui')
+                        pedido_prod.save()
 
 
                     elif peed.length > 0:
                         for num, p in peed:
+                            pedido_prod = models.Pedido.objects.get(pk=p)
+                            if valo >= pedido_prod.produtosPed.all()[0].preco:
 
-                            pedido_prod = models.Pedido.objects.filter(pk=p)
-                            if valo >= pedido_prod[0].produtosPed.all()[0].preco:
-
-                                valo -= pedido_prod[0].produtosPed.all()[0].preco
-
+                                valo -= pedido_prod.produtosPed.all()[0].preco
+                                pedido_prod.valor -= valo
                                 pedido_prod.status_pago = "P"
-                                pedido_prod[0].save()
+                                pedido_prod.save()
                             else:
                                 if valo > 0:
-                                    pdt = models.Produtocad.objects.filter(pk=pedido_prod.produtosPed.all()[0].id)
+                                    pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
+                                    pprint(pdt)
                                     res = pdt.preco - valo
                                     com.valor += res
-                                    pedido_prod[0].valor -= res
-                                    pedido_prod[0].status_pago = "R"
-                                    pedido_prod[0].save()
+                                    pedido_prod.valor -= valo
+                                    pedido_prod.status_pago = "R"
+                                    pedido_prod.save()
+                                    com.save()
                         new_status = 'ATUALIZADA'
-                        pedido_prod[0].save()
-                        com.save()
+                        pedido_prod.save()
+
                 else:
                     com.status="F"
                     com.valor = 0

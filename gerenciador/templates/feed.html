@@ -612,7 +612,7 @@
         <!--                                    {{choices}}-->
                                             {% for choice in choices  %}
 <!--                                              {{choice}}-->
-                                              {% if choice == pedido.get_status_display and choice != 'Cancelado'%} <div class="carousel-item active"> {%else%} <div class="carousel-item">{% endif %}
+                                              {% if choice == pedido.get_status_display and choice != 'Cancelado' %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{% endif %}
                                                 <div class="d-block status_pedido" >{{ choice }}</div>
                                                 </div>
 
