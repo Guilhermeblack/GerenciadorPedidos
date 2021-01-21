@@ -174,7 +174,7 @@ class Comanda(models.Model):
 
 
     def __str__(self):
-        return '{} - {}'.format(self.id, self.nome)
+        return ' {}'.format(self.nome)
 
     objects = models.Manager()
 
@@ -289,7 +289,7 @@ class Pedido(models.Model):
     data = models.DateTimeField(auto_now_add=True , blank=True)
 
     def __str__(self):
-        return '{}- {}'.format(self.id, self.comandaref)
+        return '{} - {}'.format( self.id, self.comandaref)
 
     objects = models.Manager()
 

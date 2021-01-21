@@ -103,16 +103,17 @@ def feed(request):
 
         if 'exc_ped' in request.POST:
             # pprint(request.POST)
-            ped = models.Pedido.objects.filter(pk=request.POST['exc_ped'])
-            ped.update(status="C")
-            # pprint(ped[0].comandaref.id)
-            produto_ped = models.Produtocad.objects.filter(pk=ped[0].produtosPed.all()[0].id)
+            ped = models.Pedido.objects.get(pk=request.POST['exc_ped'])
+            ped.status="C"
+            ped.valor =0
+            produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id)
 
-            comanda = models.Comanda.objects.filter(pk=ped[0].comandaref.id)
-
-            vlr = comanda[0].valor - (ped[0 ].quantidade *produto_ped[0].preco)
-            pprint(vlr)
-            comanda.update(valor=vlr)
+            comanda = models.Comanda.objects.get(pk=ped.comandaref.id)
+            vll = ped.quantidade *produto_ped.preco
+            print(vll, '  <<< vll')
+            comanda.valor -= vll
+            comanda.save()
+            ped.save()
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
@@ -142,10 +143,9 @@ def feed(request):
 
             pprint(request.POST)
 
-            com = models.Comanda.objects.filter(pk=request.POST['comanda_x'])[0]
+            com = models.Comanda.objects.get(pk=int(request.POST['comanda_x']))
             valo_ped = float(request.POST['valo'])
-            if 'pedi[]' in request.POST:
-                peed = request.POST['pedi[]']
+
 
             new_status = 'VERIFICADA'
             com.valor -= valo_ped
@@ -153,28 +153,32 @@ def feed(request):
                 com.status="F"
                 com.save()
                 new_status = 'FECHADA'
+                print('valor comanda menor q 0')
             else:
 
                 # loop itens
                 valo= valo_ped
                 if 'pedi[]' in request.POST:
+                    peed = request.POST['pedi[]']
+                    pprint(peed)
+                    print('entao foi o pedd')
                     pedido_prod = models.Pedido.objects.get(pk=peed)
                     if isinstance(peed, str):
+                        print('valor comanda maior q 0 e um item')
 
+                        if valo >= pedido_prod.valor:
 
-                        if valo >= pedido_prod.produtosPed.all()[0].preco:
-
-                            valo -= pedido_prod.produtosPed.all().preco
-
-                            pedido_prod.valor -= valo
+                            valo -= pedido_prod.valor
+                            print('valor paga o produto')
+                            pedido_prod.valor = 0
                             pedido_prod.status_pago = "P"
                             pedido_prod.save()
+
                         else:
 
                             if valo > 0:
-                                pprint(pedido_prod)
+                                print('valor nao paga produto e maior q 0')
                                 print(valo,'  valoo')
-                                pprint(pedido_prod.produtosPed)
                                 pedido_prod.valor -= valo
                                 print(com.valor,'  comanda valoor')
                                 print(pedido_prod.valor,'  valor do pedido')
@@ -183,19 +187,21 @@ def feed(request):
                                 com.save()
                                 print('passo aqui')
                         pedido_prod.save()
+                        new_status = 'ATUALIZADA com sucesso'
 
 
                     elif peed.length > 0:
                         for num, p in peed:
                             pedido_prod = models.Pedido.objects.get(pk=p)
                             if valo >= pedido_prod.produtosPed.all()[0].preco:
-
+                                print('valor do pagamento pagou produto')
                                 valo -= pedido_prod.produtosPed.all()[0].preco
                                 pedido_prod.valor -= valo
                                 pedido_prod.status_pago = "P"
                                 pedido_prod.save()
                             else:
                                 if valo > 0:
+                                    print('valor do pagamento nao pagou produto mas tem restante pae')
                                     pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
                                     pprint(pdt)
                                     res = pdt.preco - valo
@@ -203,17 +209,23 @@ def feed(request):
                                     pedido_prod.valor -= valo
                                     pedido_prod.status_pago = "R"
                                     pedido_prod.save()
+
                                     com.save()
-                        new_status = 'ATUALIZADA'
+                        new_status = 'ATUALIZADA com sucesso'
                         pedido_prod.save()
+                        com.save()
 
+                    if com.valor == 0:
+
+                        com.status="F"
+                        com.valor = 0
+                        com.save()
+                        new_status = 'FECHADA com sucesso'
                 else:
-                    com.status="F"
-                    com.valor = 0
-                    com.save()
-                    new_status = 'FECHADA'
+                    new_status = 'Sem pedido Selecionado'
 
-            messages.success(request, "{}, Comanda {} com sucesso.".format(request.user, new_status))
+
+            messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
 
 
             return render(request, 'feed.html', {

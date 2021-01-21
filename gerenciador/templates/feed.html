@@ -157,16 +157,21 @@
         var ped;
         var vainfo=0;
         let nome = $(this).val();
-
+        let olc=0;
         $('.selec').each(function(){
 
 <!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
             if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').first('.stt').text() != "C" && $(this).attr('name') == nome ){
                 console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');
                 console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');
+                olc = $(this).parent('div').siblings('.prec').text();
+                console.log(olc+'taindo');
+                olc = parseFloat( olc.replace(/[^0-9,]*/g, '').replace(',', '.') ).toFixed(2);
+                console.log(parseFloat(olc)+' jafoi');
 
                 if ( $(this).parent('div').siblings('.qnt').text() != null ){
-                    armazena_ped.push( [parseFloat($(this).parent('div').siblings('.prec').text()), $(this).val()] );
+
+                    armazena_ped.push( [parseFloat(olc), $(this).val()] );
 
                 }
 
@@ -208,29 +213,21 @@
             pedidu[i]= armazena_ped[i][1] ;
 
         }
-
-
+        console.log(' pedido pae');
+        console.log(pedidu);
 
         let vall = $('#valou').val();
+
         if (vall.includes("R$")){
-            vall = vall.replace("R$", '');
-        };
-        if (vall.substr(-3) == '.'){
-            vall = vall.replace(-3, ',');
+            vall= parseFloat(vall.replace(/[^0-9,]*/g, '').replace(',', '.')).toFixed(2);
+
         };
 
-        vall=parseFloat(vall);
-        console.log( $('#cli_com').text() );
-        if (vall == 0){
+        if (vall ==  0){
 
             vall = $('#cli_com').text();
-            if (vall.includes("R$")){
-                vall = vall.replace("R$", '');
-            };
-            if (vall.substr(-3) == '.'){
-            vall = vall.replace(-3, ',');
-            };
-            vall=parseFloat(vall);
+            vall= parseFloat(vall.replace(/[^0-9,]*/g, '').replace(',', '.')).toFixed(2);
+
         };
 
          let com = $('#comanda_x').val();
@@ -586,7 +583,7 @@
 
                                 <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
                                     <div class="card-header bg-dark text-white">
-                                        <h5 class="mb-0">Comanda - {{pedido.comandaref}}
+                                        <h5 class="mb-0">{{pedido.id}} - {{pedido.comandaref}}
                                             {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
                                                     aria-hidden="true">×</span></button>{% endif %}
                                         </h5>
