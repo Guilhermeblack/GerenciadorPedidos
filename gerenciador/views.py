@@ -358,9 +358,14 @@ def ped(request):
 def adm(request):
     # print('do adm ', request.user.groups.all()[0])
     if request.user.has_perm("gerenciador.iniciar_movimento"):
-        rq = request.POST
-        if request.POST:
+        if request.GET:
+            pprint(request.GET)
+            print('pego geet')
+            # if 'consulta_adm' in request.GET:
 
+
+        if request.POST:
+            rq = request.POST
             pprint(rq)
             # if 'prod_x' in rq:
 
@@ -425,9 +430,12 @@ def adm(request):
                     return redirect('administrador')
                 else:
                     messages.warning(request, "Dados inválidos !")
+
+            if 'relator' in rq:
+                print('deu !!!!!!')
+                return redirect('administrador')
         else:
-            if 'pesq_prod' in request.GET:
-                pprint(request.GET)
+
 
 
             rq = models.movi.objects.filter(pk=1).values()
