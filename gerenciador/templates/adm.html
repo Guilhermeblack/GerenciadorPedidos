@@ -67,6 +67,7 @@
 
         $(document).on('change','#comandas_rel', function(){
             $('#blocks').empty();
+            $('#relator').val('relacomanda');
             var form ='';
             form += '<div class="row justify-content-center ">';
 
@@ -84,8 +85,8 @@
             form += '</select></div>';
 
             form += '<div class="col-sm-4 justify-content-around">';
-            form += '<label for="cat_comanda">Categoria</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
-            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '<label for="cat_comanda">Ordenação</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="data" >Data</option><option value="status">Status</option><option value="nome">Nome</option><option value="valor">Valor</option>';
             form += '</select></div>';
 
             form += '</div>';
@@ -101,6 +102,7 @@
 
         $(document).on('change','#pedidos_rel', function(){
             $('#blocks').empty();
+            $('#relator').val('relaped');
             var form ='';
             form += '<div class="row justify-content-center ">';
 
@@ -114,20 +116,20 @@
             form += '<label for="status_pedido">Status</label>';
 
             form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" name="statsped" id="statsped" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Status Pedido</button>';
-            form+='<div class="dropdown-menu  pr-6" aria-labelledby="statsped">';
+            form+='<div class="dropdown-menu  pr-6" aria-labelledby="statsped" name="statsped">';
             form+='<ul style="list-style: none;" >';
 
-            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="1"> Pedido realizado</label></li>';
-            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="2"> Fazendo</label></li>';
-            form+='<li class="ms-select-all"><label><input class="" type="checkbox" data-name="selec_pedido[]" value="3"> Saiu para entrega</label></li>';
-            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="4"> Foi entregue</label></li>';
-            form+='<li class="ms-select-all"><label><input type="checkbox" data-name="selec_pedido[]" value="5"> Cancelado</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="P"> Pedido realizado</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="F"> Fazendo</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="S"> Saiu para entrega</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="E"> Foi entregue</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="C"> Cancelado</label></li>';
             form+='</ul></div></div></div>';
 
 
             form += '<div class="col-sm-4 justify-content-around">';
             form += '<label for="cat_comanda">Categoria</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
-            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '<option selected disabled>Selecione</option><option value="comandaref" >Por comanda</option><option value="valor">Por preço</option><option value="status">Por status</option><option value="status_pago">Por status pagamento</option>';
             form += '</select></div>';
 
             form+='';
@@ -145,7 +147,7 @@
         $(document).on('change','#produtos_rel', function(){
             $('#blocks').empty();
             $('.select_date').hide();
-
+            $('#relator').val('relaprod');
 
 
             var form ='';
@@ -156,7 +158,7 @@
             form+='<ul style="list-style: none;" >';
 
             {% for p in prod %}
-                form+='<li style="list-style: none;" class="ms-select-all"><label><input type="checkbox" data-name="selec_produto[]" value={{p.id}}> {{p.nome}}</label></li>';
+                form+='<li style="list-style: none;" class="ms-select-all"><label><input type="checkbox" data-name="selec_produto[]" name="selec_produto[]" value={{p.id}}> {{p.nome}}</label></li>';
             {% endfor %}
             form+='</ul></div></div></div>';
 
@@ -165,13 +167,13 @@
 
             form += '<div class="col-sm-4 justify-content-center">';
             form += '<label for="tipo_prod">Ordenação</label><select name="tipo_prod" id="tipo_prod" class="form-control">';
-            form += '<option selected disabled>Selecione</option><option value=1 >Mais caro primeiro</option><option value=2>Mais baratas primeiro</option>';
+            form += '<option selected disabled>Selecione</option><option value="valor" >Pelo valor</option><option value="nome">Pelo nome</option><option value="tipo">Pelo tipo</option>';
             form += '</select></div>';
 
 
             form += '<div class="col-sm-4 justify-content-center">';
             form += '<label for="cat_comanda">Tipo do produto</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
-            form += '<option selected disabled>Selecione</option><option value=1 >Alimento</option><option value=2>Bebida</option>';
+            form += '<option selected disabled>Selecione</option><option value="A" >Alimento</option><option value="B">Bebida</option>';
             form += '</select></div>';
 
             form+='</div>';
@@ -189,9 +191,16 @@
 
             form += '<div class=" col"><label for="nome_comanda">Nome da comanda</label><input type="text" class="form-control" name="nome_comanda" id="nome_comanda" placeholder="Nome da comanda"></div>';
             form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" name="nmesa_comanda" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="orderec">Ordenação</label><select name="orderec" id="orderec" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="prod" >Por produto</option><option value="data" >Por data de recebimento</option><option value="valor">Pelo nome</option><option value="tipo">Pelo tipo</option>';
+            form += '</select></div>';
+
             form += '</div>';
             var convert_html = $.parseHTML(form);
             console.log(convert_html);
+            $('#relator').val('relareceb');
             $('#blocks').append(convert_html);
             $('.select_date').show();
 
@@ -313,18 +322,18 @@
                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                     <form id='consulta_adm' name="consulta_adm" method="post">
                                         {% csrf_token %}
-                                        <input type="hidden" id="relator" name="relator" value="{{ user.id }}">
+                                        <input type="hidden" id="relator" name="relator">
                                         <div class="row justify-content-center select_date">
                                             <div class="form-group form-group-inline d-lg-inline-flex flex-column row">
                                               <h6><label for="date_de" class="col-4 col-form-label d-inline">DE</label></h6>
                                               <div class="col-12">
-                                                <input class="form-control" type="date" id="date_de">
+                                                <input class="form-control" type="datetime-local" id="date_de" name="date_de">
                                               </div>
                                             </div>
                                             <div class="form-group form-group-inline d-lg-inline-flex flex-column">
                                               <h6><label for="date_ate" class="col-4 col-form-label d-inline ">ATÉ</label></h6>
                                               <div class="col-12">
-                                                <input class="form-control" type="date" id="date_ate">
+                                                <input class="form-control" type="datetime-local" id="date_ate" name="date_ate">
                                               </div>
                                             </div>
                                         </div>

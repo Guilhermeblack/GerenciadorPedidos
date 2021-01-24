@@ -1,4 +1,5 @@
 from datetime import date
+import datetime
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
 from django.contrib.auth import logout, login, authenticate, get_user
@@ -358,11 +359,6 @@ def ped(request):
 def adm(request):
     # print('do adm ', request.user.groups.all()[0])
     if request.user.has_perm("gerenciador.iniciar_movimento"):
-        if request.GET:
-            pprint(request.GET)
-            print('pego geet')
-            # if 'consulta_adm' in request.GET:
-
 
         if request.POST:
             rq = request.POST
@@ -432,7 +428,118 @@ def adm(request):
                     messages.warning(request, "Dados inválidos !")
 
             if 'relator' in rq:
-                print('deu !!!!!!')
+
+                if len(rq) <5 and rq['date_ate'] == '' and rq['date_de'] == '':
+                    messages.warning(request, "Sem dados para conulta !")
+
+                # comandas
+                if rq['relator'] == 'relacomanda':
+
+                    result = models.Comanda.objects.all()
+                    print('comandinha')
+                    pprint(result)
+                    # filtros
+                    if rq['nmesa_comanda'] != '':
+                        result = result.filter(
+                            n_mesa=rq['nmesa_comanda']
+                        )
+                    if rq['nome_comanda'] != '':
+                        result = result.filter(
+                            nome=rq['nome_comanda']
+                        )
+                    if rq['date_de'] != '':
+                        result = result.exclude(
+                            data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
+                        )
+
+                    if rq['date_ate'] != '':
+                        result = result.filter(
+                            data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
+                        )
+
+                    if 'cat_comanda' in rq and rq['cat_comanda'] != '':
+                        result = result.order_by(rq['cat_comanda'])
+
+                    if 'status_comanda' in rq and rq['status_comanda'] != '':
+                        result = result.filter(status= rq['status_comanda'])
+
+                    pprint(result)
+                    # if rq['nmesa_comanda'] == '' and rq['nome_comanda'] == '' and rq['date_de'] == '' and rq['date_ate'] == '':
+                    #     result = models.Comanda.objects.all()
+
+                # pedidos
+                if rq['relator'] == 'relaped':
+                    if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
+                        messages.warning(request, "Sem dados para conulta !")
+                    result = models.Pedido.objects.all()
+                    pprint(result)
+                    if rq['date_de'] != '':
+                        result = result.exclude(
+                            data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
+                        )
+
+                    if rq['date_ate'] != '':
+                        result = result.filter(
+                            data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
+                        )
+                    if rq['nmesa_comanda'] != '':
+                        result = result.filter(comandaref__n_mesa__contains = rq['nmesa_comanda'])
+                    if rq['nome_comanda'] != '':
+                        result = result.filter(comandaref__nome__contains = rq['nome_comanda'])
+                    if 'cat_comanda' in rq and rq['cat_comanda'] != '':
+                        result = result.order_by(rq['cat_comanda'])
+                    if 'statsped[]' in rq and rq['statsped[]'] != '':
+                        re = rq.getlist('statsped[]')
+                        pprint(re)
+                        result = result.filter(status__in=re)
+                        # for i in re:
+                        #     print('do status', i)
+
+                    print('fim ped')
+                    pprint(result)
+
+
+                # produtos
+                if rq['relator'] == 'relaprod':
+                    if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
+                        messages.warning(request, "Sem dados para conulta !")
+                    result = models.Produtocad.objects.all()
+                    if rq['date_de'] != '':
+                        result = result.exclude(
+                            data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
+                        )
+
+                    if rq['date_ate'] != '':
+                        result = result.filter(
+                            data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
+                        )
+                    if 'selec_produto[]' in rq and rq['selec_produto[]'] != '':
+                        re = rq.getlist('selec_produto[]')
+                        pprint(re)
+                        result = result.filter(pk__in=re)
+                    if 'tipo_prod' in rq and rq['tipo_prod'] != '':
+                        result = result.order_by(rq['tipo_prod'])
+                    if 'cat_comanda' in rq and rq['cat_comanda'] != '':
+                        result = result.filter(rq['cat_comanda'])
+
+
+                # recebimentos
+                if rq['relator'] == 'relareceb':
+                    if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
+                        messages.warning(request, "Sem dados para conulta !")
+
+                    if rq['date_de'] != '':
+                        result = result.exclude(
+                            data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
+                        )
+                        pprint(result)
+                        print('nodate')
+                    if rq['date_ate'] != '':
+                        result = result.filter(
+                            data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
+                        )
+                    pass
+
                 return redirect('administrador')
         else:
 
