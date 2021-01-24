@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.utils.timezone import now
 
 class Gerente(models.Model):
@@ -213,7 +214,7 @@ class Produtocad(models.Model):
         null=False
     )
 
-    # img_prod = models.ImageField(upload_to='img/produtos', null=True, blank=True)
+    img_prod = CloudinaryField()
 
     def __str__(self):
         return self.nome
@@ -247,7 +248,7 @@ class Pedido(models.Model):
     id = models.AutoField(primary_key=True)
 
 
-    produtosPed= models.ManyToManyField(Produtocad, related_name='produto', blank=True)
+    produtosPed= models.ManyToManyField(Produtocad, related_name='produto', blank=False)
 
     quantidade = models.IntegerField(
         null=False,
@@ -293,6 +294,40 @@ class Pedido(models.Model):
 
     objects = models.Manager()
 
+class pagamentos(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+
+    pedidored = models.ManyToManyField(Pedido, related_name='pedidored', blank=True)
+
+    STATUS_PGT = (
+        ("F", "fechou comanda"),
+        ("P", "pagou produto"),
+        ("R", "Restante")
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=STATUS_PGT,
+        blank=False,
+        null=False,
+        default="R"
+    )
+
+
+    valor = models.FloatField(
+        default=0.0,
+        null=False,
+        blank=True
+    )
+
+    data = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return '{}'.format(self.id)
+
+    objects = models.Manager()
 
 class logform(models.Model):
     senha = models.CharField(

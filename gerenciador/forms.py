@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user
-
 from . import models
-
+import cloudinary
 
 class autForm(forms.ModelForm):
 
@@ -18,16 +17,15 @@ class produto(forms.ModelForm):
 
     class Meta:
         model = models.Produtocad
-        fields = 'nome','descricao','preco','tipo'
+        fields = 'nome','descricao','preco','tipo','img_prod'
 
     nome = forms.CharField()
     descricao = forms.CharField()
     # preco = forms.DecimalField(decimal_places=2)
     tipo = forms.ChoiceField(choices=(
         ("A", "Alimento"),
-        ("B", "Bebida"),
+        ("B", "Bebida")
     ))
-
 
 
 class pedidos(forms.ModelForm):

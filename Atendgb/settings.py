@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+import cloudinary  # cloudinary
+import cloudinary.uploader  # cloudinary
+import cloudinary.api  # cloudinary
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'pwa',
     'Atendgb',
     'gerenciador',
+    'cloudinary',
 
 ]
 
@@ -210,6 +213,8 @@ PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pt-BR'
 
 
-# AWS_ACCESS_KEY_ID = 'AKIAUC4QYHRFIOBIKYQM'
-# AWS_SECRET_ACCESS_KEY = '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'
-# QWS_STORAGE_BUCKET_NAME =
+cloudinary.config(
+    cloud_name="gblack",
+    api_key="191418815964556",
+    api_secret="hvTxhjD4ZyfYigVrte6ucol0lio"
+)

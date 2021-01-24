@@ -1,5 +1,9 @@
 from datetime import date
 import datetime
+
+import cloudinary
+from cloudinary import api
+import base64
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
 from django.contrib.auth import logout, login, authenticate, get_user
@@ -103,10 +107,12 @@ def feed(request):
         # print(request.POST)
 
         if 'exc_ped' in request.POST:
-            # pprint(request.POST)
+            pprint(request.POST)
             ped = models.Pedido.objects.get(pk=request.POST['exc_ped'])
             ped.status="C"
             ped.valor =0
+            # pprint(ped)
+            pprint(ped.produtosPed.all())
             produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id)
 
             comanda = models.Comanda.objects.get(pk=ped.comandaref.id)
@@ -149,81 +155,125 @@ def feed(request):
 
 
             new_status = 'VERIFICADA'
-            com.valor -= valo_ped
-            if com.valor <= 0:
-                com.status="F"
-                com.save()
-                new_status = 'FECHADA'
-                print('valor comanda menor q 0')
-            else:
 
-                # loop itens
-                valo= valo_ped
-                if 'pedi[]' in request.POST:
-                    peed = request.POST['pedi[]']
-                    pprint(peed)
-                    print('entao foi o pedd')
+
+            # loop itens
+
+            valo= valo_ped
+            if 'pedi[]' in request.POST:
+                peed = request.POST['pedi[]']
+                pprint(peed)
+                print('entao foi o pedd')
+
+                if isinstance(peed, str):
                     pedido_prod = models.Pedido.objects.get(pk=peed)
-                    if isinstance(peed, str):
-                        print('valor comanda maior q 0 e um item')
+                    print('valor comanda maior q 0 e um item')
 
-                        if valo >= pedido_prod.valor:
+                    if valo >= pedido_prod.valor:
+                        com.valor -= valo_ped
+                        if com.valor <= 0:
+                            com.status = "F"
+                            receb = models.pagamentos.objects.create(
+                                valor=float(valo_ped),
+                                status="F"
+                            )
 
-                            valo -= pedido_prod.valor
-                            print('valor paga o produto')
-                            pedido_prod.valor = 0
-                            pedido_prod.status_pago = "P"
+                            receb.pedidored.add(pedido_prod)
+
+                            receb.save()
+                            com.save()
+                            new_status = 'FECHADA'
+                            print('valor comanda menor q 0')
+                        valo -= pedido_prod.valor
+                        print('valor paga o produto')
+                        pedido_prod.valor = 0
+                        pedido_prod.status_pago = "P"
+                        receb = models.pagamentos.objects.create(
+                            valor=valo_ped,
+                            status= "P",
+                        )
+                        receb.pedidored.add(pedido_prod)
+                        receb.save()
+
+                        pedido_prod.save()
+
+                    else:
+
+                        if valo > 0:
+                            print('valor nao paga produto e maior q 0')
+                            print(valo,'  valoo')
+                            pedido_prod.valor -= valo
+                            print(com.valor,'  comanda valoor')
+                            print(pedido_prod.valor,'  valor do pedido')
+                            pedido_prod.status_pago = "R"
+                            receb = models.pagamentos.objects.create(
+                                valor=valo_ped,
+                                status="R",
+                            )
+                            receb.pedidored.add(pedido_prod)
+                            receb.save()
                             pedido_prod.save()
+                            com.save()
+                            print('passo aqui')
+                    pedido_prod.save()
+                    new_status = 'ATUALIZADA com sucesso'
 
+
+                elif peed.length > 0:
+                    for num, p in peed:
+                        pedido_prod = models.Pedido.objects.get(pk=p)
+
+                        if valo >= pedido_prod.produtosPed.all()[0].preco:
+                            print('valor do pagamento pagou produto')
+                            valo -= pedido_prod.produtosPed.all()[0].preco
+                            pedido_prod.valor -= valo
+                            pedido_prod.status_pago = "P"
+                            receb = models.pagamentos.objects.create(
+                                valor=valo_ped,
+                                status="P",
+                            )
+                            receb.pedidored.add(pedido_prod)
+                            receb.save()
+                            pedido_prod.save()
                         else:
-
                             if valo > 0:
-                                print('valor nao paga produto e maior q 0')
-                                print(valo,'  valoo')
+                                print('valor do pagamento nao pagou produto mas tem restante pae')
+                                pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
+                                pprint(pdt)
+                                res = pdt.preco - valo
+                                com.valor += res
                                 pedido_prod.valor -= valo
-                                print(com.valor,'  comanda valoor')
-                                print(pedido_prod.valor,'  valor do pedido')
                                 pedido_prod.status_pago = "R"
+                                receb = models.pagamentos.objects.create(
+                                    valor=valo_ped,
+                                    status="R",
+                                )
+                                receb.pedidored.add(pedido_prod)
+                                receb.save()
                                 pedido_prod.save()
+
                                 com.save()
-                                print('passo aqui')
-                        pedido_prod.save()
-                        new_status = 'ATUALIZADA com sucesso'
+                    new_status = 'ATUALIZADA com sucesso'
+                    pedido_prod.save()
+                    com.save()
 
+                if com.valor == 0:
 
-                    elif peed.length > 0:
-                        for num, p in peed:
-                            pedido_prod = models.Pedido.objects.get(pk=p)
-                            if valo >= pedido_prod.produtosPed.all()[0].preco:
-                                print('valor do pagamento pagou produto')
-                                valo -= pedido_prod.produtosPed.all()[0].preco
-                                pedido_prod.valor -= valo
-                                pedido_prod.status_pago = "P"
-                                pedido_prod.save()
-                            else:
-                                if valo > 0:
-                                    print('valor do pagamento nao pagou produto mas tem restante pae')
-                                    pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
-                                    pprint(pdt)
-                                    res = pdt.preco - valo
-                                    com.valor += res
-                                    pedido_prod.valor -= valo
-                                    pedido_prod.status_pago = "R"
-                                    pedido_prod.save()
-
-                                    com.save()
-                        new_status = 'ATUALIZADA com sucesso'
-                        pedido_prod.save()
+                    com.status="F"
+                    if com.valor <= 0:
+                        com.status = "F"
+                        receb = models.pagamentos.objects.create(
+                            valor=valo_ped,
+                            status="F",
+                        )
+                        receb.pedidored.add(pedido_prod)
+                        receb.save()
                         com.save()
-
-                    if com.valor == 0:
-
-                        com.status="F"
-                        com.valor = 0
-                        com.save()
-                        new_status = 'FECHADA com sucesso'
-                else:
-                    new_status = 'Sem pedido Selecionado'
+                        new_status = 'FECHADA'
+                    com.save()
+                    new_status = 'FECHADA'
+            else:
+                new_status = 'Sem pedido Selecionado'
 
 
             messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
@@ -419,8 +469,16 @@ def adm(request):
                                                         'mov': rq[0]['movimento']
                                                         })
             if 'tipo' in rq:
-                new_prod = forms.produto(rq)
+                if 'img_prod' in request.FILES:
+                    rf= request.FILES
+                new_prod = forms.produto(rq,rf)
+                pprint(new_prod)
+                print('recebeu os 2')
                 if new_prod.is_valid():
+
+
+                    pprint(request.FILES['img_prod'])
+                    cloudinary.uploader.upload(rf['img_prod'], folder="produtos")
                     new_prod.save()
                     messages.success(request, "Produto cadastrado !")
                     return redirect('administrador')
@@ -525,6 +583,7 @@ def adm(request):
 
                 # recebimentos
                 if rq['relator'] == 'relareceb':
+                    result = models.pagamentos.objects.all()
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
 
@@ -538,7 +597,7 @@ def adm(request):
                         result = result.filter(
                             data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
                         )
-                    pass
+
 
                 return redirect('administrador')
         else:

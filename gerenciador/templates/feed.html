@@ -1,6 +1,7 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
+{% load cloudinary %}
 
     <script type="text/javascript">
 
@@ -592,7 +593,7 @@
                                     <div class="card-body" id="bodybg{{pedido.id}}"><b>
                                         {% for ped in pedido.produtosPed.all %}
                                             <p class="card-text">{{ped.nome}} </p>
-<!--                                            <img class="card-img-top pb-5" style="width: 18rem;" src="{{ped.img_prod.url}}" alt="">-->
+                                            <img class="card-img-top pb-5" style="width: 18rem;" src="{{ped.img_prod.url}}" alt="">
                                         {%endfor%}
 
                                         <hr>

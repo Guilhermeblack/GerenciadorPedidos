@@ -1,5 +1,7 @@
 asgiref==3.2.10
 beautifulsoup4==4.9.1
+certifi==2020.12.5
+cloudinary==1.24.0
 cycler==0.10.0
 dj-database-url==0.5.0
 dj-static==0.0.6
@@ -21,4 +23,5 @@ six==1.15.0
 soupsieve==2.0.1
 sqlparse==0.3.1
 static3==0.7.0
+urllib3==1.26.2
 whitenoise==5.2.0
