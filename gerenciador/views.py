@@ -26,7 +26,9 @@ def index(request):
 
 
 def sobre(request):
-    return render(request, 'sobre.html', {'user': request.user})  # enviar para as comandas
+    return render(request, 'sobre.html', {
+        'user': request.user,
+    })  # enviar para as comandas
 
 
 @csrf_protect
@@ -172,9 +174,8 @@ def feed(request):
                 if isinstance(peed, str):
                     pedido_prod = models.Pedido.objects.get(pk=peed)
                     print('valor comanda maior q 0 e um item')
-
+                    com.valor -= valo_ped
                     if valo >= pedido_prod.valor:
-                        com.valor -= valo_ped
                         if com.valor <= 0:
                             com.status = "F"
                             receb = models.pagamentos.objects.create(
@@ -198,7 +199,7 @@ def feed(request):
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
-
+                        com.save()
                         pedido_prod.save()
 
                     else:
@@ -224,6 +225,7 @@ def feed(request):
 
 
                 elif peed.length > 0:
+                    com.valor -= valo_ped
                     for num, p in peed:
                         pedido_prod = models.Pedido.objects.get(pk=p)
 
@@ -476,8 +478,7 @@ def adm(request):
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
                 new_prod = forms.produto(rq,rf)
-                pprint(new_prod)
-                print('recebeu os 2')
+
                 if new_prod.is_valid():
 
 
@@ -498,8 +499,7 @@ def adm(request):
                 if rq['relator'] == 'relacomanda':
 
                     result = models.Comanda.objects.all()
-                    print('comandinha')
-                    pprint(result)
+
                     # filtros
                     if rq['nmesa_comanda'] != '':
                         result = result.filter(
@@ -525,7 +525,6 @@ def adm(request):
                     if 'status_comanda' in rq and rq['status_comanda'] != '':
                         result = result.filter(status= rq['status_comanda'])
 
-                    pprint(result)
                     # if rq['nmesa_comanda'] == '' and rq['nome_comanda'] == '' and rq['date_de'] == '' and rq['date_ate'] == '':
                     #     result = models.Comanda.objects.all()
 
@@ -534,7 +533,6 @@ def adm(request):
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
                     result = models.Pedido.objects.all()
-                    pprint(result)
                     if rq['date_de'] != '':
                         result = result.exclude(
                             data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
@@ -552,13 +550,10 @@ def adm(request):
                         result = result.order_by(rq['cat_comanda'])
                     if 'statsped[]' in rq and rq['statsped[]'] != '':
                         re = rq.getlist('statsped[]')
-                        pprint(re)
                         result = result.filter(status__in=re)
                         # for i in re:
                         #     print('do status', i)
 
-                    print('fim ped')
-                    pprint(result)
 
 
                 # produtos
@@ -603,7 +598,8 @@ def adm(request):
                         )
 
                 req = models.movi.objects.filter(pk=1).values()
-
+                print('relatoriopae')
+                pprint(result)
                 return render(request, 'relatorio.html', {
                                                     'relatorio': result,
                                                     'logado': get_user(request),

@@ -13,54 +13,77 @@
         {{ message }}
     </div>
 {% endfor %}
-    <header class="masthead text-white text-center" style="background-color: rgb(255,255,255);">
-        <div class="container" style="color: rgb(241,234,72);height: 302px; align-content:center">
+    <header class="masthead text-dark text-center" style="background-color: rgb(255,255,255);">
+        <div class="container " style="color: rgb(241,234,72); align-content:center">
             <h1 class="text-dark" style="padding: 18px;">CARDÁPIO</h1>
-            <div class="row" style=" align-content:center; padding: 18px">
+            <div class="text-dark" style=" align-content:center; padding: 18px">
                 <p></p>
                 {% for rel in relatorio %}
-                    {% if 'pedidored' in rel %}
+
+                    {% if rel.pedidored in rel %}
+                        {% if forloop.first %}
+                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            <div class='row text-secondary text-align-center hover'  style="cursor: pointer"; >
+                                <div class='col text-align-left'>{{ 'status' }}</div>
+                                <div class='col text-align-center'>{{ 'valor' }}</div>
+                                <div class='col text-align-center' >{{'data de abertura' }}</div>
+                            </div>
+                        {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-secondary text-align-center hover'  style="cursor: pointer"; >
-    <!--                                    <div class='col text-align-center'>-->
-    <!--                                        {% if ped.status_pago != "P" %}-->
-    <!--                                            <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">-->
-    <!--                                        {% endif %}-->
-    <!--                                    </div>-->
+
 
                             <div class='col text-align-left'>{{ rel.status }}</div>
                             <div class='col text-align-center'>R$ {{ rel.valor }}</div>
                             <div class='col text-align-center' >{{ rel.data }}</div>
 
-    <!--                                    <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>-->
                         </div>
-                    {% elif 'status_pago' in rel %}
-                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                        <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
-    <!--                                    <div class='col text-align-center'>-->
-    <!--                                        {% if ped.status_pago != "P" %}-->
-    <!--                                            <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">-->
-    <!--                                        {% endif %}-->
-    <!--                                    </div>-->
+                    {% elif rel.status_pago != None %}
+                        {% if forloop.first %}
+                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            <div class='row text-align-center hover p-5'  style="cursor: pointer"; >
 
-                            <div class='col text-align-left'>{{ rel.comandaref.nome }}</div>
-                            <div class='col text-align-center'>R$ {{ rel.produtosPed.all()[0] }}</div>
+                                <div class='col text-align-center'>{{ 'nome' }}</div>
+                                <div class='col text-align-center'>{{ 'produto'}}</div>
+
+                                <div class='col text-align-center' >{{ 'quantidade' }}</div>
+                                <div class='col text-align-center' >{{ 'status' }}</div>
+                                <div class='col text-align-center' >{{'status paganento' }}</div>
+                                <div class='col text-align-center' >{{ 'valor' }}</div>
+                                <div class='col text-align-center' >{{ 'data' }}</div>
+
+                            </div>
+                        {% endif %}
+                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                        <div class='row text-align-center hover p-5'  style="cursor: pointer"; >
+
+                            <div class='col text-align-center'>{{ rel.comandaref }}</div>
+                            {% for re in rel.produtosPed.all %}
+                                    <div class='col text-align-center'>{{ re.nome}}</div>
+                            {% endfor %}
+
                             <div class='col text-align-center' >{{ rel.quantidade }}</div>
                             <div class='col text-align-center' >{{ rel.status }}</div>
-                            <div class='col text-align-center' >{{ rel.status_pago }}</div>
-                            <div class='col text-align-center' >{{ rel.valor }}</div>
+                            <div class='col text-align-center' >{{ rel.get_status_pago_display }}</div>
+                            <div class='col text-align-center' >R$ {{ rel.valor }}</div>
                             <div class='col text-align-center' >{{ rel.data }}</div>
 
-    <!--                                    <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>-->
                         </div>
-                    {% elif 'descricao' in rel %}
+                    {% elif rel.descricao != None %}
+                        {% if forloop.first %}
+                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
+
+
+                                <div class='col text-align-left'>{{ 'status' }}</div>
+                                <div class='col text-align-center'>{{ 'valor' }}</div>
+                                <div class='col text-align-center' >{{ 'data' }}</div>
+
+                            </div>
+                        {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
-    <!--                                    <div class='col text-align-center'>-->
-    <!--                                        {% if ped.status_pago != "P" %}-->
-    <!--                                            <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">-->
-    <!--                                        {% endif %}-->
-    <!--                                    </div>-->
+
 
                             <div class='col text-align-left'>{{ rel.status }}</div>
                             <div class='col text-align-center'>R$ {{ rel.valor }}</div>
@@ -68,29 +91,49 @@
 
     <!--                                    <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>-->
                         </div>
-                    {% elif 'n_mesa' in rel %}
+                    {% elif rel.n_mesa != None %}
+                        {% if forloop.first %}
+                             <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            <div class='row text-align-center p-1 hover'  style="cursor: pointer"; >
+
+
+                                <div class='col text-align-left'>{{ 'n_mesa' }}</div>
+                                <div class='col text-align-center'>{{ 'nome' }}</div>
+                                <div class='col text-align-center'>{{ 'valor' }}</div>
+                                <div class='col text-align-center'>{{ 'status' }}</div>
+                                <div class='col text-align-end' >{{ 'data' }}</div>
+
+                            </div>
+                        {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                        <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
-    <!--                                    <div class='col text-align-center'>-->
-    <!--                                        {% if ped.status_pago != "P" %}-->
-    <!--                                            <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">-->
-    <!--                                        {% endif %}-->
-    <!--                                    </div>-->
+                        <div class='row text-align-center p-1 hover'  style="cursor: pointer"; >
+
 
                             <div class='col text-align-left'>{{ rel.n_mesa }}</div>
                             <div class='col text-align-center'>{{ rel.nome }}</div>
                             <div class='col text-align-center'>R$ {{ rel.valor }}</div>
                             <div class='col text-align-center'>{{ rel.status }}</div>
-                            <div class='col text-align-center' >{{ rel.data }}</div>
+                            <div class='col text-align-end' >{{ rel.data }}</div>
 
     <!--                                    <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>-->
                         </div>
                     {% endif %}
+                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                {% empty %}
+                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                    <div class='row text-align-center  hover' >
+                        <div class='col text-align-center p3'>
+                            <h3>{{'Sem resultados compatíveis com a consulta'}}</h3>
+                        </div>
+                    </div>
+                    <p></p>
                 {% endfor %}
                 <div class="col">
 
                 </div>
             </div>
+            <a href=""> <button type="button" class="btn btn-sucess border btn-lg btn-block bg-warning" data-href-template="administrador" id="confirm_cancel">Voltar</button></a>
+
         </div>
     </header>
 {% endblock %}
