@@ -6,6 +6,7 @@
 {% block content %}
 {% load cloudinary %}
 
+
     <script>
 
     $(document).ready(function(){
@@ -87,7 +88,7 @@
                                                 <h5 class="card-title">{{pro.nome}}</h5>
                                                 <img class="card-img-top pb-5" style="width: 18rem;" src="{{pro.img_prod.url}}" alt="">
                                                 <hr>
-                                                <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                                <h6 class="card-subtitle mb-2 text-muted">R$ {{pro.preco}}</h6>
                                                 <p class="card-text">{{pro.descricao}}</p>
                                                 {% if movi == "L" %}
                                                     {% if user.is_authenticated and perms.gerenciador.fazer_pedido  %}
@@ -120,7 +121,7 @@
                                             <h5 class="card-title">{{pro.nome}}</h5>
                                             <img class="card-img-top pb-5" style="width: 18rem;" src="{{pro.img_prod.url}}" alt="">
                                             <hr>
-                                            <h6 class="card-subtitle mb-2 text-muted">{{pro.preco}}</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">R$ {{pro.preco}}</h6>
                                             <p class="card-text">{{pro.descricao}}</p>
                                             {% if movi == "L" %}
                                                 {% if user.is_authenticated and perms.gerenciador.fazer_pedido %}

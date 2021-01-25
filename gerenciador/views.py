@@ -25,6 +25,10 @@ def index(request):
     return render(request, 'index.html')
 
 
+def sobre(request):
+    return render(request, 'sobre.html', {'user': request.user})  # enviar para as comandas
+
+
 @csrf_protect
 def loguin(request):
     if request.POST:
@@ -526,7 +530,7 @@ def adm(request):
                     #     result = models.Comanda.objects.all()
 
                 # pedidos
-                if rq['relator'] == 'relaped':
+                elif rq['relator'] == 'relaped':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
                     result = models.Pedido.objects.all()
@@ -558,7 +562,7 @@ def adm(request):
 
 
                 # produtos
-                if rq['relator'] == 'relaprod':
+                elif rq['relator'] == 'relaprod':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
                     result = models.Produtocad.objects.all()
@@ -582,7 +586,7 @@ def adm(request):
 
 
                 # recebimentos
-                if rq['relator'] == 'relareceb':
+                elif rq['relator'] == 'relareceb':
                     result = models.pagamentos.objects.all()
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
@@ -598,8 +602,13 @@ def adm(request):
                             data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
                         )
 
+                req = models.movi.objects.filter(pk=1).values()
 
-                return redirect('administrador')
+                return render(request, 'relatorio.html', {
+                                                    'relatorio': result,
+                                                    'logado': get_user(request),
+                                                    'mov': req
+                                                    })
         else:
 
 

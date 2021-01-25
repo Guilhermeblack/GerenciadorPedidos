@@ -3,6 +3,7 @@
 {% block content %}
 {% load cloudinary %}
 
+
     <script type="text/javascript">
 
     var armazena_ped = [];
@@ -417,7 +418,7 @@
 
                                                                 <div class='col text-align-left'>{{ com.n_mesa }}</div>
                                                                 <div class='col text-align-center'>{{ com.nome }}</div>
-                                                                <div class='col text-align-right' id="vlr_comanda">{{ com.valor }}</div>
+                                                                <div class='col text-align-right' id="vlr_comanda">R$ {{ com.valor }}</div>
                                                             </div>
                                                             <div class="modal fade modal-lg mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
                                                                 <div class="modal-dialog modal-lg" role="document">
@@ -457,7 +458,7 @@
                                                                                                     <div class='col text-align-left'>{{ prod.nome }}</div>
                                                                                             {% endfor %}
                                                                                             <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
-                                                                                            <div class='col text-align-center prec' >{{ ped.valor }}</div>
+                                                                                            <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
 
                                                                                             <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
 

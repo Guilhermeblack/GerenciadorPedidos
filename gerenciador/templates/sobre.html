@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+{% endfor %}
+    <header class="masthead pb-1 mb-1 text-left" style="background-color: rgb(255,255,255);">
+        <div class="container text-dark" style="color: rgb(241,234,72);align-content:center">
+
+            <h4 class="text-center"><B>-=-=-=- manual do gerenciador de pedidos -=-=- </B></h4>
+            <P></P>
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+            <h6>
+                <br>
+            cadastro de usuarios autenticados é feito apenas pelo desenvolvedor
+            <br><br>
+            o cliente nao autenticado pode ver os produtos porem nao pode se autenticar nem fazer pedidos
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+
+            <br>
+            <h4 class="text-center">usuario - gerente<br>
+                senha - prontoadmin<br></h4><h6>
+                <p>
+
+                - o gerente manipula os produtos
+                <br>: página administrativa :> botão produtos > deletar produto
+                                                            <br> preencher formulário com dados do produto > confirmar cadastro de novo produto
+
+                <br><br>
+                - o gerente inicia/encerra o movimento
+                <br>:página administrativa :> botão iniciar/encerrar movimento > confirmar ação<br>
+                    <span>(pedidos e comandas novos só podem ser registrados caso o movimento esteja ativo)</span>
+                <br><br>
+                - o gerente gera relatorios
+                <br>:página administrativa :> botão relatórios > seleciona o tipo do relatório > preenche o filtro de pesquina > realiza consulta e gera resultado
+                <br><br>
+                    - gerente realiza todas as ações no sistema</h6>
+
+
+
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+            <p>
+            <h4 class="text-center">usuario - garcom1<br>
+                senha - prontoadmin</h4><br><h6>
+                <p>
+                - o garçom pode abrir a comanda (se o movimento estiver ativo) através do cardapio
+                <br>:página cardapio :> abrir comanda > preenche com nome da comanda e número da mesa > confirma cadastro da nova comanda
+                <br><br>
+                - garçom realiza pedido através do cardapio
+                <br>:página cardápio :> consulta produto > botão fazer pedido > define comanda, quantidade do produto e observação > confirma pedido
+                <br><br>
+                - garçom visualiza o feed e altera status do pedido
+                <br>:página feed :> setas a direita e esquerda de cada pedido alteram status do pedido
+                              <br> botão 'X' no canto superior direito cancela pedido
+                </h6>
+
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+            <p>
+            <h4 class="text-center">usuario - cozinha<br>
+                senha - prontoadmin</h4><br><h6>
+                <p>
+                - visualiza o feed de pedidos e altera status do pedido
+                <br>:página feed :> setas a direita e esquerda de cada pedido alteram status do pedido
+                              > botão 'X' no canto superior direito cancela pedido
+                <br><br>
+
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+            <p></h6>
+            <h4 class="text-center">usuario - caixa<br>
+                senha - prontoadmin</h4><br><h6>
+                <p>
+                - visualiza o feed de pedidos
+                <br>:página feed:
+                <br><br>
+                - acessa as comandas através do feed e realiza o recebimento das comandas
+                <br>:página feed:> botão comandas > seleciona a comanda > seleciona os pedidos a serem pagos > define quantidade a ser recebida > confirma pagamento
+                <span>(comandas zeradas são fechadas automaticamente)<br>
+                    (pedidos que não forem pagos totalmente, irão gerar valor restante vinculados ao pedido)</span>
+                <br><br>
+            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+            <p>
+
+                </h6><h4 class="text-center">implementações futuras</h4><br><h6>
+                <p>
+                <br>- formatação de resultado de relatórios
+                <br>- Mais de um produto por pedido
+                <br>- adicionar o grupo de entregadores e integrar com api do ifood
+                <br>- liberar acesso para o cliente acompanhar sua comanda
+            </h6>
+        </div>
+    </header>
+{% endblock %}
+</html>

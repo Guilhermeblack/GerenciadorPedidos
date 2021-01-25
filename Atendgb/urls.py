@@ -17,6 +17,7 @@ urlpatterns = [
     path('adm', views.adm, name='administrador'),
     path('profile', views.profile, name='profile'),
     path('pedidos', views.ped, name='pedidos'),
+    path('sobre', views.sobre, name='sobre'),
     # path('loguin/', include('urls', namespace='log')),
 
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
