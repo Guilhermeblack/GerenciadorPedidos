@@ -4,7 +4,7 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-
+{% load cloudinary %}
 {% for message in messages %}
     <div class="alert {{ message.tags }} alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -14,26 +14,42 @@
     </div>
 {% endfor %}
     <header class="masthead text-dark text-center" style="background-color: rgb(255,255,255);">
-        <div class="container " style="color: rgb(241,234,72); align-content:center">
-            <h1 class="text-dark" style="padding: 18px;">CARDÁPIO</h1>
-            <div class="text-dark" style=" align-content:center; padding: 18px">
+        <div class="container " style=" align-content:center">
+            {% if 'relareceb' in tp %}
+                <h1 class="text-dark" style="padding: 18px;">{{'RECEBIMENTOS'}}</h1>
+            {% elif 'relaprod' in tp %}
+                <h1 class="text-dark" style="padding: 18px;">{{'PRODUTOS'}}</h1>
+            {% elif 'relaped' in tp %}
+                <h1 class="text-dark" style="padding: 18px;">{{'PEDIDOS'}}</h1>
+            {% elif 'relacomanda' in tp %}
+                <h1 class="text-dark" style="padding: 18px;">{{'COMANDAS'}}</h1>
+            {% endif %}
+            <br class="text-dark" style=" align-content:center">
                 <p></p>
                 {% for rel in relatorio %}
 
-                    {% if rel.pedidored in rel %}
+                    {% if 'relareceb' in tp %}
                         {% if forloop.first %}
                             <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                            <div class='row text-secondary text-align-center hover'  style="cursor: pointer"; >
+                            <h4><div class='row text-secondary text-align-center hover'  style="cursor: pointer"; >
+                                <div class='col text-align-center' >{{'nome' }}</div>
                                 <div class='col text-align-left'>{{ 'status' }}</div>
+                                <div class='col text-align-left'>{{ 'produto' }}</div>
                                 <div class='col text-align-center'>{{ 'valor' }}</div>
                                 <div class='col text-align-center' >{{'data de abertura' }}</div>
-                            </div>
+                            </div></h4>
                         {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-secondary text-align-center hover'  style="cursor: pointer"; >
-
-
+                            {% for re in rel.pedidored.all %}
+                                <div class='col text-align-left'>{{ re.comandaref }}</div>
+                            {% endfor %}
                             <div class='col text-align-left'>{{ rel.status }}</div>
+                            {% for re in rel.pedidored.all %}
+                                {% for r in re.produtosPed.all %}
+                                    <div class='col text-align-left '><img class="card-img-top" style="width: 45%;" src="{{r.img_prod.url}}" alt="{{ r.nome }}"><br>{{ r.nome }}</div>
+                                {% endfor %}
+                            {% endfor %}
                             <div class='col text-align-center'>R$ {{ rel.valor }}</div>
                             <div class='col text-align-center' >{{ rel.data }}</div>
 
@@ -41,7 +57,7 @@
                     {% elif rel.status_pago != None %}
                         {% if forloop.first %}
                             <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                            <div class='row text-align-center hover p-5'  style="cursor: pointer"; >
+                            <h4><div class='row text-align-center hover p-5'  style="cursor: pointer"; >
 
                                 <div class='col text-align-center'>{{ 'nome' }}</div>
                                 <div class='col text-align-center'>{{ 'produto'}}</div>
@@ -52,14 +68,14 @@
                                 <div class='col text-align-center' >{{ 'valor' }}</div>
                                 <div class='col text-align-center' >{{ 'data' }}</div>
 
-                            </div>
+                            </div></h4>
                         {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-align-center hover p-5'  style="cursor: pointer"; >
 
                             <div class='col text-align-center'>{{ rel.comandaref }}</div>
                             {% for re in rel.produtosPed.all %}
-                                    <div class='col text-align-center'>{{ re.nome}}</div>
+                                <div class='col text-align-left '><img class="card-img-top" style="width: 60%;" src="{{re.img_prod.url}}" alt="{{ re.nome }}"><br>{{ re.nome }}</div>
                             {% endfor %}
 
                             <div class='col text-align-center' >{{ rel.quantidade }}</div>
@@ -72,29 +88,31 @@
                     {% elif rel.descricao != None %}
                         {% if forloop.first %}
                             <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                            <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
+                            <h4><div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
 
 
-                                <div class='col text-align-left'>{{ 'status' }}</div>
-                                <div class='col text-align-center'>{{ 'valor' }}</div>
+                                <div class='col text-align-left'>{{ 'item' }}</div>
+                                <div class='col text-align-left'>{{ 'tipo' }}</div>
+                                <div class='col text-align-center'>{{ 'preço' }}</div>
                                 <div class='col text-align-center' >{{ 'data' }}</div>
 
-                            </div>
+                            </div></h4>
                         {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-align-center pb-1 hover'  style="cursor: pointer"; >
 
 
-                            <div class='col text-align-left'>{{ rel.status }}</div>
-                            <div class='col text-align-center'>R$ {{ rel.valor }}</div>
-                            <div class='col text-align-center' >{{ rel.data }}</div>
+                            <div class='col text-align-left '><img class="card-img-top" style="width: 60%;" src="{{rel.img_prod.url}}" alt="{{ rel.nome }}"><br>{{ rel.nome }}</div>
+                            <div class='col text-align-left'>{{ rel.tipo }}</div>
+                            <div class='col text-align-center'>R$ {{ rel.preco }}</div>
+                            <div class='col text-align-end' >{{ rel.descricao }}</div>
 
     <!--                                    <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>-->
                         </div>
                     {% elif rel.n_mesa != None %}
                         {% if forloop.first %}
                              <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                            <div class='row text-align-center p-1 hover'  style="cursor: pointer"; >
+                            <h4><div class='row text-align-center p-1 hover'  style="cursor: pointer"; >
 
 
                                 <div class='col text-align-left'>{{ 'n_mesa' }}</div>
@@ -103,7 +121,7 @@
                                 <div class='col text-align-center'>{{ 'status' }}</div>
                                 <div class='col text-align-end' >{{ 'data' }}</div>
 
-                            </div>
+                            </div></h4>
                         {% endif %}
                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                         <div class='row text-align-center p-1 hover'  style="cursor: pointer"; >

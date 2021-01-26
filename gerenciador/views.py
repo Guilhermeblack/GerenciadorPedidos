@@ -599,10 +599,10 @@ def adm(request):
 
                 req = models.movi.objects.filter(pk=1).values()
                 print('relatoriopae')
-                pprint(result)
                 return render(request, 'relatorio.html', {
                                                     'relatorio': result,
                                                     'logado': get_user(request),
+                                                    'tp': rq['relator'],
                                                     'mov': req
                                                     })
         else:
