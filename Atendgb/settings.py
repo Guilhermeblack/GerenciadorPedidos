@@ -151,14 +151,12 @@ DATABASES = {
 import dj_database_url
 
 # essa linha
-DATABASES['default'] = dj_database_url.config()
+# DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 
 
-# essa linha
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -172,8 +170,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/static')
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/')
 
-# essa linha
-# STATIC_URL = '../gerenciador/static/'
+
 
 
 
