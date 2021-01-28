@@ -549,8 +549,10 @@ def adm(request):
                     if 'cat_comanda' in rq and rq['cat_comanda'] != '':
                         result = result.order_by(rq['cat_comanda'])
                     if 'statsped[]' in rq and rq['statsped[]'] != '':
+                        pprint(rq['statsped[]'])
                         re = rq.getlist('statsped[]')
-                        result = result.filter(status__in=re)
+                        pprint(re)
+                        result = result.filter(status__in=rq['statsped[]'])
                         # for i in re:
                         #     print('do status', i)
 
@@ -577,7 +579,7 @@ def adm(request):
                     if 'tipo_prod' in rq and rq['tipo_prod'] != '':
                         result = result.order_by(rq['tipo_prod'])
                     if 'cat_comanda' in rq and rq['cat_comanda'] != '':
-                        result = result.filter(rq['cat_comanda'])
+                        result = result.filter(tipo__in=rq['cat_comanda'])
 
 
                 # recebimentos
