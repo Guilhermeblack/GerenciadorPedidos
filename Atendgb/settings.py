@@ -158,7 +158,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 
 # essa linha
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -173,7 +173,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/static')
 STATIC_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/')
 
 # essa linha
-STATIC_URL = '../gerenciador/static/'
+# STATIC_URL = '../gerenciador/static/'
 
 
 
