@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '14ns^8=os!q@q(m@wo&1nqo42o_*q*fh3=l$hx!i(#x--@wh4y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -164,7 +164,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 
-# STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static'), )
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static'), )
 MEDIA_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/static')
 
 
@@ -173,7 +173,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/static')
 STATIC_ROOT = os.path.join(BASE_DIR, '../GerenciadorPedidos/gerenciador/')
 
 # essa linha
-# STATIC_URL = '../gerenciador/static/'
+STATIC_URL = '../gerenciador/static/'
 
 
 
