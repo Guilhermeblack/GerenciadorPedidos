@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
+import cloudinary.api  # cloudinar
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -152,7 +153,7 @@ DATABASES = {
 import dj_database_url
 
 # essa linha
-# DATABASES['default'] = dj_database_url.config()
+DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
