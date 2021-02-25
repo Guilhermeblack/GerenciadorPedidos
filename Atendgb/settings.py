@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'gerenciador',
     'cloudinary',
     'django_pagarme',
-    'phonenumber_field'
 
 ]
 

@@ -2,7 +2,6 @@ from datetime import date
 import datetime
 
 import cloudinary
-import bluetooth
 import django_pagarme
 import base64
 from django.contrib import messages
@@ -167,16 +166,7 @@ def feed(request):
             valo_ped = float(request.POST['valo'])
 
             if formapg == 'Cartão':
-                maquina = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
-                transacao = django_pagarme.mposandroid.Mpos(maquina , settings.CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA)
-                transacao.openConnection()
-                transacao.initialize()
-                transacao.payAmount(valo_ped)
-                transacao.payAmount.PaymentMethod.CreditCard
-
-                transacao.close('conexão fechada')
-                transacao.closeConnection()
-            new_status = 'VERIFICADA'
+                pass
 
 
             # loop itens
