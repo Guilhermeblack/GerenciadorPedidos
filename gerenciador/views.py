@@ -492,7 +492,8 @@ def adm(request):
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
                 new_prod = forms.produto(rq,rf)
-
+                if new_prod.cleaned_data['insumos'] == None :
+                    new_prod.cleaned_data['insumos'] = ''
                 if new_prod.is_valid():
 
 
