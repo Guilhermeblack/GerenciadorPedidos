@@ -2,7 +2,8 @@ from datetime import date
 import datetime
 
 import cloudinary
-from cloudinary import api
+import bluetooth
+import django_pagarme
 import base64
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
@@ -108,7 +109,11 @@ def feed(request):
         "Foi entregue",
         "Cancelado"
     )
-
+    FORMA_PGT = (
+        "Cartão",
+        # "Pix",
+        "Dinheiro"
+    )
     if request.POST:
         # print(request.POST)
 
@@ -133,6 +138,7 @@ def feed(request):
                 'comandas': models.Comanda.objects.all().order_by('id', 'data'),
                 'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
+                'fpg': FORMA_PGT,
                 'movi': estado_mov[0]['movimento']
             })
 
@@ -148,6 +154,7 @@ def feed(request):
                 'comandas': models.Comanda.objects.all().order_by('id', 'data'),
                 'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
+                'fpg': FORMA_PGT,
                 'movi': estado_mov[0]['movimento']
             })
 
@@ -155,11 +162,20 @@ def feed(request):
             # tirar do total da comanda
 
             pprint(request.POST)
-
+            formapg = request.POST['fpag']
             com = models.Comanda.objects.get(pk=int(request.POST['comanda_x']))
             valo_ped = float(request.POST['valo'])
 
+            if formapg == 'Cartão':
+                maquina = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+                transacao = django_pagarme.mposandroid.Mpos(maquina , settings.CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA)
+                transacao.openConnection()
+                transacao.initialize()
+                transacao.payAmount(valo_ped)
+                transacao.payAmount.PaymentMethod.CreditCard
 
+                transacao.close('conexão fechada')
+                transacao.closeConnection()
             new_status = 'VERIFICADA'
 
 
@@ -180,7 +196,8 @@ def feed(request):
                             com.status = "F"
                             receb = models.pagamentos.objects.create(
                                 valor=float(valo_ped),
-                                status="F"
+                                status="F",
+                                formapg=formapg
                             )
 
                             receb.pedidored.add(pedido_prod)
@@ -196,6 +213,7 @@ def feed(request):
                         receb = models.pagamentos.objects.create(
                             valor=valo_ped,
                             status= "P",
+                            formapg=formapg
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -214,6 +232,7 @@ def feed(request):
                             receb = models.pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="R",
+                                formapg=formapg
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -237,6 +256,7 @@ def feed(request):
                             receb = models.pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="P",
+                                formapg=formapg
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -253,6 +273,7 @@ def feed(request):
                                 receb = models.pagamentos.objects.create(
                                     valor=valo_ped,
                                     status="R",
+                                    formapg=formapg
                                 )
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
@@ -271,6 +292,7 @@ def feed(request):
                         receb = models.pagamentos.objects.create(
                             valor=valo_ped,
                             status="F",
+                            formapg=formapg
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -290,6 +312,7 @@ def feed(request):
                 'comandas': models.Comanda.objects.all().order_by('id', 'data'),
                 'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
+                'fpg': FORMA_PGT,
                 'movi': estado_mov[0]['movimento']
             })
 
@@ -302,6 +325,7 @@ def feed(request):
             'comandas': models.Comanda.objects.all().order_by('id', 'data'),
             'pedidos': models.Pedido.objects.all().order_by('id'),
             'choices': STATUS_CHOICES,
+            'fpg': FORMA_PGT,
             'movi': estado_mov[0]['movimento']
         })
 
@@ -527,7 +551,9 @@ def adm(request):
 
                     # if rq['nmesa_comanda'] == '' and rq['nome_comanda'] == '' and rq['date_de'] == '' and rq['date_ate'] == '':
                     #     result = models.Comanda.objects.all()
-
+                    val = 0
+                    for a in result:
+                        val += a.valor
                 # pedidos
                 elif rq['relator'] == 'relaped':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
@@ -555,7 +581,9 @@ def adm(request):
                         result = result.filter(status__in=rq['statsped[]'])
                         # for i in re:
                         #     print('do status', i)
-
+                    val=0
+                    for a in result:
+                        val += a.valor
 
 
                 # produtos
@@ -577,11 +605,17 @@ def adm(request):
                         pprint(re)
                         result = result.filter(pk__in=re)
                     if 'tipo_prod' in rq and rq['tipo_prod'] != '':
-                        result = result.order_by(rq['tipo_prod'])
+                        if rq['tipo_prod'] == 'valor':
+
+                            result = result.order_by('preco')
+                        else:
+                            result = result.order_by(rq['tipo_prod'])
                     if 'cat_comanda' in rq and rq['cat_comanda'] != '':
                         result = result.filter(tipo__in=rq['cat_comanda'])
-
-
+                    pprint(result)
+                    val = 0
+                    for a in result:
+                        val += a.preco
                 # recebimentos
                 elif rq['relator'] == 'relareceb':
                     result = models.pagamentos.objects.all()
@@ -598,14 +632,18 @@ def adm(request):
                         result = result.filter(
                             data =datetime.datetime.strptime(rq['date_ate'], '%Y-%m-%dT%H:%M')
                         )
-
+                    val=0
+                    for a in result:
+                        val += a.valor
                 req = models.movi.objects.filter(pk=1).values()
                 print('relatoriopae')
                 return render(request, 'relatorio.html', {
                                                     'relatorio': result,
                                                     'logado': get_user(request),
                                                     'tp': rq['relator'],
-                                                    'mov': req
+                                                    'mov': req,
+                                                    'val':val
+
                                                     })
         else:
 

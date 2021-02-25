@@ -31,12 +31,20 @@ class Gerente(models.Model):
         null=False,
         blank=False,
     ),
-    senha_rep = models.CharField(
-        max_length=50,
+    telefone = models.CharField(
+        max_length=20,
         null=False,
         blank=False,
 
     ),
+    email = models.CharField(
+        max_length=35,
+        null=False,
+        blank=False,
+
+    ),
+
+
 
     objects = models.Manager()
 
@@ -201,7 +209,9 @@ class Produtocad(models.Model):
         default=0.0
     )
 
-    # pedidoProdutos = models.ManyToManyField(Pedido)
+    quantidade = models.IntegerField(blank=True, null=False)
+
+    insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
     STATUS_CHOICES = (
         ("A", "Alimento"),
@@ -305,6 +315,20 @@ class pagamentos(models.Model):
         ("F", "fechou comanda"),
         ("P", "pagou produto"),
         ("R", "Restante")
+    )
+
+    FORMA_PGT = (
+        ("C", "Cartão"),
+        ("P", "Pix"),
+        ("D", "Dinheiro")
+    )
+
+    formapg = models.CharField(
+        max_length=1,
+        choices=FORMA_PGT,
+        blank=False,
+        null=False,
+        default="D"
     )
 
     status = models.CharField(

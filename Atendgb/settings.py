@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'Atendgb',
     'gerenciador',
     'cloudinary',
+    'django_pagarme',
+    'phonenumber_field'
 
 ]
 
@@ -215,3 +217,10 @@ cloudinary.config(
     api_key="191418815964556",
     api_secret="hvTxhjD4ZyfYigVrte6ucol0lio"
 )
+
+# Dados para integração com Pagarme
+CHAVE_PAGARME_API_PRIVADA = 'ak_live_8jUYbLG5ojzgs9wisry243ycehrk1g'
+CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA = 'ek_live_kwLtZhdUxIWxbGGC4cHq7cddKh5T21'
+
+# Para validar telefones no Brasil
+PHONENUMBER_DEFAULT_REGION = 'BR'
