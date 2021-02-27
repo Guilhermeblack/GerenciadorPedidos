@@ -17,7 +17,7 @@ class produto(forms.ModelForm):
 
     class Meta:
         model = models.Produtocad
-        fields = 'nome','descricao','preco','tipo','img_prod','quantidade','insumos'
+        fields = 'nome','descricao','preco','tipo','img_prod','quantidade'
     nome = forms.CharField()
     descricao = forms.CharField()
     # preco = forms.DecimalField(decimal_places=2)

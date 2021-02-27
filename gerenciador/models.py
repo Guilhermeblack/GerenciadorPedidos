@@ -211,7 +211,7 @@ class Produtocad(models.Model):
 
     quantidade = models.IntegerField(blank=True, null=False)
 
-    insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    # insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     STATUS_CHOICES = (
         ("A", "Alimento"),

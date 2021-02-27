@@ -161,13 +161,9 @@ def feed(request):
             # tirar do total da comanda
 
             pprint(request.POST)
-            formapg = request.POST['fpag']
+
             com = models.Comanda.objects.get(pk=int(request.POST['comanda_x']))
             valo_ped = float(request.POST['valo'])
-
-            if formapg == 'Cartão':
-                pass
-
 
             # loop itens
 
@@ -187,7 +183,6 @@ def feed(request):
                             receb = models.pagamentos.objects.create(
                                 valor=float(valo_ped),
                                 status="F",
-                                formapg=formapg
                             )
 
                             receb.pedidored.add(pedido_prod)
@@ -203,7 +198,6 @@ def feed(request):
                         receb = models.pagamentos.objects.create(
                             valor=valo_ped,
                             status= "P",
-                            formapg=formapg
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -222,7 +216,6 @@ def feed(request):
                             receb = models.pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="R",
-                                formapg=formapg
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -246,7 +239,6 @@ def feed(request):
                             receb = models.pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="P",
-                                formapg=formapg
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -263,7 +255,6 @@ def feed(request):
                                 receb = models.pagamentos.objects.create(
                                     valor=valo_ped,
                                     status="R",
-                                    formapg=formapg
                                 )
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
@@ -282,7 +273,6 @@ def feed(request):
                         receb = models.pagamentos.objects.create(
                             valor=valo_ped,
                             status="F",
-                            formapg=formapg
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
