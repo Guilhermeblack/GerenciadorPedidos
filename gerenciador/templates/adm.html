@@ -254,11 +254,72 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <p>
+                                    <div class="modal-body justify-content-center">
+
+                                            <div class="input-group mb-3 ml-3">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">Nome</span>
+                                              </div>
+                                                {{ form.nome }}
+<!--                                              <input type="text" class="form-control" placeholder="Nome" aria-label="Username" aria-describedby="basic-addon1">-->
+                                            </div>
+                                            <div class="input-group mb-3 p-4">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text">Preço $</span>
+                                              </div>
+                                              {{ form.preco }}
+                                              <div class="input-group-append">
+                                                <span class="input-group-text">.00</span>
+                                              </div>
+
+                                                <div class="input-group-prepend ml-3">
+                                                    <span class="input-group-text">Quantidade</span>
+                                              </div>
+                                              {{ form.quantidade }}
+
+
+                                                <div class="input-group-prepend ml-3">
+                                                <span class="input-group-text">Medida</span>
+                                              </div>
+                                              {{ form.medida }}
+
+                                            </div>
+                                            <div class="input-group m-3">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text">Descrição</span>
+                                              </div>
+                                                {{ form.descricao }}
+                                            </div>
+
+                                            <div class="input-group mb-3 m-3">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text">Imagem</span>
+                                              </div>
+                                              <div class="custom-file">
+                                                {{ form.img_prod }}
+                                                <label class="custom-file-label" for="id_img_prod">Selecione</label>
+                                              </div>
+                                            </div>
+                                            {% for p in prod %}
+                                                <div class="input-group mb-3">
+                                                  <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                      <input type="checkbox" class="{{p.nome}} ins" id="check_{{p.id}}" name="check_insumo" aria-label="Selecionar os insumos que pertencem ao produto">
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                      <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
+                                                    </div>
+                                                  </div>
+                                                  <input type="text" class=" qnt_ins" name="qnt_insumo" id="qnt_{{p.id}}" aria-label="Quantidade do insumo">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">{{p.get_medida_display}}</span>
+                                                      </div>
+                                                </div>
+                                            {% endfor %}
                                             {% csrf_token %}
-                                            {{ form.as_p }}
-                                        </p>
+<!--                                            {{ form.as_p }}-->
+
+
                                     </div>
                                     <div class="modal-footer"><div><button class="btn btn-primary" type="submit">Salvar</button></div><div><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button></div></div>
                                 </div>

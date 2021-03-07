@@ -211,7 +211,7 @@ class Produtocad(models.Model):
 
     quantidade = models.IntegerField(blank=True, null=False)
 
-    # insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     STATUS_CHOICES = (
         ("A", "Alimento"),
@@ -224,10 +224,26 @@ class Produtocad(models.Model):
         null=False
     )
 
+    UND_MED = (
+        ("U", "Unidade"),
+        ("K", "Kilo"),
+        ("G", "Grama"),
+        ("L", "Litro"),
+    )
+    medida = models.CharField(
+        max_length=1,
+        choices=UND_MED,
+        default="U",
+        blank=False,
+        null=False
+    )
+
+    cardapio = models.BooleanField(blank=False, null=False, default=False)
+
     img_prod = CloudinaryField()
 
-    def __str__(self):
-        return self.nome
+    # def __str__(self):
+    #     return self.nome
 
     objects = models.Manager()
 
@@ -352,6 +368,22 @@ class pagamentos(models.Model):
         return '{}'.format(self.id)
 
     objects = models.Manager()
+
+class insumos(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+    quantidade_prod = models.FloatField(
+        null=False,
+        blank=False,
+        default=0.0
+    )
+
+
+    insumo_prod = models.ForeignKey(Produtocad, on_delete=models.CASCADE, null=True, blank=True, related_name="insumo_prod")
+
+    produto_prod = models.ForeignKey(Produtocad, on_delete=models.CASCADE, null=True, blank=True, related_name="produto_prod")
+
 
 class logform(models.Model):
     senha = models.CharField(
