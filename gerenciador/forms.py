@@ -17,17 +17,12 @@ class produto(forms.ModelForm):
 
     class Meta:
         model = models.Produtocad
-        fields = 'nome','descricao','preco','tipo','img_prod','quantidade','medida','insumos','cardapio'
-    nome = forms.CharField()
-    descricao = forms.TextInput()
-    cardapio = forms.ChoiceField()
-    # preco = forms.DecimalField(decimal_places=2)
-    insumos = forms.ModelMultipleChoiceField(queryset=models.Produtocad.objects.all(),required=False)
-    tipo = forms.ChoiceField(choices=(
-        ("A", "Alimento"),
-        ("B", "Bebida")
-    ))
+        fields = 'nome','descricao','preco','tipo','img_prod','quantidade','medida','cardapio','qnt_minima'
 
+        widgets = {
+            'descricao' : forms.Textarea(attrs={'rows': 3, 'cols': 27})
+
+        }
 
 class pedidos(forms.ModelForm):
 

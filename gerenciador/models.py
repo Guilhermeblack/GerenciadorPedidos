@@ -203,15 +203,20 @@ class Produtocad(models.Model):
         null=False,
         blank=False
     )
+
     preco = models.FloatField(
         null=False,
         blank=False,
         default=0.0
     )
+    qnt_minima = models.FloatField(
+        null=True,
+        blank=True,
+        default=1
+    )
+    quantidade = models.IntegerField(blank=True, null=True)
 
-    quantidade = models.IntegerField(blank=True, null=False)
-
-    insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    # insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     STATUS_CHOICES = (
         ("A", "Alimento"),
@@ -229,6 +234,7 @@ class Produtocad(models.Model):
         ("K", "Kilo"),
         ("G", "Grama"),
         ("L", "Litro"),
+        ("M", "Metro")
     )
     medida = models.CharField(
         max_length=1,
@@ -238,7 +244,7 @@ class Produtocad(models.Model):
         null=False
     )
 
-    cardapio = models.BooleanField(blank=False, null=False, default=False)
+    cardapio = models.BooleanField(blank=True, null=True, default=False)
 
     img_prod = CloudinaryField()
 
@@ -384,6 +390,7 @@ class insumos(models.Model):
 
     produto_prod = models.ForeignKey(Produtocad, on_delete=models.CASCADE, null=True, blank=True, related_name="produto_prod")
 
+    objects = models.Manager()
 
 class logform(models.Model):
     senha = models.CharField(

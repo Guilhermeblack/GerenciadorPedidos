@@ -15,7 +15,7 @@
 
         var usrlog= $('#movimentar').val();
         $(document).ready(function(){
-
+            $('#id_qnt_minima').css('width','15%');
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
 
@@ -213,10 +213,18 @@
             $('.select_date').hide();
         });
 
+        if ( $('.qnt_ins').val() != '' ){
+
+            $(this).attr('name') = $(this).attr('id');
+        }
 
 
-
-
+        $(document).on('click','.cardapio_prod', function(){
+<!--            #manda ajax-->
+        })
+        $(document).on('click','.estoque_prod', function(){
+<!--            #manda ajax-->
+        })
     </script>
 
     {% for message in messages %}
@@ -246,71 +254,89 @@
                     <hr>
 <!--                    funçao de zerar historico-->
                     <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">Produtos</button>
-                    <div class="modal px-6" role="document" tabindex="-1" id="novoProduto">
-                        <div class="card">
+                    <div class="modal px-6 justify-content-center" role="document" tabindex="-1" id="novoProduto">
+                        <div class="card justify-content-center">
                             {% if form %}
                             <form method="POST" id="newprod" enctype="multipart/form-data" >
-                                <div class="modal-content border bg-secondary">
+                                <div class="modal-content border bg-secondary p-3 align-content-center">
                                     <div class="modal-header">
                                         <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body justify-content-center">
+                                    <div class="modal-body" >
 
-                                            <div class="input-group mb-3 ml-3">
+                                            <div class="input-group mb-3 align-content-center">
                                               <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">Nome</span>
+                                                <span class="input-group-text" id="basic-addon1">Nome:</span>
                                               </div>
                                                 {{ form.nome }}
-<!--                                              <input type="text" class="form-control" placeholder="Nome" aria-label="Username" aria-describedby="basic-addon1">-->
+                                                <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Tipo: </span>
+                                              </div>
+                                                {{ form.tipo }}
                                             </div>
-                                            <div class="input-group mb-3 p-4">
+                                            <div class="input-group mb-3 align-content-center">
                                               <div class="input-group-prepend">
-                                                <span class="input-group-text">Preço $</span>
+                                                <span class="input-group-text">Preço: R$</span>
                                               </div>
                                               {{ form.preco }}
-                                              <div class="input-group-append">
-                                                <span class="input-group-text">.00</span>
-                                              </div>
 
-                                                <div class="input-group-prepend ml-3">
-                                                    <span class="input-group-text">Quantidade</span>
-                                              </div>
-                                              {{ form.quantidade }}
-
-
-                                                <div class="input-group-prepend ml-3">
-                                                <span class="input-group-text">Medida</span>
+                                                <div class="input-group-prepend align-content-center ">
+                                                <span class="input-group-text">Und Medida:</span>
                                               </div>
                                               {{ form.medida }}
 
+
                                             </div>
-                                            <div class="input-group m-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text">Descrição</span>
+                                            <div class="input-group mb-3 ">
+                                                <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Qnt em estoque:</span>
                                               </div>
-                                                {{ form.descricao }}
+                                              {{ form.quantidade }}
+                                                <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Qnt mínima estoque:</span>
+                                              </div>
+                                                {{ form.qnt_minima }}
                                             </div>
 
-                                            <div class="input-group mb-3 m-3">
+                                            </div>
+                                            <div class="input-group mb-3 ml-3 align-content-center " >
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text">Descrição:</span>
+                                              </div>
+                                                {{ form.descricao }}
+
+                                            </div>
+                                            <div class="input-group mb-3 ml-3 align-content-center " >
+
+                                                    <span class="input-group-text">Item do Cardápio ?</span>
+
+                                                {{form.cardapio}}
+                                            </div>
+                                            <div class="input-group mx-12 mb-5 align-content-center ">
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text">Imagem</span>
                                               </div>
                                               <div class="custom-file">
                                                 {{ form.img_prod }}
-                                                <label class="custom-file-label" for="id_img_prod">Selecione</label>
+                                                <label class="custom-file-label" for="id_img_prod">Selecione a Imagem do Produto</label>
                                               </div>
                                             </div>
                                             {% for p in prod %}
-                                                <div class="input-group mb-3">
-                                                  <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                      <input type="checkbox" class="{{p.nome}} ins" id="check_{{p.id}}" name="check_insumo" aria-label="Selecionar os insumos que pertencem ao produto">
+                                                {% if forloop.first %}
+                                                    <div class="input-group-text p-2 m-2 d-flex align-content-center">
+                                                        <label class="input-group-text d-flex align-content-center" ><h3>{{'Selecione os insumos do produto'}}</h3></label>
                                                     </div>
+                                                {% endif %}
+                                                <div class="input-group mb-3 ml-3 align-content-center">
+                                                  <div class="input-group-prepend">
+<!--                                                    <div class="input-group-text">-->
+<!--                                                      <input type="checkbox" class="{{p.nome}} ins" id="check_{{p.id}}" aria-label="Selecionar os insumos que pertencem ao produto">-->
+<!--                                                    </div>-->
                                                     <div class="input-group-text">
                                                       <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
                                                     </div>
                                                   </div>
-                                                  <input type="text" class=" qnt_ins" name="qnt_insumo" id="qnt_{{p.id}}" aria-label="Quantidade do insumo">
+                                                  <input type="text" class=" qnt_ins" name="qnt_ins[]" id="{{p.id}}" aria-label="Quantidade do insumo">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">{{p.get_medida_display}}</span>
                                                       </div>
@@ -339,7 +365,17 @@
                                         <p class="card-text font-weight-bold text-capitalize"><h7>{{pro.descricao}}</h7></p>
 
                                         <form action="{% url 'administrador' %}" method="post" name="prod_x">
+                                            <div class="input-group mb-3 justify-content-center">
+                                                <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Estoque:</span>
+                                                </div>
+                                                <input type="number" class="estoque_prod"  value="{{pro.quantidade}}" id="qnt_{{pro.id}}">
+                                                 <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Cardapio:</span>
+                                                </div>
+                                                <input type="checkbox" class="cardapio_prod" {% if pro.cardapio == True %} checked {% endif %} value="{{pro.cardapio}}" id="cardap_{{pro.id}}" style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
 
+                                            </div>
                                             <input hidden name="prod_x" id="x_pedido" value="{{pro.id}}">
                                             {% csrf_token%}
                                             <button type="submit" class="btn btn-danger del_prod" value="{{ pro.id }}" >Deletar</button>

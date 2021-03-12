@@ -131,6 +131,10 @@ def feed(request):
             comanda.valor -= vll
             comanda.save()
             ped.save()
+            # o produto recebe de volta sua quantidade de acorco com pedido
+
+
+            # os insumos recebem de volta sua quantidade conforme o que é usado no produto vezes quantidade do produto
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
@@ -352,7 +356,8 @@ def ped(request):
                                })
 
         if 'comandaref' in request.POST:
-            # produto = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
+
+
             newped = forms.pedidos(request.POST)
 
             # jogar campo por campo e jogar o produto depois
@@ -372,6 +377,11 @@ def ped(request):
                 if newped.is_valid():
                     j= newped.save()
                     j.save()
+                    ins = models.insumos.objects.filter(produto_prod=newped.id)
+                    # pegar insumos do produto
+
+                    #subtrair dos produtos a quantidade que foi no pedido pra cada insumo
+                    #a quantidade total é o é usado no produto vezes produtos pedidos
                     ped_val = models.Pedido.objects.get(pk=j.id)
                     print(ped_val.valor, '  valor q fico d opedido')
                     ped_val.valor= valu
@@ -481,15 +491,41 @@ def adm(request):
             if 'tipo' in rq:
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
-                new_prod = forms.produto(rq,rf)
-                if new_prod.cleaned_data['insumos'] == None :
-                    new_prod.cleaned_data['insumos'] = ''
-                if new_prod.is_valid():
+                nprod = rq
+                pprint(nprod)
+                nprod._mutable = True
+                nprod.pop('qnt_ins[]')
+                nprod._mutable = False
+                new_prod = forms.produto(nprod, rf)
+                pprint(new_prod)
+                # new_prod.nome= rq['nome'],
+                # new_prod.descricao= rq['descricao'],
+                # new_prod.preco= float(rq['preco']),
+                # new_prod.tipo=rq['tipo'],
+                # new_prod.quantidade=float(rq['quantidade']),
+                # new_prod.medida= rq['medida'],
+                # new_prod.cardapio= rq['cardapio'],
+                # new_prod.qnt_minima= float(rq['qnt_minima']),
 
+                print(new_prod.errors)
+                if new_prod.is_valid():
+                    if 'qnt_ins[]' in rq and rq['qnt_ins[]'] != '':
+                        for k, ins in rq['insumos']:
+                            #vincula insumos
+                            print('vincula insumos')
+                            ins = models.Insumos.objects.create(
+                                quantidade_prod=  rq['quantidade'][k],
+                                produto_prod= new_prod.id,
+                                insumo_prod = ins[k]
+
+                            )
+                            ins.save()
 
                     pprint(request.FILES['img_prod'])
                     cloudinary.uploader.upload(rf['img_prod'], folder="produtos")
                     new_prod.save()
+                    print('produto criado')
+                    pprint(new_prod)
                     messages.success(request, "Produto cadastrado !")
                     return redirect('administrador')
                 else:
