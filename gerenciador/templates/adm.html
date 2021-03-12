@@ -221,9 +221,40 @@
 
         $(document).on('click','.cardapio_prod', function(){
 <!--            #manda ajax-->
+            var card = $(this).val();
+            var pro = $(this).parent().siblings().('#x_pedido').val();
+            console.log('foi cardapio > ',card);
+            console.log('foi produto > ',pro);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'administrador' %}",
+                data: {'cardapio' :card,'produto': pro},
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
         })
         $(document).on('click','.estoque_prod', function(){
 <!--            #manda ajax-->
+            var est = $(this).val();
+            var pro = $(this).parent().siblings().('#x_pedido').val();
+            console.log('foi estoque > ',est);
+            console.log('foi produto > ',pro);
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'administrador' %}",
+                data: {'estoque' :est,'produto': pro},
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
         })
     </script>
 
@@ -336,7 +367,8 @@
                                                       <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
                                                     </div>
                                                   </div>
-                                                  <input type="text" class=" qnt_ins" name="qnt_ins[]" id="{{p.id}}" aria-label="Quantidade do insumo">
+<!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
+                                                  <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">{{p.get_medida_display}}</span>
                                                       </div>

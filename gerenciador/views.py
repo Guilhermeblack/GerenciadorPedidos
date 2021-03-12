@@ -492,6 +492,7 @@ def adm(request):
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
                 nprod = rq
+                # insumos = rq['qnt_ins[]']
                 pprint(nprod)
                 nprod._mutable = True
                 nprod.pop('qnt_ins[]')
@@ -522,7 +523,7 @@ def adm(request):
                             ins.save()
 
                     pprint(request.FILES['img_prod'])
-                    cloudinary.uploader.upload(rf['img_prod'], folder="produtos")
+                    cloudinary.uploader.upload(rf['img_prod'], folder="produtos/")
                     new_prod.save()
                     print('produto criado')
                     pprint(new_prod)
@@ -662,6 +663,17 @@ def adm(request):
                                                     'val':val
 
                                                     })
+
+            if 'cardapio' in rq:
+                prod = models.Produtocad.objects.get(pk=rq['produto'])
+                prod.cardapio = rq['cardapio']
+                prod.save()
+                return prod
+            if 'estoque' in rq:
+                prod = models.Produtocad.objects.get(pk=rq['produto'])
+                prod.quantidade = int(rq['estoque'])
+                prod.save()
+                return prod
         else:
 
 
