@@ -20,6 +20,7 @@
                 $('#alt-mov').modal('show');
 
             });
+
             $('#confirm').click(function(){
                 var x='';
                 var cnt=0;
@@ -45,12 +46,14 @@
                     cnt++;
                 });
             });
+
             $('#cancel').click(function(){
                 location.reload();
                 $("#set_pg_top").click();
 
 
             });
+
             $('.close').click(function(){
                 location.reload();
                 $("#set_pg_top").click();
@@ -58,6 +61,7 @@
 
 
         });
+
         $(document).on('click','.del_prod', function(){
 
             $('#x_pedido').val($(this.val()));
@@ -213,17 +217,24 @@
             $('.select_date').hide();
         });
 
-        if ( $('.qnt_ins').val() != '' ){
+        $(document).on('blur','.qnt_ins', function(){
+            if( $(this).val() != "" ){
+                console.log('foiuai');
+                console.log($(this).attr("id"));
+                console.log($(this));
+                $(this).attr("name",  $(this).attr("id") );
+            }
 
-            $(this).attr('name') = $(this).attr('id');
-        }
+        });
 
 
-        $(document).on('click','.cardapio_prod', function(){
-<!--            #manda ajax-->
-            var card = $(this).val();
-            var pro = $(this).parent().siblings().('#x_pedido').val();
-            console.log('foi cardapio > ',card);
+
+        $(document).on('click',' .toggle-group', function(){
+
+<!--            #manda ajax para mostrar produto cardapio-->
+            var card = $(this).siblings('.cardapio_prod').val();
+            var pro = $(this).parents().siblings('#x_pedido').val();
+            console.log(card);
             console.log('foi produto > ',pro);
             $.ajax({
                 headers: { "X-CSRFToken": '{{csrf_token}}' },
@@ -236,11 +247,12 @@
                 error: function (response) {
                 }
             });
-        })
-        $(document).on('click','.estoque_prod', function(){
-<!--            #manda ajax-->
+        });
+
+        $(document).on('blur','.estoque_prod', function(){
+<!--            #manda ajax para alterar estoque -->
             var est = $(this).val();
-            var pro = $(this).parent().siblings().('#x_pedido').val();
+            var pro = $(this).parent().siblings('#x_pedido').val();
             console.log('foi estoque > ',est);
             console.log('foi produto > ',pro);
 
@@ -255,7 +267,7 @@
                 error: function (response) {
                 }
             });
-        })
+        });
     </script>
 
     {% for message in messages %}
@@ -339,9 +351,10 @@
                                             </div>
                                             <div class="input-group mb-3 ml-3 align-content-center " >
 
-                                                    <span class="input-group-text">Item do Cardápio ?</span>
+                                                <span class="input-group-text">Item do Cardápio ?</span>
+                                                <input type="checkbox" class="cardapio_prod"  name="cardapio"  style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
 
-                                                {{form.cardapio}}
+<!--                                                {{form.cardapio}}-->
                                             </div>
                                             <div class="input-group mx-12 mb-5 align-content-center ">
                                               <div class="input-group-prepend">
@@ -352,28 +365,29 @@
                                                 <label class="custom-file-label" for="id_img_prod">Selecione a Imagem do Produto</label>
                                               </div>
                                             </div>
+                                            <div class="input-group-text p-2 m-2 d-flex align-content-center">
+                                                <label class="input-group-text d-flex align-content-center" ><h3>{{'Selecione os insumos do produto'}}</h3></label>
+                                            </div>
+                                            <div class="input-group mb-3 align-content-center">
                                             {% for p in prod %}
-                                                {% if forloop.first %}
-                                                    <div class="input-group-text p-2 m-2 d-flex align-content-center">
-                                                        <label class="input-group-text d-flex align-content-center" ><h3>{{'Selecione os insumos do produto'}}</h3></label>
-                                                    </div>
-                                                {% endif %}
-                                                <div class="input-group mb-3 ml-3 align-content-center">
-                                                  <div class="input-group-prepend">
+
+
+                                                  <div class="input-group-prepend mt-3">
 <!--                                                    <div class="input-group-text">-->
 <!--                                                      <input type="checkbox" class="{{p.nome}} ins" id="check_{{p.id}}" aria-label="Selecionar os insumos que pertencem ao produto">-->
 <!--                                                    </div>-->
                                                     <div class="input-group-text">
                                                       <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
                                                     </div>
-                                                  </div>
+
 <!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
-                                                  <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
-                                                    <div class="input-group-prepend">
+                                                    <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
+                                                    <div class="input-group-prepend mr-2">
                                                         <span class="input-group-text">{{p.get_medida_display}}</span>
                                                       </div>
-                                                </div>
+                                                  </div>
                                             {% endfor %}
+                                            </div>
                                             {% csrf_token %}
 <!--                                            {{ form.as_p }}-->
 
@@ -405,7 +419,7 @@
                                                  <div class="input-group-prepend ">
                                                     <span class="input-group-text">Cardapio:</span>
                                                 </div>
-                                                <input type="checkbox" class="cardapio_prod" {% if pro.cardapio == True %} checked {% endif %} value="{{pro.cardapio}}" id="cardap_{{pro.id}}" style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+                                                <input type="checkbox" class="cardapio_prod" {% if pro.cardapio == True %} checked value="1" {% else %} value="0" {% endif %}  id="cardap_{{pro.id}}"  style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
 
                                             </div>
                                             <input hidden name="prod_x" id="x_pedido" value="{{pro.id}}">

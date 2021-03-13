@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'gerenciador',
     'cloudinary',
     'django_pagarme',
+    # 'django_signal_notifier',
 
 ]
 

@@ -13,6 +13,7 @@ from django.contrib.auth.models import Permission
 from pprint import pprint
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
+import django.db.models.signals
 from Atendgb import settings
 from . import models, forms
 
@@ -129,12 +130,20 @@ def feed(request):
             vll = ped.quantidade *produto_ped.preco
             print(vll, '  <<< vll')
             comanda.valor -= vll
+
+            # em caso de pedido cancelado eu retorno as quantidades de insumo ao estoque
+            pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped.id)
+            for ins in pega_prod:
+                pprint(ins.insumo_prod)
+                ins.insumo_prod.quantidade = ins.insumo_prod.quantidade + ins.quantidade_prod
+                ins.insumo_prod.save()
+
             comanda.save()
             ped.save()
             # o produto recebe de volta sua quantidade de acorco com pedido
 
 
-            # os insumos recebem de volta sua quantidade conforme o que é usado no produto vezes quantidade do produto
+            # os Insumos recebem de volta sua quantidade conforme o que é usado no produto vezes quantidade do produto
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
@@ -184,7 +193,7 @@ def feed(request):
                     if valo >= pedido_prod.valor:
                         if com.valor <= 0:
                             com.status = "F"
-                            receb = models.pagamentos.objects.create(
+                            receb = models.Pagamentos.objects.create(
                                 valor=float(valo_ped),
                                 status="F",
                             )
@@ -199,7 +208,7 @@ def feed(request):
                         print('valor paga o produto')
                         pedido_prod.valor = 0
                         pedido_prod.status_pago = "P"
-                        receb = models.pagamentos.objects.create(
+                        receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status= "P",
                         )
@@ -217,7 +226,7 @@ def feed(request):
                             print(com.valor,'  comanda valoor')
                             print(pedido_prod.valor,'  valor do pedido')
                             pedido_prod.status_pago = "R"
-                            receb = models.pagamentos.objects.create(
+                            receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="R",
                             )
@@ -240,7 +249,7 @@ def feed(request):
                             valo -= pedido_prod.produtosPed.all()[0].preco
                             pedido_prod.valor -= valo
                             pedido_prod.status_pago = "P"
-                            receb = models.pagamentos.objects.create(
+                            receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="P",
                             )
@@ -256,7 +265,7 @@ def feed(request):
                                 com.valor += res
                                 pedido_prod.valor -= valo
                                 pedido_prod.status_pago = "R"
-                                receb = models.pagamentos.objects.create(
+                                receb = models.Pagamentos.objects.create(
                                     valor=valo_ped,
                                     status="R",
                                 )
@@ -274,7 +283,7 @@ def feed(request):
                     com.status="F"
                     if com.valor <= 0:
                         com.status = "F"
-                        receb = models.pagamentos.objects.create(
+                        receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status="F",
                         )
@@ -315,6 +324,12 @@ def feed(request):
 
 
 def ped(request):
+    if request.user.is_authenticated:
+        if 'gerente' == request.user.groups:
+            messages.warning(
+                request,
+                " caiu logadin {}".format(request.user)
+            )
     estado_mov = models.movi.objects.filter(pk=1).values()
     formComanda = forms.comandas
     if request.POST:
@@ -357,18 +372,31 @@ def ped(request):
 
         if 'comandaref' in request.POST:
 
-
+            # pprint(request.POST)
             newped = forms.pedidos(request.POST)
-
+            pprint(request.user.groups.all()[0].name)
+            print('printou o grupo')
             # jogar campo por campo e jogar o produto depois
 
             if newped.is_valid():
-
+                messag =''
                 add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
                 prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
 
                 qnt = int(request.POST['quantidade'])
                 # print(newped)
+                #verifico se o produto tem a quantidade para poder ser feito pedido
+                if prod.quantidade:
+                    if prod.quantidade > 0:
+                        prod.quantidade = prod.quantidade - 1
+                        if prod.quantidade < prod.qnt_minima and  request.user.groups.all()[0].name == 'gerente':
+                            messag = " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
+                            messages.warning(request, messag)
+                    else:
+                        messag = " Estoque do(a) {} insuficiente. Reabasteça o estoque".format(prod.nome)
+                        messages.warning(request, messag)
+                        prod.cardapio = False
+                        prod.save()
 
                 valu = prod.preco * qnt
                 newped.cleaned_data['valor'] =float(valu)
@@ -376,24 +404,49 @@ def ped(request):
                 print(newped.cleaned_data, '  <<<')
                 if newped.is_valid():
                     j= newped.save()
+
+                    pega_prod = models.Insumos.objects.filter(produto_prod= prod.id)
+                    # result.filter(tipo__in=rq['cat_comanda'])
+                    pprint(pega_prod)
+                    for ins in pega_prod:
+                        # verifico se o insumo tem a quantidade para poder ser feito pedido
+                        if ins.insumo_prod.quantidade > 0:
+                            print(ins.quantidade_prod, ' - quantidade a tirar')
+                            print(ins.insumo_prod.quantidade,' - quantidade produto')
+                            ins.insumo_prod.quantidade = ins.insumo_prod.quantidade - ins.quantidade_prod
+                            if ins.insumo_prod.quantidade < ins.insumo_prod.qnt_minima and request.user.groups.all()[0].name == 'gerente':
+                                print('pedou um negativo')
+                                messag =  " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
+                                messages.warning(request, messag)
+                            sv = ins.insumo_prod.save()
+                            print(ins.insumo_prod.quantidade ,' total')
+                        else:
+                            messag = " Estoque do(a) {} insuficiente. Reabasteça o estoque".format(prod.nome)
+                            messages.warning(request, messag)
+                            ins.insumo_prod = False
+                            ins.insumo_prod.save()
+                            prod.cardapio = False
+                            prod.save()
+                    # esse for fez a retirada da quantidade dos insumos
                     j.save()
-                    ins = models.insumos.objects.filter(produto_prod=newped.id)
-                    # pegar insumos do produto
+                    # aqui salvou o pedido
 
                     #subtrair dos produtos a quantidade que foi no pedido pra cada insumo
                     #a quantidade total é o é usado no produto vezes produtos pedidos
                     ped_val = models.Pedido.objects.get(pk=j.id)
-                    print(ped_val.valor, '  valor q fico d opedido')
+                    # print(ped_val.valor, '  valor q fico d opedido')
                     ped_val.valor= valu
-                    print(ped_val.valor, '  depois e salv')
+                    # print(ped_val.valor, '  depois e salv')
                     ped_val.save()
 
 
                     # print(newped.cleaned_data['valor'])
                 add_comanda.valor += valu
                 add_comanda.save()
+                messag = "  Pedido registrado !"
+                print(messag)
+                messages.success(request, messag)
 
-                messages.success(request, "Pedido registrado !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.all(),
@@ -411,8 +464,8 @@ def ped(request):
                                'comandas': models.Comanda.objects.filter(status="A"),
                                'pedido': forms.pedidos
                                })
-
-
+        messages.warning(request, "Ação inválida !")
+        return redirect('pedidos')
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
         return render(request, 'pedidos.html', {
@@ -492,39 +545,54 @@ def adm(request):
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
                 nprod = rq
-                # insumos = rq['qnt_ins[]']
-                pprint(nprod)
+                # Insumos = rq['qnt_ins[]']
+                # pprint(nprod)
+                cont=[]
                 nprod._mutable = True
-                nprod.pop('qnt_ins[]')
+                for p in list(rq):
+                    if p.isnumeric():
+                        # print('enumero')
+                        epc = float(rq[p].replace(',', '.'));
+                        print(epc)
+
+                        print(p)
+                        ins = models.Insumos.objects.create(
+                            quantidade_prod=epc,
+                            insumo_prod=models.Produtocad.objects.get(pk= p)
+
+                        )
+                        ins.save()
+                        cont.append(ins.id)
+                        nprod.pop(p)
+                # breakpoint(rq)
+                if 'cardapio' not in nprod:
+                    nprod['cardapio'] = False
+                if(nprod['cardapio'] == 'on'):
+                    nprod['cardapio'] == True
+                else:
+                    nprod['cardapio'] == False
                 nprod._mutable = False
                 new_prod = forms.produto(nprod, rf)
                 pprint(new_prod)
-                # new_prod.nome= rq['nome'],
-                # new_prod.descricao= rq['descricao'],
-                # new_prod.preco= float(rq['preco']),
-                # new_prod.tipo=rq['tipo'],
-                # new_prod.quantidade=float(rq['quantidade']),
-                # new_prod.medida= rq['medida'],
-                # new_prod.cardapio= rq['cardapio'],
-                # new_prod.qnt_minima= float(rq['qnt_minima']),
 
                 print(new_prod.errors)
                 if new_prod.is_valid():
-                    if 'qnt_ins[]' in rq and rq['qnt_ins[]'] != '':
-                        for k, ins in rq['insumos']:
-                            #vincula insumos
-                            print('vincula insumos')
-                            ins = models.Insumos.objects.create(
-                                quantidade_prod=  rq['quantidade'][k],
-                                produto_prod= new_prod.id,
-                                insumo_prod = ins[k]
 
-                            )
-                            ins.save()
 
-                    pprint(request.FILES['img_prod'])
+
+
+
+
+                    # pprint(request.FILES['img_prod'])
                     cloudinary.uploader.upload(rf['img_prod'], folder="produtos/")
-                    new_prod.save()
+                    np = new_prod.save()
+                    print('vincula Insumos')
+                    pprint(cont)
+                    for p in cont:
+                        pprint(p)
+                        prodins = models.Insumos.objects.get(pk= p)
+                        prodins.produto_prod = np
+                        prodins.save()
                     print('produto criado')
                     pprint(new_prod)
                     messages.success(request, "Produto cadastrado !")
@@ -636,7 +704,7 @@ def adm(request):
                         val += a.preco
                 # recebimentos
                 elif rq['relator'] == 'relareceb':
-                    result = models.pagamentos.objects.all()
+                    result = models.Pagamentos.objects.all()
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
 
@@ -665,10 +733,24 @@ def adm(request):
                                                     })
 
             if 'cardapio' in rq:
-                prod = models.Produtocad.objects.get(pk=rq['produto'])
-                prod.cardapio = rq['cardapio']
-                prod.save()
-                return prod
+                prod = models.Produtocad.objects.get(pk=request.POST['produto'])
+                pprint(prod)
+                if(rq['cardapio'] == '1'):
+                    # print(' produto foi par ao cardapio')
+                    # pprint(prod.cardapio)
+                    prod.cardapio = False
+                    prod.save()
+                    return 1
+                    # models.Produtocad.objects.filter(pk=request.POST['produto']).update(cardapio=False)
+                elif(rq['cardapio'] == '0'):
+                    # print(' produto saiu do cardapio')
+                    # pprint(prod.cardapio)
+                    prod.cardapio = True
+                    prod.save()
+                    return 1
+                    # models.Produtocad.objects.filter(pk=request.POST['produto']).update(cardapio=True)
+
+
             if 'estoque' in rq:
                 prod = models.Produtocad.objects.get(pk=rq['produto'])
                 prod.quantidade = int(rq['estoque'])

@@ -1,6 +1,9 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.db.models import signals
 from django.utils.timezone import now
+# import django_signal_notifier
+
 
 class Gerente(models.Model):
 
@@ -244,7 +247,7 @@ class Produtocad(models.Model):
         null=False
     )
 
-    cardapio = models.BooleanField(blank=True, null=True, default=False)
+    cardapio = models.BooleanField(blank=True, null=False, default=False)
 
     img_prod = CloudinaryField()
 
@@ -326,7 +329,7 @@ class Pedido(models.Model):
 
     objects = models.Manager()
 
-class pagamentos(models.Model):
+class Pagamentos(models.Model):
 
     id = models.AutoField(primary_key=True)
 
@@ -375,7 +378,7 @@ class pagamentos(models.Model):
 
     objects = models.Manager()
 
-class insumos(models.Model):
+class Insumos(models.Model):
 
     id = models.AutoField(primary_key=True)
 
@@ -391,6 +394,7 @@ class insumos(models.Model):
     produto_prod = models.ForeignKey(Produtocad, on_delete=models.CASCADE, null=True, blank=True, related_name="produto_prod")
 
     objects = models.Manager()
+
 
 class logform(models.Model):
     senha = models.CharField(

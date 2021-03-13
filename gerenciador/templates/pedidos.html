@@ -11,10 +11,10 @@
 
     $(document).ready(function(){
         setTimeout( function() {
-            location.reload();
+            location.href = "{% url 'pedidos' %}";
             $("#set_pg_top").click();
 
-        }, 80000);
+        }, 800000);
         $('.pedB').click(function(){
 
             $('#prod_ped').text($(this).siblings('.card-title').text());
@@ -97,6 +97,16 @@
                                                 {% endif %}
                                             </div>
                                         </div>
+                                    {% else %}
+<!--                                        {% if forloop.last %}-->
+<!--                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">-->
+<!--                                            <div class='text-align-center mt-8'>-->
+<!--                                                    <div class='col text-align-center'><strong>-->
+<!--                                                        Não existem Bedidas  habiliatdas-->
+<!--                                                    </strong></div>-->
+<!--                                            </div>-->
+<!--                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">-->
+<!--                                        {% endif %}-->
                                     {% endif %}
                                 {% empty %}
                                 <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
@@ -115,7 +125,7 @@
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 {% for pro in prod %}
-                                    {% if pro.tipo == 'A' and pro.quantidade > 0 and pro.cardapio == True%}
+                                    {% if pro.tipo == 'A'  and pro.cardapio == True %}
                                     <div class="card border border-secondary" style="width: auto; margin: 4px;">
                                         <div class="card-body">
                                             <h5 class="card-title">{{pro.nome}}</h5>
@@ -131,6 +141,16 @@
                                             {% endif %}
                                         </div>
                                     </div>
+                                    {% else %}
+<!--                                        {% if forloop.last %}-->
+<!--                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">-->
+<!--                                            <div class='text-align-center mt-8'>-->
+<!--                                                    <div class='col text-align-center'><strong>-->
+<!--                                                        Não existem Alimentos  habiliatdos-->
+<!--                                                    </strong></div>-->
+<!--                                            </div>-->
+<!--                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">-->
+<!--                                        {% endif %}-->
                                     {% endif %}
                                 {% empty %}
                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">

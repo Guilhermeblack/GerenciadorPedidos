@@ -33,7 +33,7 @@ class pedidos(forms.ModelForm):
 
         widgets = {
             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-
+            # 'produtosPed': forms.HiddenInput(),
             'status': forms.HiddenInput(),
             'valor': forms.HiddenInput()
         }
@@ -46,11 +46,11 @@ class comandas(forms.ModelForm):
 
     class Meta:
         model = models.Comanda
-        fields = 'nome',"n_mesa",'valor'
+        fields = 'nome',"n_mesa"
         name = 'soucomanda'
 
     nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'})),
-    valor= forms.FloatField(widget=forms.HiddenInput())
+    # valor= forms.FloatField(widget=forms.HiddenInput())
 
 
 class mov(forms.ModelForm):
