@@ -129,7 +129,7 @@ def feed(request):
             comanda = models.Comanda.objects.get(pk=ped.comandaref.id)
             vll = ped.quantidade *produto_ped.preco
             print(vll, '  <<< vll')
-            comanda.valor -= vll
+            # comanda.valor -= vll
 
             # em caso de pedido cancelado eu retorno as quantidades de insumo ao estoque
             pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped.id)
@@ -261,6 +261,7 @@ def feed(request):
                                 print('valor do pagamento nao pagou produto mas tem restante pae')
                                 pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
                                 pprint(pdt)
+                                res = pdt.preco - valo
                                 res = pdt.preco - valo
                                 com.valor += res
                                 pedido_prod.valor -= valo

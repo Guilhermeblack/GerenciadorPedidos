@@ -203,8 +203,8 @@ class Produtocad(models.Model):
     )
     descricao = models.TextField(
         max_length=255,
-        null=False,
-        blank=False
+        null=True,
+        blank=True,
     )
 
     preco = models.FloatField(
@@ -249,7 +249,7 @@ class Produtocad(models.Model):
 
     cardapio = models.BooleanField(blank=True, null=False, default=False)
 
-    img_prod = CloudinaryField()
+    img_prod = CloudinaryField(blank=True, null=True)
 
     # def __str__(self):
     #     return self.nome

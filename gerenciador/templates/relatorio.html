@@ -60,7 +60,7 @@
                             <td >{{ rel.data }}</td>
                         </tr>
                         {% if forloop.last %}
-                            <tr><th></th><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
+                            <tr>Total<th></th><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
                         {% endif %}
                     {% elif rel.status_pago != None %}
                         {% if forloop.first %}
@@ -94,7 +94,7 @@
 
                         </tr>
                         {% if forloop.last %}
-                            <tr><th></th><th></th><th></th><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
+                            <tr>Total<th></th><th></th><th></th><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
                         {% endif %}
                     {% elif rel.descricao != None %}
                         {% if forloop.first %}
@@ -121,7 +121,7 @@
 
                         </tr>
                         {% if forloop.last %}
-                            <tr><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
+                            <tr>Total<th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
                         {% endif %}
                     {% elif rel.n_mesa != None %}
                         {% if forloop.first %}
@@ -149,7 +149,7 @@
                             <td >{{ rel.data }}</td>
                         </tr>
                         {% if forloop.last %}
-                            <tr><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th><th></th></tr>
+                            <tr>Total<th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th><th></th></tr>
                         {% endif %}
 
                     {% endif %}
