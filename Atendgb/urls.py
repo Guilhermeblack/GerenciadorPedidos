@@ -18,6 +18,7 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('pedidos', views.ped, name='pedidos'),
     path('sobre', views.sobre, name='sobre'),
+    path('new/', views.new, name='new'),
     path('checkout/', include('django_pagarme.urls'))
     # path('loguin/', include('urls', namespace='log')),
 

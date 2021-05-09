@@ -4,14 +4,7 @@
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block content %}
-<script>
-    $('#msg').display('block'){
-        setInterval(function() {
-            $('#msg').fadeOut('slow');
-        }, 3500);
-    }
 
-</script>
 {% for message in messages %}
     <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
         <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
@@ -22,14 +15,21 @@
 {% endfor %}
     {% if user.is_authenticated %}
         <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
-            <h1 class="align-items-center text-primary" style="font-size: 62px;margin: 3px;">Bem vindo !</h1>
+            <h1 class="text-primary" align="center" style="font-size: 62px;margin: 3px;">Cadastros da Loja</h1>
         </header>
-        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
+        <div class="login-dark">
             <p align="center">
-            <h2>
-                LOGO EMPRESA
-            </h2>
+            <h2 class="sr-only">Cadastros</h2>
+<!--                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>-->
+                {% for c in cad %}
+                    <div class="form-group" align="center">{{c.username}}</div>
+                    <div class="form-group" align="center">{{c.email}}</div>
+
+
+                {%endfor%}
+            <button id="register_new" name="register" onclick="newc()" type="button" class="btn btn-warning btn-block sm register">Cadastre funcionarios</button>
             </p>
+
         </div>
     {% elif user.is_anonymous %}
         <header class="text-center justify-content-center align-content-bottom masthead text-white text-center" style=" align:bottom; background-color: rgb(255,255,255);width: auto; height: 178px; padding-top: 40px; margin: 5px;padding-bottom: 14px;">
@@ -44,11 +44,28 @@
                     {% csrf_token %}
                     <div class="form-group" align="center">{{form.nome}}</div>
                     <div class="form-group" align="center">{{form.senha}}</div>
+<!--                    <span for="{{form.nome}}">{{form.nome.he}}</span>-->
                 {% endif %}
-                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div>
-<!--                <button href="#" class="btn btn-warning btn-block sm">Cadastre-se</button>-->
+                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Loguin</button></div>
+                <h8 align="center" >OU</h8>
+                <button id="register" name="register" onclick="newc()" type="button" class="btn btn-warning btn-block sm register">Cadastre sua loja</button>
+
             </form>
+
         </div>
     {% endif %}
+<script>
+
+
+        function newc(){
+            console.log('coco');
+          window.location.href = "{% url 'new' %}";
+        }
+
+
+
+
+</script>
 {% endblock %}
+
 </html>

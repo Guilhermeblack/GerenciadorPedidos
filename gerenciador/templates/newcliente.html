@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+<script>
+<!--    $('#msg').display('block', function(){-->
+<!--        setInterval(function() {-->
+<!--            $('#msg').fadeOut('slow');-->
+<!--        }, 3500);-->
+<!--    });-->
+
+$(document).ready(function(){
+
+    $('#id_Senha').attr('type','password');
+});
+
+</script>
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
+        <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+{% endfor %}
+    {% if user.is_authenticated %}
+
+        <div class="login-dark align-itens-center" style="background-color: rgb(255,255,253);margin: 4px;">
+
+            <form method="post" class="form-group">
+
+                <div style="width: auto;margin: 4px;margin-left: 55px;margin-bottom: 11px;">{{'NOVO CADASTRO'}}</div>
+                {{clie.as_p}}
+                {% csrf_token %}
+                <select name="groupcli" class="form-group " >
+
+                    {%for g in groups %}
+                        <option value="{{g.name}}">{{g.name}}</option>
+                    {%endfor%}
+                </select>
+
+                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Criar</button></div>
+<!--                <button href="#" class="btn btn-warning btn-block sm">Contrate</button>-->
+            </form>
+        </div>
+    {% elif user.is_anonymous %}
+        <header class="text-center justify-content-center align-content-bottom masthead text-white text-center" style=" align:bottom; background-color: rgb(255,255,255);width: auto; height: 178px; padding-top: 40px; margin: 5px;padding-bottom: 14px;">
+            <h1 class="align-items-center text-center text-primary" style=" font-size: 62px;margin: 3px;" >ENTRAR</h1>
+        </header>
+        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
+            <form method="post" style="margin-top: 4px;padding: 22px;">
+
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
+                {{loja.as_p}}
+                {{clie.as_p}}
+                {% csrf_token %}
+                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Criar</button></div>
+<!--                <button href="#" class="btn btn-warning btn-block sm">Contrate</button>-->
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
+</html>

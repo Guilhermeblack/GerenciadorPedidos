@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import make_password, check_password, BCryptPas
 from django.contrib.auth import logout, login, authenticate, get_user
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, User, Group
 from pprint import pprint
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
@@ -52,14 +52,108 @@ def loguin(request):
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
             messages.error(request, 'Dados inválidos')
-            return render(request, 'loguin.html', {'form': forms.autForm})
+            return render(request, 'loguin.html', {
+                #trazer os usuarios dessa loja
+                'form': forms.autForm
+            })
         messages.error(request, 'Formulrio inválido')
-        return render(request, 'loguin.html', {'form': forms.autForm})
+        return render(request, 'loguin.html', {
+            # trazer os usuarios dessa loja
+            'form': forms.autForm
+
+        })
     else:
         if request.user.is_authenticated:
+            if request.user.has_perm('iniciar_movimento'):
+                return render(request, 'loguin.html', {
+                    # trazer os usuarios dessa loja
+                    'cad': models.User.objects.all(),
+                    'form': forms.autForm
+
+                })
             return redirect('profile')
 
         return render(request, 'loguin.html', {'form': forms.autForm})
+
+@csrf_protect
+def new(request):
+    # if request.user.is_authenticated
+    if request.POST:
+        pprint(request.POST)
+        gp = Group.objects.get(name=request.POST['groupcli'])
+
+        print(' --- ')
+        pprint(gp)
+        print('post da loja')
+
+        #cria loja
+
+        lj = forms.Newloja(request.POST )
+        pprint(lj)
+        if lj.is_valid():
+
+            lojinha = lj.save()
+
+            pprint(lojinha)
+        #cria gerente
+        # request.POST.delete('nome_loja')
+        # request.POST.delete('porte')
+        gr = {
+            'username': request.POST['Usuario'],
+            'password': request.POST['Senha'],
+            'email': request.POST['Email'],
+            'first_name': request.POST['Nome'],
+            'last_name': request.POST['Sobrenome']
+        }
+        # gr._mutable = True
+        # gr['Nome'] = request.POST['Nome']
+        # gr['Senha'] = request.POST['Senha']
+        # gr['Email'] = request.POST['Email']
+        # gr['Usuario'] = request.POST['Usuario']
+        # gr['Sobrenome'] = request.POST['Sobrenome']
+        # gr['nome_loja'] = request.POST['nome_loja']
+        # gr.delete('nome_loja')
+        # gr['porte'].request.POST['porte']
+        # gr.delete('porte')
+        #
+        # gr._mutable = False
+        ger = forms.Newcli(gr)
+
+        # pprint(gr.Nome)
+        pprint(ger)
+        if ger.is_valid():
+            print('bateeu')
+            gerente = ger.save(commit= False)
+            gerente.loja = lojinha
+        # gerente.save(commit= False)
+            print(' nodaleee ')
+            pprint(gerente)
+            gerente.loja = lojinha
+            gerente.groups.add(gp)
+            gerente.save()
+            user = authenticate(
+                username=request.POST['Usuario'],
+                password=request.POST['Senha']
+            )
+
+            if user is not None:
+                login(request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+        # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
+        # user.first_name = request.POST['Nome']
+        # user.last_name = request.POST['Sobrenome']
+        # user.has_perm('gerente.add_bar')
+        # user.permissions.set(['fazer_pedido', 'ver_feed','iniciar_movimento','fechar_comanda','abrir_comanda','controlar_produtos'])
+        #
+        # user.groups.add(gp)
+        # user.save()
+        gp.save()
+        # pprint(gerente)
+    return render(request, 'newcliente.html',{
+        'loja': forms.Newloja,
+        'clie': forms.Newcli,
+        'groups': Group.objects.all()
+    })
 
 
 def profile(request):
@@ -188,7 +282,7 @@ def feed(request):
 
                 if isinstance(peed, str):
                     pedido_prod = models.Pedido.objects.get(pk=peed)
-                    print('valor comanda maior q 0 e um item')
+                    print('apenas um item sendo pago')
                     com.valor -= valo_ped
                     if valo >= pedido_prod.valor:
                         if com.valor <= 0:
@@ -205,7 +299,7 @@ def feed(request):
                             new_status = 'FECHADA'
                             print('valor comanda menor q 0')
                         valo -= pedido_prod.valor
-                        print('valor paga o produto')
+                        print('valor paga o produto unico do pedido')
                         pedido_prod.valor = 0
                         pedido_prod.status_pago = "P"
                         receb = models.Pagamentos.objects.create(
@@ -220,7 +314,7 @@ def feed(request):
                     else:
 
                         if valo > 0:
-                            print('valor nao paga produto e maior q 0')
+                            print('valor nao paga produto sobra {} ')
                             print(valo,'  valoo')
                             pedido_prod.valor -= valo
                             print(com.valor,'  comanda valoor')
@@ -240,13 +334,16 @@ def feed(request):
 
 
                 elif peed.length > 0:
+                    pprint('mais de um produto no pedido')
                     com.valor -= valo_ped
                     for num, p in peed:
+                        pprint('loop dos produtos sendo pagos')
+                        pprint(p)
                         pedido_prod = models.Pedido.objects.get(pk=p)
 
                         if valo >= pedido_prod.produtosPed.all()[0].preco:
-                            print('valor do pagamento pagou produto')
-                            valo -= pedido_prod.produtosPed.all()[0].preco
+                            print('valor sendo pago {}  é maior que valor do produto {}'.format(valo,pedido_prod.produtosPed.all()[0].preco ))
+                            valo -= pedido_prod.produtosPed.all()[0].preco * pedido_prod.produtosPed.all()[0].quantidade
                             pedido_prod.valor -= valo
                             pedido_prod.status_pago = "P"
                             receb = models.Pagamentos.objects.create(
@@ -257,14 +354,14 @@ def feed(request):
                             receb.save()
                             pedido_prod.save()
                         else:
+                            print('valor do produto pagou o valor do pedido aqui'.format(valo))
                             if valo > 0:
-                                print('valor do pagamento nao pagou produto mas tem restante pae')
+                                print('valor do pagamento nao pagou produto mas tem restante >>>')
                                 pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
                                 pprint(pdt)
                                 res = pdt.preco - valo
-                                res = pdt.preco - valo
                                 com.valor += res
-                                pedido_prod.valor -= valo
+                                pedido_prod.valor = res
                                 pedido_prod.status_pago = "R"
                                 receb = models.Pagamentos.objects.create(
                                     valor=valo_ped,
@@ -273,13 +370,16 @@ def feed(request):
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
                                 pedido_prod.save()
+                            elif valo <= 0:
 
+
+                                print('fecho o valor do pedido {}'.format(valo))
                                 com.save()
                     new_status = 'ATUALIZADA com sucesso'
                     pedido_prod.save()
                     com.save()
 
-                if com.valor == 0:
+                if com.valor <= 0:
 
                     com.status="F"
                     if com.valor <= 0:
@@ -553,7 +653,7 @@ def adm(request):
                 for p in list(rq):
                     if p.isnumeric():
                         # print('enumero')
-                        epc = float(rq[p].replace(',', '.'));
+                        epc = float(rq[p].replace(',', '.'))
                         print(epc)
 
                         print(p)
@@ -569,9 +669,9 @@ def adm(request):
                 if 'cardapio' not in nprod:
                     nprod['cardapio'] = False
                 if(nprod['cardapio'] == 'on'):
-                    nprod['cardapio'] == True
+                    nprod['cardapio'] = True
                 else:
-                    nprod['cardapio'] == False
+                    nprod['cardapio'] = False
                 nprod._mutable = False
                 new_prod = forms.produto(nprod, rf)
                 pprint(new_prod)

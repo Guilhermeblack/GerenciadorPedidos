@@ -1,8 +1,43 @@
+from django.contrib.auth.models import User
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.db.models import signals
 from django.utils.timezone import now
 # import django_signal_notifier
+
+
+class Loja(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+
+    nome_loja = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+
+    )
+
+
+    data = models.DateTimeField(auto_now_add=True, blank=True)
+
+    STATUS_CHOICES = (
+        ("G", "Gold"),
+        ("P", "Plat"),
+    )
+    porte = models.CharField(
+        max_length=1,
+        choices=STATUS_CHOICES,
+        default="G",
+        blank=True,
+        null=False
+    )
+
+
+    def __str__(self):
+        return ' {}'.format(self.nome_loja)
+
+    objects = models.Manager()
 
 
 class Gerente(models.Model):
@@ -47,6 +82,7 @@ class Gerente(models.Model):
 
     ),
 
+    # loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="new_loja")
 
 
     objects = models.Manager()
@@ -421,4 +457,37 @@ class movi(models.Model):
         null=False
     )
     objects = models.Manager()
+
+class Newcli(models.Model):
+
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="new_loja")
+
+    Usuario= models.CharField(
+        max_length=20,
+        null=False,
+        blank=False,
+    )
+    Senha= models.CharField(
+        max_length=25,
+        null=False,
+        blank=False,
+    )
+    Email= models.EmailField(
+        max_length=40,
+        null=False,
+        blank=False,
+    )
+    Nome= models.CharField(
+        max_length=20,
+        null=False,
+        blank=False,
+    )
+    Sobrenome= models.CharField(
+        max_length=30,
+        null=False,
+        blank=False,
+    )
 # Create your models here.
