@@ -13,7 +13,7 @@
 
 $(document).ready(function(){
 
-    $('#id_Senha').attr('type','password');
+    $('#id_password').attr('type','password');
 });
 
 </script>
@@ -56,6 +56,16 @@ $(document).ready(function(){
                 <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
                 {{loja.as_p}}
                 {{clie.as_p}}
+                <select name="grupocli" hidden>
+                    {%for g in groups %}
+                        {%if g.name == "gerente" %}
+
+                            <option value="{{g.name}}" selected >{{g.name}}</option>
+                        {%endif%}
+                    {%endfor%}
+
+                </select>
+
                 {% csrf_token %}
                 <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Criar</button></div>
 <!--                <button href="#" class="btn btn-warning btn-block sm">Contrate</button>-->

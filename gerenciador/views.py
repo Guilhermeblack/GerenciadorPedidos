@@ -80,8 +80,7 @@ def new(request):
     # if request.user.is_authenticated
     if request.POST:
         pprint(request.POST)
-        gp = Group.objects.get(name=request.POST['groupcli'])
-
+        gp = Group.objects.get(name=request.POST['grupocli'])
         print(' --- ')
         pprint(gp)
         print('post da loja')
@@ -89,66 +88,53 @@ def new(request):
         #cria loja
 
         lj = forms.Newloja(request.POST )
-        pprint(lj)
+        # pprint(lj)
         if lj.is_valid():
 
+            gr = request.POST
+
+            ger = forms.Newcli(gr )
             lojinha = lj.save()
-
-            pprint(lojinha)
-        #cria gerente
-        # request.POST.delete('nome_loja')
-        # request.POST.delete('porte')
-        gr = {
-            'username': request.POST['Usuario'],
-            'password': request.POST['Senha'],
-            'email': request.POST['Email'],
-            'first_name': request.POST['Nome'],
-            'last_name': request.POST['Sobrenome']
-        }
-        # gr._mutable = True
-        # gr['Nome'] = request.POST['Nome']
-        # gr['Senha'] = request.POST['Senha']
-        # gr['Email'] = request.POST['Email']
-        # gr['Usuario'] = request.POST['Usuario']
-        # gr['Sobrenome'] = request.POST['Sobrenome']
-        # gr['nome_loja'] = request.POST['nome_loja']
-        # gr.delete('nome_loja')
-        # gr['porte'].request.POST['porte']
-        # gr.delete('porte')
-        #
-        # gr._mutable = False
-        ger = forms.Newcli(gr)
-
-        # pprint(gr.Nome)
-        pprint(ger)
+            pprint(ger)
         if ger.is_valid():
             print('bateeu')
+
+
+            pprint(lojinha)
             gerente = ger.save(commit= False)
             gerente.loja = lojinha
         # gerente.save(commit= False)
             print(' nodaleee ')
-            pprint(gerente)
             gerente.loja = lojinha
-            gerente.groups.add(gp)
             gerente.save()
-            user = authenticate(
-                username=request.POST['Usuario'],
-                password=request.POST['Senha']
+            gerente.groups.add(gp)
+
+            pprint(gerente)
+            cli = models.Newcli.objects.create(user=gerente, loja=lojinha)
+            cli.save()
+
+            gp.save()
+            s = authenticate(
+                username=request.POST['username'],
+                password=request.POST['password']
             )
 
-            if user is not None:
-                login(request, user)
+            if s is not None:
+                print('loho fdp')
+                login(request, s)
+
+                messages.info(request, 'Parabens, sua loja foi aberta. \n --  {}'.format(date.today()))
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-        # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
-        # user.first_name = request.POST['Nome']
-        # user.last_name = request.POST['Sobrenome']
-        # user.has_perm('gerente.add_bar')
-        # user.permissions.set(['fazer_pedido', 'ver_feed','iniciar_movimento','fechar_comanda','abrir_comanda','controlar_produtos'])
-        #
-        # user.groups.add(gp)
-        # user.save()
-        gp.save()
-        # pprint(gerente)
+            # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
+            # user.first_name = request.POST['Nome']
+            # user.last_name = request.POST['Sobrenome']
+            # user.has_perm('gerente.add_bar')
+            # user.permissions.set(['fazer_pedido', 'ver_feed','iniciar_movimento','fechar_comanda','abrir_comanda','controlar_produtos'])
+            #
+            # user.groups.add(gp)
+            # user.save()
+
+            # pprint(gerente)
     return render(request, 'newcliente.html',{
         'loja': forms.Newloja,
         'clie': forms.Newcli,
@@ -290,6 +276,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=float(valo_ped),
                                 status="F",
+                                loja= request.user.loja
                             )
 
                             receb.pedidored.add(pedido_prod)
@@ -305,6 +292,7 @@ def feed(request):
                         receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status= "P",
+                            loja=request.user.loja
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -323,6 +311,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="R",
+                                loja=request.user.loja
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -349,6 +338,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="P",
+                                loja=request.user.loja
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -366,6 +356,7 @@ def feed(request):
                                 receb = models.Pagamentos.objects.create(
                                     valor=valo_ped,
                                     status="R",
+                                    loja=request.user.loja
                                 )
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
@@ -387,6 +378,7 @@ def feed(request):
                         receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status="F",
+                            loja=request.user.loja
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -451,6 +443,7 @@ def ped(request):
 
             # print('tem perm')
             if formcom.is_valid():
+                formcom.loja = request.user.loja
                 formcom.save()
                 messages.success(request, "Comanda aberta !")
                 return render(request, 'pedidos.html',
@@ -504,6 +497,7 @@ def ped(request):
                 newped['valor'].value = valu
                 print(newped.cleaned_data, '  <<<')
                 if newped.is_valid():
+                    newped.loja = request.user.loja
                     j= newped.save()
 
                     pega_prod = models.Insumos.objects.filter(produto_prod= prod.id)
@@ -659,7 +653,8 @@ def adm(request):
                         print(p)
                         ins = models.Insumos.objects.create(
                             quantidade_prod=epc,
-                            insumo_prod=models.Produtocad.objects.get(pk= p)
+                            insumo_prod=models.Produtocad.objects.get(pk= p),
+                            loja=request.user.loja
 
                         )
                         ins.save()
@@ -683,7 +678,7 @@ def adm(request):
 
 
 
-
+                    new_prod.loja = request.user.loja
                     # pprint(request.FILES['img_prod'])
                     cloudinary.uploader.upload(rf['img_prod'], folder="produtos/")
                     np = new_prod.save()

@@ -57,7 +57,9 @@ class Gerente(models.Model):
     def __str__(self):
         return self.nome
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ger_loja")
     id = models.AutoField(primary_key=True),
+
     nome = models.CharField(
         max_length=50,
         null=False,
@@ -87,105 +89,12 @@ class Gerente(models.Model):
 
     objects = models.Manager()
 
-class Garcom(models.Model):
-    class Meta:
-        permissions = [
-            ('fazer_pedido', 'incluir pedido'),
-            ('pedido_entregue', 'pedido foi entregue'),
-            ('ver_feed', 'visualizar o feed'),
-            ('abrir_comanda', 'abrir uma nova comanda')
-        ]
-
-    def __str__(self):
-        return self.nome
-
-    id = models.AutoField(primary_key=True),
-
-    nome = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-        default="garçom",
-    ),
-    senha = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    ),
-    senha_rep = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    ),
-    objects = models.Manager()
-
-class Cozinha(models.Model):
-    class Meta:
-        permissions = [
-            ('pedido_pronto', 'pedido pronto'),
-            ('ver_feed', 'visualizar o feed')
-        ]
-
-    def __str__(self):
-        return self.nome
-
-    id = models.AutoField(primary_key=True),
-
-    nome = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-        default='cheff',
-    )
-    senha = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    )
-    senha_rep = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    )
-    objects = models.Manager()
-
-
-class Caixa(models.Model):
-    class Meta:
-        permissions = [
-            ('fechar_comanda', 'fechar a comanda'),
-            ('ver_feed', 'visualizar o feed')
-        ]
-
-    def __str__(self):
-        return self.nome
-
-    id = models.AutoField(primary_key=True),
-
-
-    nome = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-        default='cheff',
-    )
-    senha = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    )
-    senha_rep = models.CharField(
-        max_length=50,
-        null=False,
-        blank=False,
-    )
-    objects = models.Manager()
-
 
 class Comanda(models.Model):
 
     id = models.AutoField(primary_key=True)
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="com_loja")
 
     nome = models.CharField(
         max_length=50,
@@ -231,6 +140,7 @@ class Produtocad(models.Model):
 
     id = models.AutoField(primary_key=True)
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="pro_loja")
 
     nome = models.CharField(
         max_length=50,
@@ -318,6 +228,7 @@ class Pedido(models.Model):
 
     id = models.AutoField(primary_key=True)
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ped_loja")
 
     produtosPed= models.ManyToManyField(Produtocad, related_name='produto', blank=False)
 
@@ -369,6 +280,7 @@ class Pagamentos(models.Model):
 
     id = models.AutoField(primary_key=True)
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="pag_loja")
 
     pedidored = models.ManyToManyField(Pedido, related_name='pedidored', blank=True)
 
@@ -418,6 +330,7 @@ class Insumos(models.Model):
 
     id = models.AutoField(primary_key=True)
 
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ins_loja")
     quantidade_prod = models.FloatField(
         null=False,
         blank=False,
@@ -456,38 +369,18 @@ class movi(models.Model):
         blank=False,
         null=False
     )
+
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="mov_loja")
     objects = models.Manager()
 
 class Newcli(models.Model):
 
+    id = models.AutoField(primary_key=True)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="new_loja")
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="cli_loja")
+    # def __str__(self):
+    #     return ' {}'.format(self.nome_loja)
 
-    Usuario= models.CharField(
-        max_length=20,
-        null=False,
-        blank=False,
-    )
-    Senha= models.CharField(
-        max_length=25,
-        null=False,
-        blank=False,
-    )
-    Email= models.EmailField(
-        max_length=40,
-        null=False,
-        blank=False,
-    )
-    Nome= models.CharField(
-        max_length=20,
-        null=False,
-        blank=False,
-    )
-    Sobrenome= models.CharField(
-        max_length=30,
-        null=False,
-        blank=False,
-    )
 # Create your models here.
