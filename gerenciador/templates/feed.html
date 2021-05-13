@@ -448,6 +448,9 @@
         <!--                                                                            {{ ped.comandaref.id }}-->
         <!--                                                                            {{ com.id }}-->
                                                                                     {% if ped.comandaref.id == com.id and com.status == 'A' %}
+
+<!--                                                                                    condicao para cliente-->
+                                                                                        {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                                                                         <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
                                                                                             <div class='col text-align-center'>
@@ -471,6 +474,7 @@
 <!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
 
                                                                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                                    {%endif%}
                                                                                     {%endif%}
                                                                                 {% empty %}
                                                                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">

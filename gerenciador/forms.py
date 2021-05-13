@@ -63,13 +63,7 @@ class comandas(forms.ModelForm):
     # valor= forms.FloatField(widget=forms.HiddenInput())
 
 
-class mov(forms.ModelForm):
 
-    class Meta:
-
-        model = models.movi
-        fields = {'movimento'}
-        name = 'alteraMov'
 
 
 class Newloja(forms.ModelForm):

@@ -34,10 +34,15 @@ $(document).ready(function(){
                 <div style="width: auto;margin: 4px;margin-left: 55px;margin-bottom: 11px;">{{'NOVO CADASTRO'}}</div>
                 {{clie.as_p}}
                 {% csrf_token %}
-                <select name="groupcli" class="form-group " >
+                <select name="groupocli" class="form-group " >
 
                     {%for g in groups %}
-                        <option value="{{g.name}}">{{g.name}}</option>
+                        {% if g.name == "garcom" %}
+                            <option value="{{g.name}}" selected >{{g.name}}</option>
+                        {% else %}
+                            <option value="{{g.name}}">{{g.name}}</option>
+                        {% endif %}
+
                     {%endfor%}
                 </select>
 

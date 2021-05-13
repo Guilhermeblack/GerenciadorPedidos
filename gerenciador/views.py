@@ -34,6 +34,7 @@ def sobre(request):
 
 @csrf_protect
 def loguin(request):
+
     if request.POST:
         # print(' >>>', request.POST)
         formu = forms.autForm(request.POST)
@@ -63,11 +64,20 @@ def loguin(request):
 
         })
     else:
-        if request.user.is_authenticated:
+
+        if request.user.is_authenticated and request.user.has_perm("gerenciador.iniciar_movimento") :
+
+            nc = models.Newcli.objects.get(user=request.user)
+            if nc:
+                loja = nc.loja
+            else:
+                loja = ''
+
+            nl = models.Newcli.objects.filter(loja = loja)
             if request.user.has_perm('iniciar_movimento'):
                 return render(request, 'loguin.html', {
                     # trazer os usuarios dessa loja
-                    'cad': models.User.objects.all(),
+                    'cad': nl,
                     'form': forms.autForm
 
                 })
@@ -77,10 +87,11 @@ def loguin(request):
 
 @csrf_protect
 def new(request):
+
     # if request.user.is_authenticated
     if request.POST:
         pprint(request.POST)
-        gp = Group.objects.get(name=request.POST['grupocli'])
+        gp = Group.objects.get(name=request.POST['groupocli'])
         print(' --- ')
         pprint(gp)
         print('post da loja')
@@ -90,12 +101,15 @@ def new(request):
         lj = forms.Newloja(request.POST )
         # pprint(lj)
         if lj.is_valid():
-
-            gr = request.POST
-
-            ger = forms.Newcli(gr )
             lojinha = lj.save()
-            pprint(ger)
+        else:
+            nl = models.Newcli.objects.get(user=request.user)
+            lojinha = nl.loja
+        gr = request.POST
+
+        ger = forms.Newcli(gr )
+
+        pprint(ger)
         if ger.is_valid():
             print('bateeu')
 
@@ -115,8 +129,8 @@ def new(request):
 
             gp.save()
             s = authenticate(
-                username=request.POST['username'],
-                password=request.POST['password']
+                username=gerente.username,
+                password=gerente.password
             )
 
             if s is not None:
@@ -143,10 +157,22 @@ def new(request):
 
 
 def profile(request):
+
+
+    if not models.Newcli.objects.all():
+        print('tentei')
+        nt = models.Newcli.objects.create(user=request.user)
+        nt.save()
     if request.user.is_authenticated:
+
+        nc = models.Newcli.objects.get(user=request.user)
+        if nc:
+            loja = nc.loja
+        else:
+            loja = ''
         usr = get_user(request)
         grupo = request.user.groups.all()
-        print(grupo)
+        # print(grupo)
 
         if 'caixas' in str(grupo):
             messages.info(request, 'Logado como caixa. \n Data: {}'.format(date.today()))
@@ -181,7 +207,11 @@ def logoutuser(request):
 
 # @permission_required('ver_feed')
 def feed(request):
-    estado_mov = models.movi.objects.filter(pk=1).values()
+    nc = models.Newcli.objects.get(user=request.user)
+    loja = nc.loja
+
+    pprint(loja)
+    estado_mov = loja.movimento
     STATUS_CHOICES = (
         "Pedido realizado",
         "Fazendo",
@@ -199,20 +229,20 @@ def feed(request):
 
         if 'exc_ped' in request.POST:
             pprint(request.POST)
-            ped = models.Pedido.objects.get(pk=request.POST['exc_ped'])
+            ped = models.Pedido.objects.get(pk=request.POST['exc_ped'], loja=loja)
             ped.status="C"
             ped.valor =0
             # pprint(ped)
             pprint(ped.produtosPed.all())
-            produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id)
+            produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id,loja=loja)
 
-            comanda = models.Comanda.objects.get(pk=ped.comandaref.id)
+            comanda = models.Comanda.objects.get(pk=ped.comandaref.id,loja=loja)
             vll = ped.quantidade *produto_ped.preco
             print(vll, '  <<< vll')
             # comanda.valor -= vll
 
             # em caso de pedido cancelado eu retorno as quantidades de insumo ao estoque
-            pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped.id)
+            pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped.id, loja=loja)
             for ins in pega_prod:
                 pprint(ins.insumo_prod)
                 ins.insumo_prod.quantidade = ins.insumo_prod.quantidade + ins.quantidade_prod
@@ -227,27 +257,27 @@ def feed(request):
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
             return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
                 'fpg': FORMA_PGT,
-                'movi': estado_mov[0]['movimento']
+                'movi': estado_mov
             })
 
         if 'stats' in request.POST:
             print(request.POST)
-            ped= models.Pedido.objects.filter(pk=request.POST['idstat'])
+            ped= models.Pedido.objects.get(pk=request.POST['idstat'],loja=loja)
             pprint(ped)
             ped.update(status=request.POST['stats'])
             # ped.save()
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
             return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
                 'fpg': FORMA_PGT,
-                'movi': estado_mov[0]['movimento']
+                'movi': estado_mov
             })
 
         if 'comanda_x' in request.POST:
@@ -255,7 +285,7 @@ def feed(request):
 
             pprint(request.POST)
 
-            com = models.Comanda.objects.get(pk=int(request.POST['comanda_x']))
+            com = models.Comanda.objects.get(pk=int(request.POST['comanda_x']),loja=loja)
             valo_ped = float(request.POST['valo'])
 
             # loop itens
@@ -267,7 +297,7 @@ def feed(request):
                 print('entao foi o pedd')
 
                 if isinstance(peed, str):
-                    pedido_prod = models.Pedido.objects.get(pk=peed)
+                    pedido_prod = models.Pedido.objects.get(pk=peed, loja=loja)
                     print('apenas um item sendo pago')
                     com.valor -= valo_ped
                     if valo >= pedido_prod.valor:
@@ -276,7 +306,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=float(valo_ped),
                                 status="F",
-                                loja= request.user.loja
+                                loja= loja
                             )
 
                             receb.pedidored.add(pedido_prod)
@@ -347,7 +377,7 @@ def feed(request):
                             print('valor do produto pagou o valor do pedido aqui'.format(valo))
                             if valo > 0:
                                 print('valor do pagamento nao pagou produto mas tem restante >>>')
-                                pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id)
+                                pdt = models.Produtocad.objects.get(pk=pedido_prod.produtosPed.all()[0].id, loja=loja)
                                 pprint(pdt)
                                 res = pdt.preco - valo
                                 com.valor += res
@@ -395,11 +425,11 @@ def feed(request):
 
             return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.all().order_by('id', 'status'),
+                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
                 'choices': STATUS_CHOICES,
                 'fpg': FORMA_PGT,
-                'movi': estado_mov[0]['movimento']
+                'movi': estado_mov
             })
 
     else:
@@ -408,22 +438,28 @@ def feed(request):
         # pprint(models.Pedido.objects.all().order_by('id'))
         return render(request, 'feed.html', {
 
-            'comandas': models.Comanda.objects.all().order_by('id', 'data'),
-            'pedidos': models.Pedido.objects.all().order_by('id'),
+            'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+            'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
             'choices': STATUS_CHOICES,
             'fpg': FORMA_PGT,
-            'movi': estado_mov[0]['movimento']
+            'movi': estado_mov
         })
 
 
 def ped(request):
+
+
     if request.user.is_authenticated:
+        nc = models.Newcli.objects.get(user=request.user)
+        pprint(nc.loja)
+        loja = nc.loja
         if 'gerente' == request.user.groups:
             messages.warning(
                 request,
                 " caiu logadin {}".format(request.user)
             )
-    estado_mov = models.movi.objects.filter(pk=1).values()
+    pprint(loja)
+    estado_mov = loja.movimento
     formComanda = forms.comandas
     if request.POST:
         # print(request.POST)
@@ -443,14 +479,30 @@ def ped(request):
 
             # print('tem perm')
             if formcom.is_valid():
-                formcom.loja = request.user.loja
-                formcom.save()
+                formco = formcom.save(commit=False)
+                formco.loja = loja
+                password = ""+request.POST['nome']+request.POST['n_mesa']+""
+                user_comanda = models.User.objects.create_user(
+                    username=request.POST['nome'],
+                    password=password,
+                    email= request.POST['nome']+"@mail.com"
+                )
+                user_comanda.groups.add(Group.objects.get(name='cliente'))
+                user_comanda.save()
+                clientec = models.Newcli.objects.create(
+                    user = user_comanda,
+                    loja = loja
+
+                )
+                clientec.save()
+
+                formco.save()
                 messages.success(request, "Comanda aberta !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
-                               'prod': models.Produtocad.objects.all(),
-                               'movi':estado_mov[0]['movimento'],
-                               'comandas': models.Comanda.objects.filter(status="A"),
+                               'prod': models.Produtocad.objects.filter(loja=loja),
+                               'movi':estado_mov,
+                               'comandas': models.Comanda.objects.filter(status="A",loja=loja),
                                'pedido': forms.pedidos
                                })
             else:
@@ -458,9 +510,9 @@ def ped(request):
 
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
-                               'prod': models.Produtocad.objects.all(),
-                               'movi': estado_mov[0]['movimento'],
-                               'comandas': models.Comanda.objects.filter(status="A"),
+                               'prod': models.Produtocad.objects.filter(loja=loja),
+                               'movi': estado_mov,
+                               'comandas': models.Comanda.objects.filter(status="A",loja=loja),
                                'pedido': forms.pedidos
                                })
 
@@ -468,14 +520,14 @@ def ped(request):
 
             # pprint(request.POST)
             newped = forms.pedidos(request.POST)
-            pprint(request.user.groups.all()[0].name)
+            pprint(request.user.groups.all())
             print('printou o grupo')
             # jogar campo por campo e jogar o produto depois
 
             if newped.is_valid():
                 messag =''
-                add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
-                prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'])
+                add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'],loja=loja)
+                prod = models.Produtocad.objects.get(pk=request.POST['produtosPed'],loja=loja)
 
                 qnt = int(request.POST['quantidade'])
                 # print(newped)
@@ -497,10 +549,11 @@ def ped(request):
                 newped['valor'].value = valu
                 print(newped.cleaned_data, '  <<<')
                 if newped.is_valid():
-                    newped.loja = request.user.loja
-                    j= newped.save()
+                    j = newped.save(commit=False)
+                    j.loja = loja
+                    j.save()
 
-                    pega_prod = models.Insumos.objects.filter(produto_prod= prod.id)
+                    pega_prod = models.Insumos.objects.filter(produto_prod= prod.id,loja=loja)[0]
                     # result.filter(tipo__in=rq['cat_comanda'])
                     pprint(pega_prod)
                     for ins in pega_prod:
@@ -528,7 +581,7 @@ def ped(request):
 
                     #subtrair dos produtos a quantidade que foi no pedido pra cada insumo
                     #a quantidade total é o é usado no produto vezes produtos pedidos
-                    ped_val = models.Pedido.objects.get(pk=j.id)
+                    ped_val = models.Pedido.objects.filter(pk=j.id,loja=loja)[0]
                     # print(ped_val.valor, '  valor q fico d opedido')
                     ped_val.valor= valu
                     # print(ped_val.valor, '  depois e salv')
@@ -544,9 +597,9 @@ def ped(request):
 
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
-                               'prod': models.Produtocad.objects.all(),
-                               'movi': estado_mov[0]['movimento'],
-                               'comandas': models.Comanda.objects.filter(status="A"),
+                               'prod': models.Produtocad.objects.filter(loja=loja),
+                               'movi': estado_mov,
+                               'comandas': models.Comanda.objects.filter(status="A",loja=loja),
                                'pedido': forms.pedidos
                                })
             else:
@@ -554,9 +607,9 @@ def ped(request):
 
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
-                               'prod': models.Produtocad.objects.all(),
-                               'movi': estado_mov[0]['movimento'],
-                               'comandas': models.Comanda.objects.filter(status="A"),
+                               'prod': models.Produtocad.objects.filter(loja=loja),
+                               'movi': estado_mov,
+                               'comandas': models.Comanda.objects.filter(status="A",loja=loja),
                                'pedido': forms.pedidos
                                })
         messages.warning(request, "Ação inválida !")
@@ -565,9 +618,9 @@ def ped(request):
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
-            'prod': models.Produtocad.objects.all(),
-            'comandas': models.Comanda.objects.filter(status= "A"),
-            'movi':estado_mov[0]['movimento'],
+            'prod': models.Produtocad.objects.filter(loja=loja),
+            'comandas': models.Comanda.objects.filter(status= "A",loja=loja),
+            'movi':estado_mov,
             'pedido': forms.pedidos()
 
         })
@@ -576,65 +629,71 @@ def ped(request):
 @permission_required('gerenciador.iniciar_movimento')
 def adm(request):
     # print('do adm ', request.user.groups.all()[0])
+
+    nc = models.Newcli.objects.get(user=request.user)
+    loja = nc.loja
     if request.user.has_perm("gerenciador.iniciar_movimento"):
 
         if request.POST:
             rq = request.POST
             pprint(rq)
             # if 'prod_x' in rq:
-
+            #deleta um produto
             if 'prod_x' in rq:
 
-                models.Produtocad.objects.filter(pk=request.POST['prod_x']).delete()
-                estado_mov = models.movi.objects.filter(pk=1).values()
+                models.Produtocad.objects.filter(pk=request.POST['prod_x'],loja=loja).delete()
+                estado_mov = loja.movimento
                 messages.info(request, "Produto deletado com sucesso!")
                 return render(request, 'adm.html', {'form': forms.produto,
-                                                    'prod': models.Produtocad.objects.all(),
+                                                    'prod': models.Produtocad.objects.get(loja=loja),
                                                     'logado': get_user(request),
-                                                    'mov': estado_mov[0]['movimento']
+                                                    'mov': estado_mov
                                                     })
-
+            #altera o movimento
             if 'movimento' in rq:
                 # useer = forms.mov(rq)
 
                 # print(useer)
                 # if useer.is_valid():
-                mov_atual = models.movi.objects.all().update(movimento=rq['movimento'])
+                # mov_atual = models.Loja.objects.all().update(movimento=rq['movimento'], loja=loja)
                 # print(mov_atual, 'movaq')
                 # print('nudale', rq['movimento'])
 
-                if (mov_atual == 1):
-                    if (rq['movimento'] == 'L'):
+                if loja:
+                    if rq['movimento'] == 'L':
 
                         messages.info(request, "Movimento iniciado com sucesso !")
                         # print('nudale', rq['movimento'])
-                        estado_mov = models.movi.objects.filter(pk=1).values()
+                        loja.movimento = "L"
+                        loja.save()
+                        estado_mov = loja.movimento
                         # print(estado_mov)
                         return render(request, 'adm.html', {'form': forms.produto,
-                                                            'prod': models.Produtocad.objects.all(),
+                                                            'prod': models.Produtocad.objects.filter(loja=loja),
                                                             'logado': get_user(request),
-                                                            'mov': estado_mov[0]['movimento']
+                                                            'mov': estado_mov
                                                             })
 
-                    elif (rq['movimento'] == 'D'):
+                    elif rq['movimento'] == 'D':
 
-
+                        loja.movimento = "D"
+                        loja.save()
                         messages.info(request, "Movimento encerrado com sucesso !")
                         # print('trerrekcheck', rq['movimento'])
-                        estado_mov = models.movi.objects.filter(pk=1).values()
+                        estado_mov = loja.movimento
                         # print(estado_mov)
                         return render(request, 'adm.html', {'form': forms.produto,
-                                                            'prod': models.Produtocad.objects.all(),
+                                                            'prod': models.Produtocad.objects.filter(loja=loja),
                                                             'logado': get_user(request),
-                                                            'mov': estado_mov[0]['movimento']
+                                                            'mov': estado_mov
                                                             })
                 else:
                     # messages.error(request, "{}".format('Não foi possível alterar o movimento.'))
-                    rq = models.movi.objects.filter(pk=1).values()
+                    rq = loja.movimento
                     return render(request, 'adm.html', {'form': forms.produto,
-                                                        'prod': models.Produtocad.objects.all(),
+                                                        'prod': models.Produtocad.objects.filter(loja=loja),
                                                         'logado': get_user(request),
-                                                        'mov': rq[0]['movimento']
+                                                        'mov': rq
                                                         })
             if 'tipo' in rq:
                 if 'img_prod' in request.FILES:
@@ -653,7 +712,7 @@ def adm(request):
                         print(p)
                         ins = models.Insumos.objects.create(
                             quantidade_prod=epc,
-                            insumo_prod=models.Produtocad.objects.get(pk= p),
+                            insumo_prod=models.Produtocad.objects.get(pk= p,loja=loja),
                             loja=request.user.loja
 
                         )
@@ -674,19 +733,20 @@ def adm(request):
                 print(new_prod.errors)
                 if new_prod.is_valid():
 
+                    new_pro =new_prod.save(commit=False)
 
-
-
-
-                    new_prod.loja = request.user.loja
+                    new_pro.loja = loja
                     # pprint(request.FILES['img_prod'])
-                    cloudinary.uploader.upload(rf['img_prod'], folder="produtos/")
-                    np = new_prod.save()
+                    dir = str(loja.id)+"/produtos"
+
+
+                    cloudinary.uploader.upload(rf['img_prod'], folder=dir)
+                    np = new_pro.save()
                     print('vincula Insumos')
                     pprint(cont)
                     for p in cont:
                         pprint(p)
-                        prodins = models.Insumos.objects.get(pk= p)
+                        prodins = models.Insumos.objects.get(pk= p,loja=loja)
                         prodins.produto_prod = np
                         prodins.save()
                     print('produto criado')
@@ -704,7 +764,7 @@ def adm(request):
                 # comandas
                 if rq['relator'] == 'relacomanda':
 
-                    result = models.Comanda.objects.all()
+                    result = models.Comanda.objects.get(loja=loja)
 
                     # filtros
                     if rq['nmesa_comanda'] != '':
@@ -740,7 +800,7 @@ def adm(request):
                 elif rq['relator'] == 'relaped':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
-                    result = models.Pedido.objects.all()
+                    result = models.Pedido.objects.get(loja=loja)
                     if rq['date_de'] != '':
                         result = result.exclude(
                             data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
@@ -772,7 +832,7 @@ def adm(request):
                 elif rq['relator'] == 'relaprod':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
-                    result = models.Produtocad.objects.all()
+                    result = models.Produtocad.objects.get(loja=loja)
                     if rq['date_de'] != '':
                         result = result.exclude(
                             data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
@@ -800,7 +860,7 @@ def adm(request):
                         val += a.preco
                 # recebimentos
                 elif rq['relator'] == 'relareceb':
-                    result = models.Pagamentos.objects.all()
+                    result = models.Pagamentos.objects.get(loja=loja)
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
 
@@ -817,7 +877,7 @@ def adm(request):
                     val=0
                     for a in result:
                         val += a.valor
-                req = models.movi.objects.filter(pk=1).values()
+                req = loja.movimento
                 print('relatoriopae')
                 return render(request, 'relatorio.html', {
                                                     'relatorio': result,
@@ -829,7 +889,7 @@ def adm(request):
                                                     })
 
             if 'cardapio' in rq:
-                prod = models.Produtocad.objects.get(pk=request.POST['produto'])
+                prod = models.Produtocad.objects.get(pk=request.POST['produto'], loja=loja)
                 pprint(prod)
                 if(rq['cardapio'] == '1'):
                     # print(' produto foi par ao cardapio')
@@ -848,7 +908,7 @@ def adm(request):
 
 
             if 'estoque' in rq:
-                prod = models.Produtocad.objects.get(pk=rq['produto'])
+                prod = models.Produtocad.objects.get(pk=rq['produto'], loja=loja)
                 prod.quantidade = int(rq['estoque'])
                 prod.save()
                 return prod
@@ -856,13 +916,14 @@ def adm(request):
 
 
 
-            rq = models.movi.objects.filter(pk=1).values()
+            rq = loja.movimento
             # estado_mov = models.movi.objects.filter(pk=1)
             # print(rq)
+
             return render(request, 'adm.html', {'form': forms.produto,
-                                                'prod': models.Produtocad.objects.all(),
+                                                'prod': models.Produtocad.objects.filter(loja=loja),
                                                 'logado': get_user(request),
-                                                'mov': rq[0]['movimento']
+                                                'mov': rq
                                                 })
     else:
         messages.danger(request, "Você não tem permissão para acessar esta página.")
