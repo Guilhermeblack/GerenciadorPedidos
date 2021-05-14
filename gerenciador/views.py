@@ -65,16 +65,24 @@ def loguin(request):
         })
     else:
 
-        if request.user.is_authenticated and request.user.has_perm("gerenciador.iniciar_movimento") :
+        if request.user.is_authenticated :
 
             nc = models.Newcli.objects.get(user=request.user)
-            if nc:
+            if nc is not None:
                 loja = nc.loja
             else:
-                loja = ''
+                loja = request.user.loja
 
             nl = models.Newcli.objects.filter(loja = loja)
-            if request.user.has_perm('iniciar_movimento'):
+            # print('oclii')
+            # pprint(nl)
+            # pprint(Permission.objects.filter(user= request.user))
+            # pprint(request.user.get_group_permissions() )
+            gp= Group.objects.filter(user=request.user)
+
+
+
+            if 'gerenciador.iniciar_movimento' in request.user.get_group_permissions() :
                 return render(request, 'loguin.html', {
                     # trazer os usuarios dessa loja
                     'cad': nl,
@@ -90,55 +98,83 @@ def new(request):
 
     # if request.user.is_authenticated
     if request.POST:
-        pprint(request.POST)
-        gp = Group.objects.get(name=request.POST['groupocli'])
-        print(' --- ')
-        pprint(gp)
-        print('post da loja')
+        # pprint(request.POST)
+        gp = Group.objects.get(name=request.POST['grupocli'])
+        # print(' --- ')
+        # pprint(gp)
+        # print('post da loja')
 
         #cria loja
 
         lj = forms.Newloja(request.POST )
         # pprint(lj)
+        #preciso de uma loja, se nao for uma nova pego a loja do usuario logado
+
         if lj.is_valid():
             lojinha = lj.save()
+            messages.info(request, 'Parabens, sua loja foi aberta. \n --  {}'.format(date.today()))
         else:
             nl = models.Newcli.objects.get(user=request.user)
             lojinha = nl.loja
         gr = request.POST
-
+        senha = gr['password']
+        gr._mutable = True
+        gr['password'] = make_password(gr['password'])
+        gr._mutable = False
         ger = forms.Newcli(gr )
 
-        pprint(ger)
+        # pprint(ger)
         if ger.is_valid():
             print('bateeu')
 
 
-            pprint(lojinha)
+            # pprint(lojinha)
             gerente = ger.save(commit= False)
             gerente.loja = lojinha
+
         # gerente.save(commit= False)
             print(' nodaleee ')
             gerente.loja = lojinha
             gerente.save()
             gerente.groups.add(gp)
 
-            pprint(gerente)
+            # pprint(gerente)
             cli = models.Newcli.objects.create(user=gerente, loja=lojinha)
             cli.save()
 
-            gp.save()
-            s = authenticate(
-                username=gerente.username,
-                password=gerente.password
-            )
+            # gp.save()
+            print('salvo tudo')
+            if request.user.is_authenticated:
 
-            if s is not None:
-                print('loho fdp')
-                login(request, s)
+                messages.info(request, 'Bem vinda(o), fique a vontade. \n --  {}'.format(date.today()))
 
-                messages.info(request, 'Parabens, sua loja foi aberta. \n --  {}'.format(date.today()))
-                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+            else:
+
+                # pprint(ger.cleaned_data.get('username'))
+                # pprint(ger.cleaned_data.get('password'))
+                # pprint(senha)
+                # pprint(check_password(ger.cleaned_data.get('password'),encoded=pbkdf2_sha256))
+
+                # password = make_password(formu.cleaned_data.get('senha'), salt=None, hasher='pbkdf2_sha256')
+                username = ger.cleaned_data.get('username')
+
+                # print(password)
+                user = authenticate(
+                    username=username,
+                    password=senha
+                )
+
+                # pprint(user)
+
+                if user is not None:
+                    login(request, user)
+                    messages.info(request, 'Bem vinda(o), aproveite o melhor sistema. \n --  {}'.format(date.today()))
+                    return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+
+        else:
+            messages.info(request, 'Cadastro inválido. \n --  {}'.format(date.today()))
+
+
             # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
             # user.first_name = request.POST['Nome']
             # user.last_name = request.POST['Sobrenome']
@@ -233,12 +269,12 @@ def feed(request):
             ped.status="C"
             ped.valor =0
             # pprint(ped)
-            pprint(ped.produtosPed.all())
+            # pprint(ped.produtosPed.all())
             produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id,loja=loja)
 
             comanda = models.Comanda.objects.get(pk=ped.comandaref.id,loja=loja)
             vll = ped.quantidade *produto_ped.preco
-            print(vll, '  <<< vll')
+            # print(vll, '  <<< vll')
             # comanda.valor -= vll
 
             # em caso de pedido cancelado eu retorno as quantidades de insumo ao estoque
@@ -308,6 +344,9 @@ def feed(request):
                                 status="F",
                                 loja= loja
                             )
+                            nc = models.Newcli.objects.get(com.cliente)
+                            models.User.objects.get(nc).delete()
+                            nc.delete()
 
                             receb.pedidored.add(pedido_prod)
 
@@ -413,6 +452,9 @@ def feed(request):
                         receb.pedidored.add(pedido_prod)
                         receb.save()
                         com.save()
+                        nc = models.Newcli.objects.get(com.cliente)
+                        models.User.objects.get(nc).delete()
+                        nc.delete()
                         new_status = 'FECHADA'
                     com.save()
                     new_status = 'FECHADA'
@@ -458,7 +500,10 @@ def ped(request):
                 request,
                 " caiu logadin {}".format(request.user)
             )
-    pprint(loja)
+        pprint(loja)
+
+    else:
+        loja = models.Loja.objects.get(pk=36)
     estado_mov = loja.movimento
     formComanda = forms.comandas
     if request.POST:
@@ -487,6 +532,7 @@ def ped(request):
                     password=password,
                     email= request.POST['nome']+"@mail.com"
                 )
+                formco.cliente = user_comanda
                 user_comanda.groups.add(Group.objects.get(name='cliente'))
                 user_comanda.save()
                 clientec = models.Newcli.objects.create(

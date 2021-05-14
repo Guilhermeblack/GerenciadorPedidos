@@ -26,15 +26,17 @@ $(document).ready(function(){
     </div>
 {% endfor %}
     {% if user.is_authenticated %}
-
+        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);padding-bottom: 4px;">
+            <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
+        </header>
         <div class="login-dark align-itens-center" style="background-color: rgb(255,255,253);margin: 4px;">
 
             <form method="post" class="form-group">
 
-                <div style="width: auto;margin: 4px;margin-left: 55px;margin-bottom: 11px;">{{'NOVO CADASTRO'}}</div>
+
                 {{clie.as_p}}
                 {% csrf_token %}
-                <select name="groupocli" class="form-group " >
+                <select name="grupocli" class="form-group " >
 
                     {%for g in groups %}
                         {% if g.name == "garcom" %}

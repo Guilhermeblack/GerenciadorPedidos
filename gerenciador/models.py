@@ -52,6 +52,19 @@ class Loja(models.Model):
     objects = models.Manager()
 
 
+class Newcli(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True)
+    # def __str__(self):
+    #     return ' {}'.format(self.nome_loja)
+
+# Create your models here.
+
+
 class Gerente(models.Model):
 
     class Meta:
@@ -107,6 +120,8 @@ class Comanda(models.Model):
     id = models.AutoField(primary_key=True)
 
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="com_loja")
+
+    cliente = models.ForeignKey(Newcli, on_delete=models.CASCADE, null=True, blank=True)
 
     nome = models.CharField(
         max_length=50,
@@ -371,14 +386,3 @@ class logform(models.Model):
 
 
 
-class Newcli(models.Model):
-
-    id = models.AutoField(primary_key=True)
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True)
-    # def __str__(self):
-    #     return ' {}'.format(self.nome_loja)
-
-# Create your models here.

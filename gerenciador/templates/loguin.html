@@ -14,19 +14,23 @@
     </div>
 {% endfor %}
     {% if user.is_authenticated %}
-        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);width: 524px;height: 178px;padding-top: 78px;margin: 5px;padding-bottom: 14px;">
-            <h1 class="text-primary" align="center" style="font-size: 62px;margin: 3px;">Cadastros da Loja</h1>
+        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
+            <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
         </header>
-        <div class="login-dark">
+        <div class="login-dark" align="center">
             <p align="center">
             <h2 class="sr-only">Cadastros</h2>
 <!--                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>-->
+                <table>
                 {% for c in cad %}
-                    <div class="form-group" align="center">{{c.username}}</div>
-                    <div class="form-group" align="center">{{c.email}}</div>
-
+                    <tr class="form-group" align="center" border="1px">
+                        <th class="form-group" align="center">{{c.user.username}}</th>
+                        <th class="form-group" colspan="3"></th>
+                        <th class="form-group" align="center" >{{c.user.email}}</th>
+                    </tr>
 
                 {%endfor%}
+                </table>
             <button id="register_new" name="register" onclick="newc()" type="button" class="btn btn-warning btn-block sm register">Cadastre funcionarios</button>
             </p>
 
