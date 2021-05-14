@@ -270,7 +270,7 @@ def feed(request):
             ped.valor =0
             # pprint(ped)
             # pprint(ped.produtosPed.all())
-            produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id,loja=loja)
+            produto_ped = models.Produtocad.objects.filter(pk=ped.produtosPed.all()[0].id,loja=loja)
 
             comanda = models.Comanda.objects.get(pk=ped.comandaref.id,loja=loja)
             vll = ped.quantidade *produto_ped.preco
@@ -278,7 +278,7 @@ def feed(request):
             # comanda.valor -= vll
 
             # em caso de pedido cancelado eu retorno as quantidades de insumo ao estoque
-            pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped.id, loja=loja)
+            pega_prod = models.Insumos.objects.filter(produto_prod=produto_ped, loja=loja)
             for ins in pega_prod:
                 pprint(ins.insumo_prod)
                 ins.insumo_prod.quantidade = ins.insumo_prod.quantidade + ins.quantidade_prod
@@ -532,7 +532,7 @@ def ped(request):
                     password=password,
                     email= request.POST['nome']+"@mail.com"
                 )
-                formco.cliente = user_comanda
+
                 user_comanda.groups.add(Group.objects.get(name='cliente'))
                 user_comanda.save()
                 clientec = models.Newcli.objects.create(
@@ -541,7 +541,7 @@ def ped(request):
 
                 )
                 clientec.save()
-
+                formco.cliente = clientec
                 formco.save()
                 messages.success(request, "Comanda aberta !")
                 return render(request, 'pedidos.html',
@@ -599,7 +599,7 @@ def ped(request):
                     j.loja = loja
                     j.save()
 
-                    pega_prod = models.Insumos.objects.filter(produto_prod= prod.id,loja=loja)[0]
+                    pega_prod = models.Insumos.objects.filter(produto_prod= prod,loja=loja)
                     # result.filter(tipo__in=rq['cat_comanda'])
                     pprint(pega_prod)
                     for ins in pega_prod:
