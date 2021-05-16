@@ -691,7 +691,7 @@ def adm(request):
                 estado_mov = loja.movimento
                 messages.info(request, "Produto deletado com sucesso!")
                 return render(request, 'adm.html', {'form': forms.produto,
-                                                    'prod': models.Produtocad.objects.get(loja=loja),
+                                                    'prod': models.Produtocad.objects.filter(loja=loja),
                                                     'logado': get_user(request),
                                                     'mov': estado_mov
                                                     })
@@ -744,27 +744,14 @@ def adm(request):
             if 'tipo' in rq:
                 if 'img_prod' in request.FILES:
                     rf= request.FILES
+                else:
+                    rf = 'not'
                 nprod = rq
                 # Insumos = rq['qnt_ins[]']
                 # pprint(nprod)
                 cont=[]
                 nprod._mutable = True
-                for p in list(rq):
-                    if p.isnumeric():
-                        # print('enumero')
-                        epc = float(rq[p].replace(',', '.'))
-                        print(epc)
 
-                        print(p)
-                        ins = models.Insumos.objects.create(
-                            quantidade_prod=epc,
-                            insumo_prod=models.Produtocad.objects.get(pk= p,loja=loja),
-                            loja=request.user.loja
-
-                        )
-                        ins.save()
-                        cont.append(ins.id)
-                        nprod.pop(p)
                 # breakpoint(rq)
                 if 'cardapio' not in nprod:
                     nprod['cardapio'] = False
@@ -773,28 +760,51 @@ def adm(request):
                 else:
                     nprod['cardapio'] = False
                 nprod._mutable = False
-                new_prod = forms.produto(nprod, rf)
+
+                new_prod = forms.produto(nprod, request.FILES)
+
                 pprint(new_prod)
 
-                print(new_prod.errors)
+                # print(new_prod.errors)
                 if new_prod.is_valid():
 
                     new_pro =new_prod.save(commit=False)
 
                     new_pro.loja = loja
+                    for p in list(rq):
+                        if p.isnumeric():
+                            # print('enumero')
+                            epc = float(rq[p].replace(',', '.'))
+                            print(epc)
+
+                            print(p)
+                            ins = models.Insumos.objects.create(
+                                quantidade_prod=epc,
+                                insumo_prod=models.Produtocad.objects.get(pk=p, loja=loja),
+
+                                loja=loja
+
+                            )
+                            ins.save()
+                            cont.append(ins.id)
+                            nprod._mutable = True
+                            nprod.pop(p)
+                            nprod._mutable = False
                     # pprint(request.FILES['img_prod'])
-                    dir = str(loja.id)+"/produtos"
+                    if not rf == 'not':
+                        dir = str(loja.id)+"/produtos"
 
 
-                    cloudinary.uploader.upload(rf['img_prod'], folder=dir)
+                        cloudinary.uploader.upload(rf['img_prod'], folder=dir)
                     np = new_pro.save()
                     print('vincula Insumos')
-                    pprint(cont)
+                    pprint(new_pro)
                     for p in cont:
-                        pprint(p)
-                        prodins = models.Insumos.objects.get(pk= p,loja=loja)
-                        prodins.produto_prod = np
-                        prodins.save()
+                        print('{} savees'.format(p))
+                        prodins = models.Insumos.objects.get(pk= p)
+                        prodins.produto_prod = new_pro
+                        print('esse malditp {} '.format(prodins.produto_prod))
+                        svp = prodins.save()
                     print('produto criado')
                     pprint(new_prod)
                     messages.success(request, "Produto cadastrado !")
@@ -810,7 +820,7 @@ def adm(request):
                 # comandas
                 if rq['relator'] == 'relacomanda':
 
-                    result = models.Comanda.objects.get(loja=loja)
+                    result = models.Comanda.objects.filter(loja=loja)
 
                     # filtros
                     if rq['nmesa_comanda'] != '':
@@ -846,7 +856,7 @@ def adm(request):
                 elif rq['relator'] == 'relaped':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
-                    result = models.Pedido.objects.get(loja=loja)
+                    result = models.Pedido.objects.filter(loja=loja)
                     if rq['date_de'] != '':
                         result = result.exclude(
                             data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
@@ -878,7 +888,7 @@ def adm(request):
                 elif rq['relator'] == 'relaprod':
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
-                    result = models.Produtocad.objects.get(loja=loja)
+                    result = models.Produtocad.objects.filter(loja=loja)
                     if rq['date_de'] != '':
                         result = result.exclude(
                             data =datetime.datetime.strptime(rq['date_de'], '%Y-%m-%dT%H:%M')
@@ -906,7 +916,7 @@ def adm(request):
                         val += a.preco
                 # recebimentos
                 elif rq['relator'] == 'relareceb':
-                    result = models.Pagamentos.objects.get(loja=loja)
+                    result = models.Pagamentos.objects.filter(loja=loja)
                     if len(rq) < 5 and rq['date_ate'] == '' and rq['date_de'] == '':
                         messages.warning(request, "Sem dados para conulta !")
 

@@ -25,7 +25,7 @@ class produto(forms.ModelForm):
             # 'nome' : forms.CharField(help_text="Este campo representa o nome do produto"),
             # 'preco' : forms.FloatField(help_text="Insira o preço do produto neste campo"),
             # 'tipo' : forms.CharField(help_text="Escolha se o produto é um alimento ou uma bebida"),
-            # 'quantidade' : forms.IntegerField(help_text="Quantidade em estoque do produto"),
+            # 'quantidade' : forms.IntegerField(widget=forms.PasswordInput(attrs={'min_value':1, 'width':15, 'require': False}) )
             # 'medida' : forms.CharField(help_text="Escolha a unidade de medida do produto"),
             # 'cardapio' : forms.BooleanField(help_text="Defina se o produto irá aparecer no cardápio"),
             # 'qnt_minima' : forms.FloatField(help_text="Defina qual a quantidade minima do produto a loja poderá ter em estoque antes de ser alertada")

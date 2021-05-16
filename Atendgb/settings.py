@@ -142,16 +142,21 @@ USE_TZ = True
 
 
 
-# print(BASE_DIR)
-#heroku settings
-#heroku settings
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'bab77316bbc476dfcf73dd0f6fdc4c6f9a9f569a79237e82ad99e5fddeb73bf5',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
+
 import dj_database_url
+DATABASES['default'] = dj_database_url.config(default='postgres://cthnqrzlzcfwki:bab77316bbc476dfcf73dd0f6fdc4c6f9a9f569a79237e82ad99e5fddeb73bf5@ec2-3-228-114-251.compute-1.amazonaws.com:5432/ddq9lfm8i99u0d')
+# DATABASES['default'] = dj_database_url.config()
 
 # essa linha
 # DATABASES['default'] = dj_database_url.config()

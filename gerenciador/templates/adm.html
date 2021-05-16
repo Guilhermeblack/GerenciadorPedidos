@@ -297,27 +297,27 @@
                     <hr>
 <!--                    funçao de zerar historico-->
                     <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">Produtos</button>
-                    <div class="modal px-6 justify-content-center" role="document" tabindex="-1" id="novoProduto">
+                    <div class="modal " role="document" tabindex="-1" id="novoProduto">
                         <div class="card justify-content-center">
                             {% if form %}
-                            <form method="POST" id="newprod" enctype="multipart/form-data" >
-                                <div class="modal-content border bg-secondary p-3 align-content-center">
+                            <form method="POST" class="justify-content-center" id="newprod" enctype="multipart/form-data" >
+                                <div class="modal-content border  bg-secondary  " align="center">
                                     <div class="modal-header">
                                         <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body" >
+                                    <div class="modal-body w-80  "  >
 
-                                            <div class="input-group mb-3 align-content-center">
-                                              <div class="input-group-prepend">
+                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex " >
+                                              <div class="input-group-prepend" align="center">
                                                 <span class="input-group-text" id="basic-addon1">Nome:</span>
                                               </div>
                                                 {{ form.nome }}
-                                                <div class="input-group-prepend ">
-                                                    <span class="input-group-text">Tipo: </span>
+                                                <div class="input-group-prepend justify-content-center w-60 d-inline-flex">
+                                                    <span class="input-group-text al" >Tipo: </span>
                                               </div>
                                                 {{ form.tipo }}
                                             </div>
-                                            <div class="input-group mb-3 align-content-center">
+                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex ">
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text">Preço: R$</span>
                                               </div>
@@ -330,7 +330,7 @@
 
 
                                             </div>
-                                            <div class="input-group mb-3 ">
+                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex ">
                                                 <div class="input-group-prepend ">
                                                     <span class="input-group-text">Qnt em estoque:</span>
                                               </div>
@@ -341,53 +341,60 @@
                                                 {{ form.qnt_minima }}
                                             </div>
 
-                                            </div>
-                                            <div class="input-group mb-3 ml-3 align-content-center " >
+<!--                                            </div>-->
+                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex" >
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text">Descrição:</span>
                                               </div>
                                                 {{ form.descricao }}
 
                                             </div>
-                                            <div class="input-group mb-3 ml-3 align-content-center " >
+                                            <div class="mb-3 justify-content-center w-30 d-inline-flex " >
 
                                                 <span class="input-group-text">Item do Cardápio ?</span>
                                                 <input type="checkbox" class="cardapio_prod"  name="cardapio"  style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
 
 <!--                                                {{form.cardapio}}-->
                                             </div>
-                                            <div class="input-group mx-12 mb-5 align-content-center ">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text">Imagem</span>
-                                              </div>
-                                              <div class="custom-file">
+                                            <div class="input-group mb-3 justify-content-center w-30 d-inline-flex">
+
+                                              <div class="custom-file w-30">
                                                 {{ form.img_prod }}
-                                                <label class="custom-file-label" for="id_img_prod">Selecione a Imagem do Produto</label>
+                                                <label class="custom-file-label w-20" for="id_img_prod">Selecione a Imagem do Produto</label>
                                               </div>
                                             </div>
-                                            <div class="input-group-text p-2 m-2 d-flex align-content-center">
-                                                <label class="input-group-text d-flex align-content-center" ><h3>{{'Selecione os insumos do produto'}}</h3></label>
-                                            </div>
-                                            <div class="input-group mb-3 align-content-center">
-                                            {% for p in prod %}
+
+                                                <div class="dropdown input-group-text p-2 m-2 justify-content-center w-30 d-inline-flex">
+                                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="insumo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                    <label class="input-group-text " ><h3>{{'Selecione os insumos do produto'}}</h3></label>
+                                                    </a>
+                                                    <div class="dropdown-menu" aria-labelledby="insumo">
+                                                      <div class="container-fluid">
+                                                        {% for p in prod %}
+                                                            <div class="row dropdown-item">
+
+                                                                <div class="input-group-prepend mt-3 newprod">
+
+                                                                    <div class="input-group-text">
+                                                                      <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
+                                                                    </div>
+
+                <!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
+                                                                    <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
+                                                                    <div class="input-group-prepend mr-2">
+                                                                        <span class="input-group-text">{{p.get_medida_display}}</span>
+                                                                      </div>
+                                                                </div>
 
 
-                                                  <div class="input-group-prepend mt-3">
-<!--                                                    <div class="input-group-text">-->
-<!--                                                      <input type="checkbox" class="{{p.nome}} ins" id="check_{{p.id}}" aria-label="Selecionar os insumos que pertencem ao produto">-->
-<!--                                                    </div>-->
-                                                    <div class="input-group-text">
-                                                      <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
-                                                    </div>
 
-<!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
-                                                    <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
-                                                    <div class="input-group-prepend mr-2">
-                                                        <span class="input-group-text">{{p.get_medida_display}}</span>
+                                                            </div>
+                                                        {% endfor %}
                                                       </div>
-                                                  </div>
-                                            {% endfor %}
-                                            </div>
+                                                    </div>
+                                                </div>
+
+
                                             {% csrf_token %}
 <!--                                            {{ form.as_p }}-->
 

@@ -74,7 +74,8 @@ class Gerente(models.Model):
             ('iniciar_movimento', 'iniciar o movimento'),
             ('fechar_comanda', 'fechar a comanda'),
             ('abrir_comanda', 'abrir uma nova comanda'),
-            ('controlar_produtos', 'controlar produtos disponiveis')
+            ('controlar_produtos', 'controlar produtos disponiveis'),
+            ('sou_cliente', 'acesso de cliente')
         ]
 
         # app_label = 'gerente'
@@ -358,6 +359,7 @@ class Insumos(models.Model):
     id = models.AutoField(primary_key=True)
 
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ins_loja")
+
     quantidade_prod = models.FloatField(
         null=False,
         blank=False,
