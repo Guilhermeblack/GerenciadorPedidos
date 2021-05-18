@@ -366,6 +366,13 @@
         $('#comandas').modal('hide');
     });
 
+    function fechaele(md){
+        console.log('#'+md);
+        let v = '#'+md;
+        $(v).modal('toggle');
+        $(v).modal('hide');
+    }
+
 
     </script>
     {% for message in messages %}
@@ -383,22 +390,20 @@
 
 
                 <div class="row bg-white">
-                    <div class="col d-flex"> </div>
                     <div class="col d-flex justify-content-center">
                         <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>
                     </div>
 
-                        <div class="col d-flex justify-content-sm-end">
+                        <div class="col justify-content-lg-center">
                             {% if user.is_authenticated and perms.gerenciador.fechar_comanda  %}
                                 <button class="btn btn-primary btn-sm btn-rounded hover" style="max-height:40%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
 
-                                <div class="modal fade" role="dialog" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content ">
+                                <div class="modal fade mr-2" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
+                                        <div class="modal-content  w-80 mx-3">
 
                                             <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                        aria-hidden="true">×</span></button>
+                                                <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" aria-label="Close"><span
+                                                       class="close" data-dismiss="modal" aria-hidden="true"> ×</span></button>
                                             </div>
                                             <form method="post" name="comandas">
                                                 <div class="modal-body">
@@ -421,13 +426,13 @@
                                                                 <div class='col text-align-center'>{{ com.nome }}</div>
                                                                 <div class='col text-align-right' id="vlr_comanda">R$ {{ com.valor }}</div>
                                                             </div>
-                                                            <div class="modal fade modal-lg mod-filho" role="dialog" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
-                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                    <div class="modal-content ">
+                                                            <div class="modal fade justify-content-center mod-filho" role="document" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
+
+                                                                    <div class="modal-content w-80 mr-2 mx-3">
 
                                                                         <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
-                                                                            <button type="button" class="close close-filho" data-target="comanda_cli" aria-label="Close"><span
-                                                                                aria-hidden="true">×</span></button>
+                                                                            <button type="button" class="close close-filho" data-target="comanda_cli" onclick="fechaele('comanda_cli{{com.id}}')" aria-label="Close"><span
+                                                                                aria-hidden="true" aria-label="Close" >×</span></button>
                                                                         </div>
                                                                         <form method="post" name="comanda_cli">
                                                                             <div class="modal-body" id="pedidos_cli">
@@ -486,11 +491,10 @@
 
                                                                             <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
                                                                                 {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
-                                                                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" data-target="comanda_cli"  >Sair</button>
+                                                                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('comanda_cli{{com.id}}')"  aria-label="Close" data-target="comanda_cli"  >Sair</button>
                                                                             </div>
                                                                         </form>
                                                                     </div>
-                                                                </div>
                                                             </div>
                                                         {% endif %}
                                                     {% empty %}
@@ -504,19 +508,18 @@
 
                                                 <div class="modal-footer">
     <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
-                                                    <button class="btn btn-danger cancel" type="button" data-dismiss="modal" >Sair</button>
+                                                    <button class="btn btn-danger cancel" type="button" onclick="fechaele('comandas')" data-dismiss="modal" >Sair</button>
                                                 </div>
                                             </form>
                                         </div>
-                                    </div>
                                 </div>
                                 <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
-                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-dialog modal-lg " role="document">
                                         <div class="modal-content bg-alert">
 
                                             <div class="modal-header"> <strong><h4 class="text-align-center ">ENCERRAR COMANDA </h4></strong>
-                                                <button type="button" class="close close-filho" data-target="modal" aria-label="Close"><span
-                                                    aria-hidden="true">×</span></button>
+                                                <button type="button" onclick="fechaele('x_comanda')" class="close close-filho" data-target="modal" aria-label="Close"><span
+                                                    aria-hidden="true" aria-label="Close">×</span></button>
                                             </div>
                                             <div class="modal-body"  class="d-flex justify-content-center">
                                                 <div class="row d-flex justify-content-center">
