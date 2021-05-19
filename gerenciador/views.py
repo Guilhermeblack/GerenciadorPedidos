@@ -265,14 +265,14 @@ def feed(request):
 
         if 'exc_ped' in request.POST:
             pprint(request.POST)
-            ped = models.Pedido.objects.get(pk=request.POST['exc_ped'], loja=loja)
+            ped = models.Pedido.objects.get(pk=request.POST['exc_ped'])
             ped.status="C"
             ped.valor =0
             # pprint(ped)
             # pprint(ped.produtosPed.all())
-            produto_ped = models.Produtocad.objects.filter(pk=ped.produtosPed.all()[0].id,loja=loja)
+            produto_ped = models.Produtocad.objects.get(pk=ped.produtosPed.all()[0].id)
 
-            comanda = models.Comanda.objects.get(pk=ped.comandaref.id,loja=loja)
+            comanda = models.Comanda.objects.get(pk=ped.comandaref.id)
             vll = ped.quantidade *produto_ped.preco
             # print(vll, '  <<< vll')
             # comanda.valor -= vll
@@ -302,10 +302,10 @@ def feed(request):
 
         if 'stats' in request.POST:
             print(request.POST)
-            ped= models.Pedido.objects.get(pk=request.POST['idstat'],loja=loja)
+            ped= models.Pedido.objects.get(pk=request.POST['idstat'])
             pprint(ped)
-            ped.update(status=request.POST['stats'])
-            # ped.save()
+            ped.status=request.POST['stats']
+            ped.save()
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
             return render(request, 'feed.html', {
 
@@ -630,7 +630,7 @@ def ped(request):
 
                     #subtrair dos produtos a quantidade que foi no pedido pra cada insumo
                     #a quantidade total é o é usado no produto vezes produtos pedidos
-                    ped_val = models.Pedido.objects.filter(pk=j.id,loja=loja)[0]
+                    ped_val = models.Pedido.objects.get(pk=j.id)
                     # print(ped_val.valor, '  valor q fico d opedido')
                     ped_val.valor= valu
                     # print(ped_val.valor, '  depois e salv')
@@ -690,7 +690,7 @@ def adm(request):
             #deleta um produto
             if 'prod_x' in rq:
 
-                models.Produtocad.objects.filter(pk=request.POST['prod_x'],loja=loja).delete()
+                models.Produtocad.objects.get(pk=request.POST['prod_x']).delete()
                 estado_mov = loja.movimento
                 messages.info(request, "Produto deletado com sucesso!")
                 return render(request, 'adm.html', {'form': forms.produto,
@@ -783,7 +783,7 @@ def adm(request):
                             print(p)
                             ins = models.Insumos.objects.create(
                                 quantidade_prod=epc,
-                                insumo_prod=models.Produtocad.objects.get(pk=p, loja=loja),
+                                insumo_prod=models.Produtocad.objects.get(pk=p),
 
                                 loja=loja
 
@@ -948,7 +948,7 @@ def adm(request):
                                                     })
 
             if 'cardapio' in rq:
-                prod = models.Produtocad.objects.get(pk=request.POST['produto'], loja=loja)
+                prod = models.Produtocad.objects.get(pk=request.POST['produto'])
                 pprint(prod)
                 if(rq['cardapio'] == '1'):
                     # print(' produto foi par ao cardapio')
@@ -967,7 +967,7 @@ def adm(request):
 
 
             if 'estoque' in rq:
-                prod = models.Produtocad.objects.get(pk=rq['produto'], loja=loja)
+                prod = models.Produtocad.objects.get(pk=rq['produto'])
                 prod.quantidade = int(rq['estoque'])
                 prod.save()
                 return prod

@@ -139,7 +139,7 @@
             url: "{% url 'feed' %}",
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
-                    location.reload();
+                    location.reload(false);
                     $("#set_pg_top").click();
             },
             error: function (response) {
@@ -369,10 +369,14 @@
     function fechaele(md){
         console.log('#'+md);
         let v = '#'+md;
-        $(v).modal('toggle');
-        $(v).modal('hide');
-    }
 
+        $(""+v+"").modal().toggle();
+        if(md == 'comandas'){
+
+            location.reload(false);
+        }
+
+    }
 
     </script>
     {% for message in messages %}
@@ -402,7 +406,7 @@
                                         <div class="modal-content  w-80 mx-3">
 
                                             <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
-                                                <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" aria-label="Close"><span
+                                                <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" data-target="comandas" aria-label="Close"><span
                                                        class="close" data-dismiss="modal" aria-hidden="true"> ×</span></button>
                                             </div>
                                             <form method="post" name="comandas">
@@ -428,73 +432,73 @@
                                                             </div>
                                                             <div class="modal fade justify-content-center mod-filho" role="document" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
 
-                                                                    <div class="modal-content w-80 mr-2 mx-3">
+                                                                <div class="modal-content w-80 mr-2 mx-3">
 
-                                                                        <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
-                                                                            <button type="button" class="close close-filho" data-target="comanda_cli" onclick="fechaele('comanda_cli{{com.id}}')" aria-label="Close"><span
-                                                                                aria-hidden="true" aria-label="Close" >×</span></button>
-                                                                        </div>
-                                                                        <form method="post" name="comanda_cli">
-                                                                            <div class="modal-body" id="pedidos_cli">
-                                                                                <h6 class="modal-title">
-                                                                                    <div class="row align-items-start">
-                                                                                        <div class='col text-align-left font-weight-bold'>
-                                                                                            <input type="checkbox" class="" name="prodd" id="prodd" >
-                                                                                        </div>
-                                                                                        <div class='col text-align-left font-weight-bold'>{{ 'Prd' }}</div>
-                                                                                        <div class='col text-align-center font-weight-bold'>{{ 'qnt' }}</div>
-                                                                                        <div class='col text-align-center font-weight-bold'>{{ 'Vlr' }}</div>
-                                                                                        <div class='col text-align-right font-weight-bold'>{{ 'Stt' }}</div>
-                                                                                        <div class='col text-align-right font-weight-bold'>{{ 'Pag' }}</div>
+                                                                    <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
+                                                                        <button type="button" class="close close-filho"  onclick="fechaele('comanda_cli{{com.id}}')" data-target="comanda_cli{{com.id}}" aria-label="Close"><span
+                                                                            aria-hidden="true" aria-label="Close" >×</span></button>
+                                                                    </div>
+                                                                    <form method="post" name="comanda_cli">
+                                                                        <div class="modal-body" id="pedidos_cli">
+                                                                            <h6 class="modal-title">
+                                                                                <div class="row align-items-start">
+                                                                                    <div class='col text-align-left font-weight-bold'>
+                                                                                        <input type="checkbox" class="" name="prodd" id="prodd" >
                                                                                     </div>
-                                                                                </h6>
+                                                                                    <div class='col text-align-left font-weight-bold'>{{ 'Prd' }}</div>
+                                                                                    <div class='col text-align-center font-weight-bold'>{{ 'qnt' }}</div>
+                                                                                    <div class='col text-align-center font-weight-bold'>{{ 'Vlr' }}</div>
+                                                                                    <div class='col text-align-right font-weight-bold'>{{ 'Stt' }}</div>
+                                                                                    <div class='col text-align-right font-weight-bold'>{{ 'Pag' }}</div>
+                                                                                </div>
+                                                                            </h6>
 
-                                                                                {% for ped in pedidos %}
-        <!--                                                                            {{ ped.comandaref.id }}-->
-        <!--                                                                            {{ com.id }}-->
-                                                                                    {% if ped.comandaref.id == com.id and com.status == 'A' %}
+                                                                            {% for ped in pedidos %}
+    <!--                                                                            {{ ped.comandaref.id }}-->
+    <!--                                                                            {{ com.id }}-->
+                                                                                {% if ped.comandaref.id == com.id and com.status == 'A' %}
 
 <!--                                                                                    condicao para cliente-->
-                                                                                        {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
-                                                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                        <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
-                                                                                            <div class='col text-align-center'>
-                                                                                                {% if ped.status_pago != "P" %}
-                                                                                                    <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
-                                                                                                {% endif %}
-                                                                                            </div>
-                                                                                            {% for prod in ped.produtosPed.all %}
-                                                                                                    <div class='col text-align-left'>{{ prod.nome }}</div>
-                                                                                            {% endfor %}
-                                                                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
-                                                                                            <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
-
-                                                                                            <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
-
-
-                                                                                            <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>
-
-
+                                                                                    {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
+                                                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                                    <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
+                                                                                        <div class='col text-align-center'>
+                                                                                            {% if ped.status_pago != "P" %}
+                                                                                                <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
+                                                                                            {% endif %}
                                                                                         </div>
+                                                                                        {% for prod in ped.produtosPed.all %}
+                                                                                                <div class='col text-align-left'>{{ prod.nome }}</div>
+                                                                                        {% endfor %}
+                                                                                        <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
+                                                                                        <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
+
+                                                                                        <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
+
+
+                                                                                        <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>
+
+
+                                                                                    </div>
 <!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
 
-                                                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                    {%endif%}
-                                                                                    {%endif%}
-                                                                                {% empty %}
                                                                                     <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                                                    <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
-                                                                                            <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
-                                                                                    </div>
-                                                                                {% endfor %}
-                                                                            </div>
+                                                                                {%endif%}
+                                                                                {%endif%}
+                                                                            {% empty %}
+                                                                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                                                                <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
+                                                                                        <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
 
-                                                                            <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
-                                                                                {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
-                                                                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('comanda_cli{{com.id}}')"  aria-label="Close" data-target="comanda_cli"  >Sair</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
+                                                                        <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
+                                                                            {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
+                                                                            {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('comanda_cli{{com.id}}')"  aria-label="Close" data-target="comanda_cli{{com.id}}"  >Sair</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         {% endif %}
                                                     {% empty %}
@@ -508,11 +512,17 @@
 
                                                 <div class="modal-footer">
     <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
-                                                    <button class="btn btn-danger cancel" type="button" onclick="fechaele('comandas')" data-dismiss="modal" >Sair</button>
+                                                    <button class="btn btn-danger cancel" type="button" onclick="fechaele('comandas')" data-target="comandas" data-dismiss="modal" >Sair</button>
                                                 </div>
                                             </form>
                                         </div>
                                 </div>
+
+
+
+
+
+
                                 <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
                                     <div class="modal-dialog modal-lg " role="document">
                                         <div class="modal-content bg-alert">
