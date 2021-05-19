@@ -67,6 +67,7 @@
     };
 
     $(document).on('click', '.cp',function(){
+    
         let stat = $(this).parent().find('.status_pedido').parent('.active').prev().text().trim();
         let st='';
         switch (stat) {
@@ -95,13 +96,14 @@
             url: "{% url 'feed' %}",
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
+                    color_bg(stat, id);
                     location.reload();
                     $("#set_pg_top").click();
             },
             error: function (response) {
             }
         });
-        color_bg(stat, id);
+
 
 
     });
@@ -139,14 +141,15 @@
             url: "{% url 'feed' %}",
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
-                    location.reload(false);
-                    $("#set_pg_top").click();
+                color_bg(stat, id);
+                location.reload();
+                $("#set_pg_top").click();
             },
             error: function (response) {
             }
         });
 
-        color_bg(stat, id);
+
 
 
 

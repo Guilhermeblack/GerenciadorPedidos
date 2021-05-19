@@ -172,6 +172,7 @@ def new(request):
                     return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
         else:
+            lojinha.delete()
             messages.info(request, 'Cadastro inválido. \n --  {}'.format(date.today()))
 
 
@@ -503,7 +504,7 @@ def ped(request):
         pprint(loja)
 
     else:
-        loja = models.Loja.objects.get(pk=36)
+        return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
     estado_mov = loja.movimento
     formComanda = forms.comandas
     if request.POST:
@@ -578,19 +579,19 @@ def ped(request):
                 qnt = int(request.POST['quantidade'])
                 # print(newped)
                 #verifico se o produto tem a quantidade para poder ser feito pedido
-
-                if prod.quantidade > 0 and prod.quantidade > prod.qnt_minima:
-                    print('vou tirar {} do produto que é {}'.format(newped.cleaned_data['quantidade'],prod.quantidade))
-                    prod.quantidade -= qnt
-                    if prod.quantidade <= prod.qnt_minima and  request.user.groups.all()[0].name == 'gerente':
-                        messag = " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
+                if prod.quantidade != None and prod.qnt_minima != None and abs(prod.quantidade) :
+                    if prod.quantidade > 0 and prod.quantidade > prod.qnt_minima:
+                        print('vou tirar {} do produto que é {}'.format(newped.cleaned_data['quantidade'],prod.quantidade))
+                        prod.quantidade -= qnt
+                        if prod.quantidade <= prod.qnt_minima and  request.user.groups.all()[0].name == 'gerente':
+                            messag = " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
+                            messages.warning(request, messag)
+                        prod.save()
+                    else:
+                        messag = " Estoque do(a) {} insuficiente. Reabasteça o estoque".format(prod.nome)
                         messages.warning(request, messag)
-                    prod.save()
-                else:
-                    messag = " Estoque do(a) {} insuficiente. Reabasteça o estoque".format(prod.nome)
-                    messages.warning(request, messag)
-                    prod.cardapio = False
-                    prod.save()
+                        prod.cardapio = False
+                        prod.save()
 
                 valu = prod.preco * qnt
                 newped.cleaned_data['valor'] =float(valu)
@@ -599,8 +600,9 @@ def ped(request):
                 if newped.is_valid():
                     j = newped.save(commit=False)
                     j.loja = loja
-                    j.produtosPed = prod
                     j.save()
+                    j.produtosPed.add(prod)
+
 
                     pega_prod = models.Insumos.objects.filter(produto_prod= prod,loja=loja)
                     # result.filter(tipo__in=rq['cat_comanda'])

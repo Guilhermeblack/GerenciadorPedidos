@@ -191,7 +191,11 @@ class Produtocad(models.Model):
         blank=True,
         default=1
     )
-    quantidade = models.IntegerField(blank=True, null=True)
+    quantidade = models.FloatField(
+        null=True,
+        blank=True,
+        default=1
+    )
 
     # insumos = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
