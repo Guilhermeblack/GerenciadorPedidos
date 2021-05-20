@@ -17,14 +17,14 @@ $(document).ready(function(){
 });
 
 </script>
-{% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
-        <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+            <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
     {% if user.is_authenticated %}
         <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);padding-bottom: 4px;">
             <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>

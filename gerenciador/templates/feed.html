@@ -44,7 +44,7 @@
         });
     });
 
-    function color_bg(stat, id){
+     function color_bg(stat, id){
         switch (stat) {
             case "Pedido realizado":
                 $('#'+id).css('background-color','#D8FBDA');
@@ -88,6 +88,7 @@
             break;
             default: st = "P";
         };
+        console.log(st);
         let id = $(this).parent().parent().siblings('#idped').text().trim();
         let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
         $.ajax({
@@ -97,8 +98,8 @@
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
                     color_bg(stat, id);
-                    location.reload();
-                    $("#set_pg_top").click();
+<!--                    location.reload();-->
+<!--                    $("#set_pg_top").click();-->
             },
             error: function (response) {
             }
@@ -134,7 +135,7 @@
         };
         let id = $(this).parent().parent().siblings('#idped').text().trim();
         let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
-
+        console.log(st);
         $.ajax({
             headers: { "X-CSRFToken": csrf },
             type: 'POST',
@@ -142,8 +143,8 @@
             data: {'stats' :st, 'idstat': id},
             success: function (response) {
                 color_bg(stat, id);
-                location.reload();
-                $("#set_pg_top").click();
+<!--                location.reload();-->
+<!--                $("#set_pg_top").click();-->
             },
             error: function (response) {
             }
@@ -281,7 +282,7 @@
 
     });
 
-    function converter(valor){
+    async function converter(valor){
 
         var numero = parseFloat(valor);
         document.getElementById('valori').value = numero;
@@ -382,17 +383,17 @@
     }
 
     </script>
-    {% for message in messages %}
-        <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
-            <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            {{ message }}
-        </div>
-    {% endfor %}
 
-    <header class="masthead text-white text-center " >
 
+    <header class="text-center justify-content-around  masthead text-white" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
         <div class='container' style="align-content:center; margin-top: 15px;">
 
 
@@ -403,7 +404,7 @@
 
                         <div class="col justify-content-lg-center">
                             {% if user.is_authenticated and perms.gerenciador.fechar_comanda  %}
-                                <button class="btn btn-primary btn-sm btn-rounded hover" style="max-height:40%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+                                <button class="btn btn-primary btn-md-auto align-content-center btn-rounded hover" style="max-height:40%; padding-bottom:7%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
 
                                 <div class="modal fade mr-2" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
                                         <div class="modal-content  w-80 mx-3">
@@ -628,7 +629,7 @@
                         <div class="row mb-3 ped_" id="vamofi">
                             <div class="col mb-2">
 
-                                <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <div class="card  border border-secondary rounded-top" style="color: rgb(33,37,41);">
                                     <div class="card-header bg-dark text-white">
                                         <h5 class="mb-0">{{pedido.id}} - {{pedido.comandaref}}
                                             {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
@@ -636,10 +637,10 @@
                                         </h5>
 
                                     </div>
-                                    <div class="card-body" id="bodybg{{pedido.id}}"><b>
+                                    <div class="card-body container" id="bodybg{{pedido.id}}"><b>
                                         {% for ped in pedido.produtosPed.all %}
                                             <p class="card-text">{{ped.nome}} </p>
-                                            <img class="card-img-top pb-5" style="width: 18rem;" src="{{ped.img_prod.url}}" alt="">
+                                            <img class="card-img  pb-5" style="width: 18rem; padding-right:15%" src="{{ped.img_prod.url}}" alt="">
                                         {%endfor%}
 
                                         <hr>

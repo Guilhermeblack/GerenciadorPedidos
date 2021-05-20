@@ -42,15 +42,16 @@
 
     </script>
 
-{% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
-        <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
+
     <header class="masthead text-white text-center mb-5" style="background-color: rgb(255,255,255);">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
         <div class="container-fluid align-content-center pb-1 mb-2"
              style="align-content: center; color: rgb(241,234,72);width: 95%; height: 302px;padding: 5px;margin: 7px;">
             <h1 class="text-center" style="padding: 15px;color: rgb(44,62,80);width: 100% ;height: 79px;">PRODUTOS</h1>

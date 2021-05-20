@@ -5,26 +5,26 @@
 {% load static %}
 {% block content %}
 
-{% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
 
-    <section id="faq" class="faq">
-      <div class="container">
 
+
+      <div class="container px-3">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
         <div class="section-title mb-4" data-aos="fade-up">
           <h2>Como aproveitar o melhor do sistema</h2>
         </div>
 
-        <div class="faq-list p-2 justify-content-center ">
+        <div class="faq-list p-2 container ">
 
-          <div data-aos="fade-up  py-2 my-2">
-              <a data-toggle="collapse" class="collapsed" href="  #faq1"><label class="input-group-text align-text-center " ><h3>{{'Cadstre sua loja e crie seu usuário a partir do menu de acesso'}}</h3></label></a>
+          <div data-aos="fade-up col align-self-center py-2 my-2 col-lg-auto">
+              <a data-toggle="collapse" class="collapsed" href="  #faq1"><label class="input-group-text  " ><h5> Cadstre sua loja</h5></label></a>
             <div id="faq1" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                 Preencha o formulário de cadastrocom as informações do estabelecimento a ser cadastrado, juntamente com as informações do seu cadstro.
@@ -47,7 +47,7 @@
           </div>
 
           <div data-aos="fade-up px-5 w-80" data-aos-delay="100">
-            <a data-toggle="collapse" href="  #faq2" class="collapsed"><label class="input-group-text align-text-center  " ><h3>{{'Iniciando o movimeno e criando comandas/pedidos'}}</h3></label></a>
+            <a data-toggle="collapse" href="  #faq2" class="collapsed"><label class="input-group-text align-text-center  " ><h5>{{'Criando comandas/pedidos'}}</h5></label></a>
             <div id="faq2" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                 O Estabelecimento deve estar com o movimento ativo (ação realizada pelo gerente) para que as novas comandas possam ser abertas e novos pedidos possam ser feitos.
@@ -67,7 +67,7 @@
           </div>
 
           <div data-aos="fade-up px-5 w-80" data-aos-delay="200">
-            <a data-toggle="collapse" href="  #faq3" class="collapsed"><label class="input-group-text align-text-center  " ><h3>{{'Controle de comandas/pedidos'}}</h3></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+            <a data-toggle="collapse" href="  #faq3" class="collapsed"><label class="input-group-text align-text-center  " ><h5>{{'Comandas e Pedidos'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
             <div id="faq3" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                 Pedidos feitos agora estarão disponíveis no feed de pedidos, representados basicamente com nome da comanda responsável, numero do pedido, imagem do produto
@@ -85,7 +85,7 @@
           </div>
 
           <div data-aos="fade-up px-5 w-80" data-aos-delay="300">
-            <a data-toggle="collapse" href="  #faq4" class="collapsed"><label class="input-group-text " ><h3>{{'Acesso do cliente'}}</h3></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+            <a data-toggle="collapse" href="  #faq4" class="collapsed"><label class="input-group-text " ><h5>{{'Acesso do cliente'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
             <div id="faq4" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                 Clientes terão acesso as informações da sua comanda.<br>
@@ -99,7 +99,7 @@
           </div>
 
           <div data-aos="fade-up px-5 w-80" data-aos-delay="400">
-            <a data-toggle="collapse" href="  #faq5" class="collapsed"><label class="input-group-text " ><h3>{{'Relatorio'}}</h3></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+            <a data-toggle="collapse" href="  #faq5" class="collapsed"><label class="input-group-text " ><h5>{{'Relatorio'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
             <div id="faq5" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                  O gerente podera gerar relatorio através do menu administrativo acessando o botão 'relatórios'
@@ -111,7 +111,7 @@
           </div>
 
           <div data-aos="fade-up px-5 w-80" data-aos-delay="500">
-            <a data-toggle="collapse" href="  #faq6" class="collapsed"><label class="input-group-text " ><h3>{{'Implementações futuras'}}</h3></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+            <a data-toggle="collapse" href="  #faq6" class="collapsed"><label class="input-group-text " ><h5>{{'Implementações futuras'}}</h5></label></a>
             <div id="faq6" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>
               <p>
                 Módulos adicionais para lojas parceiras
@@ -134,10 +134,9 @@
         </div>
 
           <div class="section-footer mt-2 justify-content-center" data-aos="fade-up"><strong>
-              <span>Para maiores detalhes/perguntas entre em contato no nosso rodapé</span></strong>
+            <span><i>Dúvidas ou sugestões entre em contato.<br>Meios no nosso rodapé</i></span></strong>
             </div>
       </div>
-    </section>
 
 {% endblock %}
 </html>

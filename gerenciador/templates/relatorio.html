@@ -5,15 +5,16 @@
 {% load static %}
 {% block content %}
 {% load cloudinary %}
-{% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
+
     <header class="masthead text-dark text-center" style="background-color: rgb(255,255,255);">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
         <div class="container " style=" align-content:center">
             {% if 'relareceb' in tp %}
                 <h1 class="text-dark" style="padding: 18px;">{{'RECEBIMENTOS'}}</h1>

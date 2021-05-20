@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_protect
 import django.db.models.signals
 from Atendgb import settings
 from . import models, forms
+from asgiref.sync import async_to_sync
 
 
 def index(request):
@@ -292,14 +293,7 @@ def feed(request):
 
             # os Insumos recebem de volta sua quantidade conforme o que é usado no produto vezes quantidade do produto
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
-            return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
-                'choices': STATUS_CHOICES,
-                'fpg': FORMA_PGT,
-                'movi': estado_mov
-            })
 
         if 'stats' in request.POST:
             print(request.POST)
@@ -308,14 +302,7 @@ def feed(request):
             ped.status=request.POST['stats']
             ped.save()
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
-            return render(request, 'feed.html', {
 
-                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
-                'choices': STATUS_CHOICES,
-                'fpg': FORMA_PGT,
-                'movi': estado_mov
-            })
 
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
@@ -465,15 +452,14 @@ def feed(request):
 
             messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
 
+        return render(request, 'feed.html', {
 
-            return render(request, 'feed.html', {
-
-                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id', 'status'),
-                'choices': STATUS_CHOICES,
-                'fpg': FORMA_PGT,
-                'movi': estado_mov
-            })
+            'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+            'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+            'choices': STATUS_CHOICES,
+            'fpg': FORMA_PGT,
+            'movi': estado_mov
+        })
 
     else:
         messages.success(request, "{}, Data {}".format(request.user, date.today()))

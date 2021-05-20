@@ -5,18 +5,19 @@
 {% load static %}
 {% block content %}
 
-{% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
-        <button type="button" style="font-size: 22px;  align-self: right" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+            <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
+<header class="text-center justify-content-around  masthead text-white" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
+
     {% if user.is_authenticated %}
-        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
-            <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
-        </header>
+        <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
+
         <div class="login-dark" align="center">
             <p align="center">
             <h2 class="sr-only">Cadastros</h2>
@@ -36,9 +37,8 @@
 
         </div>
     {% elif user.is_anonymous %}
-        <header class="text-center justify-content-center align-content-bottom masthead text-white text-center" style=" align:bottom; background-color: rgb(255,255,255);width: auto; height: 178px; padding-top: 40px; margin: 5px;padding-bottom: 14px;">
-            <h1 class="align-items-center text-center text-primary" style=" font-size: 62px;margin: 3px;" >ENTRAR</h1>
-        </header>
+        <h1 class="align-items-center text-center text-primary" style=" font-size: 62px;margin: 3px;" >ENTRAR</h1>
+
         <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
             <form method="post" style="margin-top: 4px;padding: 22px;">
 
@@ -51,13 +51,14 @@
 <!--                    <span for="{{form.nome}}">{{form.nome.he}}</span>-->
                 {% endif %}
                 <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Loguin</button></div>
-                <h8 align="center" >OU</h8>
+                <h8 align="center justify-content-center" >OU</h8>
                 <button id="register" name="register" onclick="newc()" type="button" class="btn btn-warning btn-block sm register">Cadastre sua loja</button>
 
             </form>
 
         </div>
     {% endif %}
+</header>
 <script>
 
 
