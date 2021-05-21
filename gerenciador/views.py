@@ -302,7 +302,14 @@ def feed(request):
             ped.status=request.POST['stats']
             ped.save()
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
+            return render(request, 'feed.html', {
 
+                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+                'choices': STATUS_CHOICES,
+                'fpg': FORMA_PGT,
+                'movi': estado_mov
+            })
 
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
