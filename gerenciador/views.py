@@ -67,8 +67,10 @@ def loguin(request):
     else:
 
         if request.user.is_authenticated :
+            pprint(request.user)
+            pprint(request.user.id)
 
-            nc = models.Newcli.objects.get(user=request.user)
+            nc = models.Newcli.objects.get(user=request.user.id)
             if nc is not None:
                 loja = nc.loja
             else:
@@ -76,7 +78,7 @@ def loguin(request):
 
             nl = models.Newcli.objects.filter(loja = loja)
             # print('oclii')
-            # pprint(nl)
+            pprint(nl)
             # pprint(Permission.objects.filter(user= request.user))
             # pprint(request.user.get_group_permissions() )
             gp= Group.objects.filter(user=request.user)
@@ -94,6 +96,8 @@ def loguin(request):
 
         return render(request, 'loguin.html', {'form': forms.autForm})
 
+
+#novo gerente e loja, controle de cadastros
 @csrf_protect
 def new(request):
 
@@ -112,6 +116,7 @@ def new(request):
         #preciso de uma loja, se nao for uma nova pego a loja do usuario logado
 
         if lj.is_valid():
+            pprint(lj)
             lojinha = lj.save()
             messages.info(request, 'Parabens, sua loja foi aberta. \n --  {}'.format(date.today()))
         else:
@@ -142,7 +147,7 @@ def new(request):
             # pprint(gerente)
             cli = models.Newcli.objects.create(user=gerente, loja=lojinha)
             cli.save()
-
+            pprint(cli)
             # gp.save()
             print('salvo tudo')
             if request.user.is_authenticated:
@@ -165,9 +170,8 @@ def new(request):
                     password=senha
                 )
 
-                # pprint(user)
 
-                if user is not None:
+                if user is not None and 'gerente' not in gerente.groups.all():
                     login(request, user)
                     messages.info(request, 'Bem vinda(o), aproveite o melhor sistema. \n --  {}'.format(date.today()))
                     return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)

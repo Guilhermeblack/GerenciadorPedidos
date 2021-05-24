@@ -417,367 +417,368 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <div class='container' style="align-content:center; margin-top: 15px;">
 
 
-                <div class="row bg-white">
-                    <div class="col d-flex justify-content-center">
-                        <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>
+            <div class="row bg-white">
+                <div class="col d-flex justify-content-center">
+                    <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>
+                </div>
+
+                <div class="col justify-content-lg-center">
+                    {% if user.is_authenticated and perms.gerenciador.fechar_comanda  %}
+                        <button class="btn btn-primary btn-md-auto align-content-center btn-rounded hover" style="max-height:40%; padding-bottom:7%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+
+
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            {% for pedido in pedidos|dictsort:"data" %}
+
+                {% if pedido.status != "C" and pedido.comandaref.status != 'F' %}
+                    <div class="row mb-3 ped_" id="vamofi">
+                        <div class="col mb-2">
+
+                            <div class="card  border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">{{pedido.id}} - {{pedido.comandaref}}
+                                        {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
+                                                aria-hidden="true">×</span></button>{% endif %}
+                                    </h5>
+
+                                </div>
+                                <div class="card-body container" id="bodybg{{pedido.id}}"><b>
+                                    {% for ped in pedido.produtosPed.all %}
+                                        <p class="card-text">{{ped.nome}} </p>
+                                        <img class="card-img  pb-5" style="width: 15rem; " src="{{ped.img_prod.url}}" alt="">
+                                    {%endfor%}
+
+                                    <hr>
+                                    <p class="card-text">{{pedido.quantidade}}</p>
+                                    <p class="card-text">{{pedido.observacao}}</p>
+                                </b></div>
+                                <hr>
+                                {% csrf_token %}
+                                <div id="idped" class="idped" style="display: none;">{{pedido.id}}</div>
+                                <div class="pb-2 bg-light mb-3">
+
+                                    <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
+                                        <div class="carousel-inner">
+    <!--                                    {{choices}}-->
+                                        {% for choice in choices  %}
+<!--                                              {{choice}}-->
+                                           <div {% if choice == pedido.get_status_display and choice != 'Cancelado' %} class="carousel-item active" {%else%}  class="carousel-item"{% endif %} >
+                                            <div class="d-block status_pedido" >{{ choice }}</div>
+                                            </div>
+
+
+
+                                        {% endfor %}
+
+                                        </div>
+
+                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
+                                            {% if choice != 'Pedido realizado' %}<div><i class="caret-left-square-fill dark" ></i></div>
+                                              <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                            {% endif %}
+                                          </a>
+
+
+                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
+                                            {% if choice != 'Foi Entregue' %}
+                                              <i class="arrow-alt-circle-right bg-dark" ></i>
+                                              <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                            {%endif%}
+                                          </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                     <div class="row mb-3" >
+                         <div class="col mb-2">
+                             {{' Comandas já finalizadas ou pedidos entregue'}}
+                             {{' Aguarde os próximos pedidos '}}
+                         </div>
+                     </div>
+                {%endif%}
+            {% empty %}
+                    <div class="row mb-3 ">
+                        <div class="col mb-2">
+                            <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                <div class='text-align-center '>
+                                        <div class='text-align-center'><strong><p><h2>
+                                            {{ 'Não existem pedidos no momento !'}}
+
+                                        </h2></p></strong></div>
+                                </div>
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            </div>
+                        </div>
                     </div>
 
-                        <div class="col justify-content-lg-center">
-                            {% if user.is_authenticated and perms.gerenciador.fechar_comanda  %}
-                                <button class="btn btn-primary btn-md-auto align-content-center btn-rounded hover" style="max-height:40%; padding-bottom:7%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+            {% endfor %}
 
-                                <div class="modal fade mr-2" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
-                                        <div class="modal-content  w-80 mx-3">
-
-                                            <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
-                                                <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" data-target="comandas" aria-label="Close"><span
-                                                       class="close" data-dismiss="modal" aria-hidden="true"> ×</span></button>
-                                            </div>
-                                            <form method="post" name="comandas">
-                                                <div class="modal-body">
-                                                    <h6 class="modal-title">
-                                                        <div class="row align-items-center">
-                                                            <div class='col text-align-left font-weight-bold'>{{ 'Nº Mesa' }}</div>
-                                                            <div class='col text-align-center font-weight-bold'>{{ 'Nome Cliente' }}</div>
-                                                            <div class='col text-align-right font-weight-bold'>{{ 'Total Comanda' }}</div>
-                                                        </div>
-                                                    </h6>
-
-                                                    {% for com in comandas %}
-                                                        {% if com.status == 'A' %}
-                                                            <p>
-                                                            <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                            <div class='row text-align-center pb-1 hover c_cli' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
+    </header>
 
 
-                                                                <div class='col text-align-left'>{{ com.n_mesa }}</div>
-                                                                <div class='col text-align-center'>{{ com.nome }}</div>
-                                                                <div class='col text-align-right' id="vlr_comanda">R$ {{ com.valor }}</div>
+<!--                        realizar agamento-->
+            <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
+                            <div class="modal-dialog modal-lg " role="document">
+                                <div class="modal-content bg-alert">
+
+                                    <div class="modal-header"> <strong><h4 class="text-align-center ">ENCERRAR COMANDA </h4></strong>
+                                        <button type="button" onclick="fechaele('x_comanda')" class="close close-filho" data-target="modal" aria-label="Close"><span
+                                            aria-hidden="true" aria-label="Close">×</span></button>
+                                    </div>
+                                    <div class="modal-body"  class="d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-center">
+                                            <h2 style="width:70%" class="d-flex justify-content-center">
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+                                                    <label for="cli_com"> Total: </label>
+                                                    <h2 style="text-transform:uppercase"><p id="cli_com"></p></h2>
+                                                </div>
+                                            </h2>
+                                            </h2>
+                                        </div>
+                                        <div class="row d-flex justify-content-center">
+
+                                            <h2 style="width:70%" class="d-flex justify-content-center 22"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+                                                    <label for="valori"><h4> Dividir em: </h4></label>
+                                                    <input type="range" id="divisor_tot" class="form-control p-2 justify-content-center" min="1" max="20" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
+                                                    <input type="hidden" class="form-control p-2 justify-content-center" name="val_ini" id="val_ini">
+                                                    <input type="text" class="form-control p-2 justify-content-center disabled" name="valori"  value="1" id="valori">
+                                                </div>
+                                            </b></h2>
+                                            <h2 style="width:70%" class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight ">
+                                                    <label > OU </label>
+                                                </div>
+                                            </b></h2>
+                                            <b>
+                                            <h2  class="d-flex justify-content-center 33" ><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+
+                                                    <label for="valou"><h4> Pagar a Quantidade: </h4></label>
+                                                    <row class="d-flex p-3 ">
+                                                        <input id="valou" class="form-control ml-3 p-2 justify-content-center" name="valou" onblur="converter2(this.value)" >
+                                                        <button type="button" id="pag_tot" onclick="pagtot()" style="width:33%" aria-pressed="false" class="btn btn-primary form-control p-2 mx-3 justify-content-end" > pagar total</button>
+                                                    </row>
+
+                                                </div>
+                                            </b></h2>
+                                            <h2 class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight ">
+                                                    <label for="valou"><h4> Forma de pagamento: </h4></label>
+                                                </div>
+                                            </b></h2>
+                                            <h2  class="d-flex justify-content-center 33" ><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+
+
+                                                    <row class="d-flex p-3" name="formpg" id="formpg" >
+
+                                                        {% for pg in fpg %}
+                                                            <div class="form-check p-2 m-3">
+                                                                <input class="form-check-input" type="radio" {% if pg == Cartão %} selected {%endif%} value="{{pg}}" name="fpg{{pg}}" id="{{pg}}" >
+                                                                <label class="form-check-label" for="{{pg}}">
+                                                                    {{pg}}
+                                                                </label>
                                                             </div>
+                                                        {%endfor%}
+
+                                                    </row>
+
+                                                </div>
+                                            </b></h2>
+                                            <span><u><i>
+                                                O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
+                                            </i></u></span>
+
+                                            </b>
+                                        </div>
+                                        <div id="tkn">
+                                        <input type="hidden" id="comanda_x" disabled >
+                                        {%csrf_token%}
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pagar !</button>
+                                        <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" > Não pagar !</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+<!--                            modal cancelar pedido-->
+            <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
+                <div class="modal-dialog modal-dialog-centered" role="document" >
+
+                    <div class="modal-content bg-light">
+                        <div class="modal-header">
+                            <h4 class="modal-title text-light">Cancelar Pedido</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body text-sucess">
+                            <p>
+                            <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
+                            </p>
+                            <form name="exc_ped" class="post-form" method="post" action="{% url 'feed' %}">
+                                <input class="hidden can_ped" name="exc_ped" hidden id="can_ped">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" id="confirm_cancel">Confirmar</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+<!--                 #modal das coomandas           -->
+            <div class="modal fade mr-2" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
+                <div class="modal-content  w-80 mx-3">
+
+                    <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" data-target="comandas" aria-label="Close"><span
+                               class="close" data-dismiss="modal" aria-hidden="true"> ×</span></button>
+                    </div>
+                    <form method="post" name="comandas">
+                        <div class="modal-body">
+                            <h6 class="modal-title">
+                                <div class="row align-items-center">
+                                    <div class='col text-align-left font-weight-bold'>{{ 'Nº Mesa' }}</div>
+                                    <div class='col text-align-center font-weight-bold'>{{ 'Nome Cliente' }}</div>
+                                    <div class='col text-align-right font-weight-bold'>{{ 'Total Comanda' }}</div>
+                                </div>
+                            </h6>
+
+                            {% for com in comandas %}
+                                {% if com.status == 'A' %}
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <div class='row text-align-center pb-1 hover c_cli' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
+
+
+                                        <div class='col text-align-left'>{{ com.n_mesa }}</div>
+                                        <div class='col text-align-center'>{{ com.nome }}</div>
+                                        <div class='col text-align-right' id="vlr_comanda">R$ {{ com.valor }}</div>
+                                    </div>
 
 
 
 
 
 <!--                                                    -=-=-=-=-=-=-=-=-=-&#45;&#45;=-=-=&#45;&#45;=-=-=-=-=-=-===-=-->
-                                                        {% endif %}
-                                                    {% empty %}
-                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                        <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
-                                                                <div class='col text-align-left'><strong> Não Existem Clientes !</strong></div>
-                                                        </div>
-                                                    {% endfor %}
-
-                                                </div>
-
-                                                <div class="modal-footer">
-    <!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
-                                                    <button class="btn btn-danger cancel" type="button" onclick="fechaele('comandas')" data-target="comandas" data-dismiss="modal" >Sair</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                {% endif %}
+                            {% empty %}
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+                                        <div class='col text-align-left'><strong> Não Existem Clientes !</strong></div>
                                 </div>
+                            {% endfor %}
 
-
-                                {% for com in comandas %}
-                                    {% if com.status == 'A' %}
-
-
-                                <div class="modal fade justify-content-center mod-filho" role="document" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
-
-                                    <div class="modal-content w-80 mr-2 mx-3">
-
-                                        <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
-                                            <button type="button" class="close close-filho"  onclick="fechaele('comanda_cli{{com.id}}')" data-target="comanda_cli{{com.id}}" aria-label="Close"><span
-                                                aria-hidden="true" aria-label="Close" >×</span></button>
-                                        </div>
-                                        <form method="post" name="comanda_cli">
-                                            <div class="modal-body" id="pedidos_cli">
-                                                <h6 class="modal-title">
-                                                    <div class="row align-items-start">
-                                                        <div class='col text-align-left font-weight-bold'>
-                                                            <input type="checkbox" class="" name="prodd" id="prodd" >
-                                                        </div>
-                                                        <div class='col text-align-left font-weight-bold'>{{ 'Prd' }}</div>
-                                                        <div class='col text-align-center font-weight-bold'>{{ 'qnt' }}</div>
-                                                        <div class='col text-align-center font-weight-bold'>{{ 'Vlr' }}</div>
-                                                        <div class='col text-align-right font-weight-bold'>{{ 'Stt' }}</div>
-                                                        <div class='col text-align-right font-weight-bold'>{{ 'Pag' }}</div>
-                                                    </div>
-                                                </h6>
-
-                                                {% for ped in pedidos %}
-<!--                                                                            {{ ped.comandaref.id }}-->
-<!--                                                                            {{ com.id }}-->
-                                                    {% if ped.comandaref.id == com.id and com.status == 'A' %}
-
-<!--                                                                                    condicao para cliente-->
-                                                        {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
-                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                        <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
-                                                            <div class='col text-align-center'>
-                                                                {% if ped.status_pago != "P" %}
-                                                                    <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
-                                                                {% endif %}
-                                                            </div>
-                                                            {% for prod in ped.produtosPed.all %}
-                                                                    <div class='col text-align-left'>{{ prod.nome }}</div>
-                                                            {% endfor %}
-                                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
-                                                            <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
-
-                                                            <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
-
-
-                                                            <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>
-
-
-                                                        </div>
-<!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
-
-                                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                    {%endif%}
-                                                    {%endif%}
-                                                {% empty %}
-                                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                                    <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
-                                                            <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-
-                                            <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
-                                                {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
-                                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('comanda_cli{{com.id}}')"  aria-label="Close" data-target="comanda_cli{{com.id}}"  >Sair</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-
-                                    {% endif %}
-                                {% endfor %}
-
-
-
-
-
-
-                                <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
-                                    <div class="modal-dialog modal-lg " role="document">
-                                        <div class="modal-content bg-alert">
-
-                                            <div class="modal-header"> <strong><h4 class="text-align-center ">ENCERRAR COMANDA </h4></strong>
-                                                <button type="button" onclick="fechaele('x_comanda')" class="close close-filho" data-target="modal" aria-label="Close"><span
-                                                    aria-hidden="true" aria-label="Close">×</span></button>
-                                            </div>
-                                            <div class="modal-body"  class="d-flex justify-content-center">
-                                                <div class="row d-flex justify-content-center">
-                                                    <h2 style="width:70%" class="d-flex justify-content-center">
-                                                        <div class="form-group p-2 flex-fill bd-highlight">
-                                                            <label for="cli_com"> Total: </label>
-                                                            <h2 style="text-transform:uppercase"><p id="cli_com"></p></h2>
-                                                        </div>
-                                                    </h2>
-                                                    </h2>
-                                                </div>
-                                                <div class="row d-flex justify-content-center">
-
-                                                    <h2 style="width:70%" class="d-flex justify-content-center 22"><b>
-                                                        <div class="form-group p-2 flex-fill bd-highlight">
-                                                            <label for="valori"><h4> Dividir em: </h4></label>
-                                                            <input type="range" id="divisor_tot" class="form-control p-2 justify-content-center" min="1" max="20" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
-                                                            <input type="hidden" class="form-control p-2 justify-content-center" name="val_ini" id="val_ini">
-                                                            <input type="text" class="form-control p-2 justify-content-center disabled" name="valori"  value="1" id="valori">
-                                                        </div>
-                                                    </b></h2>
-                                                    <h2 style="width:70%" class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
-                                                        <div class="form-group p-2 flex-fill bd-highlight ">
-                                                            <label > OU </label>
-                                                        </div>
-                                                    </b></h2>
-                                                    <b>
-                                                    <h2  class="d-flex justify-content-center 33" ><b>
-                                                        <div class="form-group p-2 flex-fill bd-highlight">
-
-                                                            <label for="valou"><h4> Pagar a Quantidade: </h4></label>
-                                                            <row class="d-flex p-3 ">
-                                                                <input id="valou" class="form-control ml-3 p-2 justify-content-center" name="valou" onblur="converter2(this.value)" >
-                                                                <button type="button" id="pag_tot" onclick="pagtot()" style="width:33%" aria-pressed="false" class="btn btn-primary form-control p-2 mx-3 justify-content-end" > pagar total</button>
-                                                            </row>
-
-                                                        </div>
-                                                    </b></h2>
-                                                    <h2 class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
-                                                        <div class="form-group p-2 flex-fill bd-highlight ">
-                                                            <label for="valou"><h4> Forma de pagamento: </h4></label>
-                                                        </div>
-                                                    </b></h2>
-                                                    <h2  class="d-flex justify-content-center 33" ><b>
-                                                        <div class="form-group p-2 flex-fill bd-highlight">
-
-
-                                                            <row class="d-flex p-3" name="formpg" id="formpg" >
-
-                                                                {% for pg in fpg %}
-                                                                    <div class="form-check p-2 m-3">
-                                                                        <input class="form-check-input" type="radio" {% if pg == Cartão %} selected {%endif%} value="{{pg}}" name="fpg{{pg}}" id="{{pg}}" >
-                                                                        <label class="form-check-label" for="{{pg}}">
-                                                                            {{pg}}
-                                                                        </label>
-                                                                    </div>
-                                                                {%endfor%}
-
-                                                            </row>
-
-                                                        </div>
-                                                    </b></h2>
-                                                    <span><u><i>
-                                                        O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
-                                                    </i></u></span>
-
-                                                    </b>
-                                                </div>
-                                                <div id="tkn">
-                                                <input type="hidden" id="comanda_x" disabled >
-                                                {%csrf_token%}
-
-
-                                                </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pagar !</button>
-                                                <button class="btn btn-danger btn-lg cancel" type="button" data-dismiss="modal" > Não pagar !</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
                         </div>
 
-                </div>
-
-
-                {% for pedido in pedidos|dictsort:"data" %}
-
-                    {% if pedido.status != "C" and pedido.comandaref.status != 'F' %}
-                        <div class="row mb-3 ped_" id="vamofi">
-                            <div class="col mb-2">
-
-                                <div class="card  border border-secondary rounded-top" style="color: rgb(33,37,41);">
-                                    <div class="card-header bg-dark text-white">
-                                        <h5 class="mb-0">{{pedido.id}} - {{pedido.comandaref}}
-                                            {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
-                                                    aria-hidden="true">×</span></button>{% endif %}
-                                        </h5>
-
-                                    </div>
-                                    <div class="card-body container" id="bodybg{{pedido.id}}"><b>
-                                        {% for ped in pedido.produtosPed.all %}
-                                            <p class="card-text">{{ped.nome}} </p>
-                                            <img class="card-img  pb-5" style="width: 15rem; " src="{{ped.img_prod.url}}" alt="">
-                                        {%endfor%}
-
-                                        <hr>
-                                        <p class="card-text">{{pedido.quantidade}}</p>
-                                        <p class="card-text">{{pedido.observacao}}</p>
-                                    </b></div>
-                                    <hr>
-                                    {% csrf_token %}
-                                    <div id="idped" class="idped" style="display: none;">{{pedido.id}}</div>
-                                    <div class="pb-2 bg-light mb-3">
-
-                                        <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
-                                          <div class="carousel-inner">
-        <!--                                    {{choices}}-->
-                                            {% for choice in choices  %}
-<!--                                              {{choice}}-->
-                                              {% if choice == pedido.get_status_display and choice != 'Cancelado' %} <div class="carousel-item active"> {%else%} <div class="carousel-item">{% endif %}
-                                                <div class="d-block status_pedido" >{{ choice }}</div>
-                                                </div>
-
-
-
-                                            {% endfor %}
-
-                                          </div>
-
-                                                  <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
-                                                    {% if choice != 'Pedido realizado' %}<div><i class="caret-left-square-fill dark" ></i></div>
-                                                      <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                                                    {% endif %}
-                                                  </a>
-
-
-                                                  <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
-                                                    {% if choice != 'Foi Entregue' %}
-                                                      <i class="arrow-alt-circle-right bg-dark" ></i>
-                                                      <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                                                    {%endif%}
-                                                  </a>
-
-                                          </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="modal-footer">
+<!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
+                            <button class="btn btn-danger cancel" type="button" onclick="fechaele('comandas')" data-target="comandas" data-dismiss="modal" >Sair</button>
                         </div>
-                    {% else %}
-                         <div class="row mb-3" >
-                             <div class="col mb-2">
-                                 {{' Comandas já finalizadas ou pedidos entregue'}}
-                                 {{' Aguarde os próximos pedidos '}}
-                             </div>
-                         </div>
-                    {%endif%}
-                {% empty %}
-                        <div class="row mb-3 ">
-                            <div class="col mb-2">
-                                <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
-                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                    <div class='text-align-center '>
-                                            <div class='text-align-center'><strong><p><h2>
-                                                {{ 'Não existem pedidos no momento !'}}
-
-                                            </h2></p></strong></div>
-                                    </div>
-                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
-                                </div>
-                            </div>
-                        </div>
-
-                {% endfor %}
-                <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
-                    <div class="modal-dialog modal-dialog-centered" role="document" >
-
-                        <div class="modal-content bg-light">
-                            <div class="modal-header">
-                                <h4 class="modal-title text-light">Cancelar Pedido</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body text-sucess">
-                                <p>
-                                <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
-                                </p>
-                                <form name="exc_ped" class="post-form" method="post" action="{% url 'feed' %}">
-                                    <input class="hidden can_ped" name="exc_ped" hidden id="can_ped">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" id="confirm_cancel">Confirmar</button>
-                                </form>
-                            </div>
-                            <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
-                            </div>
-                        </div>
-
-                    </div>
-
+                    </form>
                 </div>
         </div>
-    </header>
 
+
+<!--                          modal  pedidos da comanda-->
+            {% for com in comandas %}
+                {% if com.status == 'A' %}
+
+
+                <div class="modal fade justify-content-center mod-filho" role="document" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
+
+                    <div class="modal-content w-80 mr-2 mx-3">
+
+                        <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
+                            <button type="button" class="close close-filho"  onclick="fechaele('comanda_cli{{com.id}}')" data-target="comanda_cli{{com.id}}" aria-label="Close"><span
+                                aria-hidden="true" aria-label="Close" >×</span></button>
+                        </div>
+                        <form method="post" name="comanda_cli">
+                            <div class="modal-body" id="pedidos_cli">
+                                <h6 class="modal-title">
+                                    <div class="row align-items-start">
+                                        <div class='col text-align-left font-weight-bold'>
+                                            <input type="checkbox" class="" name="prodd" id="prodd" >
+                                        </div>
+                                        <div class='col text-align-left font-weight-bold'>{{ 'Prd' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'qnt' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'Vlr' }}</div>
+                                        <div class='col text-align-right font-weight-bold'>{{ 'Stt' }}</div>
+                                        <div class='col text-align-right font-weight-bold'>{{ 'Pag' }}</div>
+                                    </div>
+                                </h6>
+
+                                {% for ped in pedidos %}
+<!--                                                                            {{ ped.comandaref.id }}-->
+<!--                                                                            {{ com.id }}-->
+                                    {% if ped.comandaref.id == com.id and com.status == 'A' %}
+
+<!--                                                                                    condicao para cliente-->
+                                        {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
+                                            <div class='col text-align-center'>
+                                                {% if ped.status_pago != "P" %}
+                                                    <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
+                                                {% endif %}
+                                            </div>
+                                            {% for prod in ped.produtosPed.all %}
+                                                    <div class='col text-align-left'>{{ prod.nome }}</div>
+                                            {% endfor %}
+                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
+                                            <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
+
+                                            <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
+
+
+                                            <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>
+
+
+                                        </div>
+<!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
+
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    {%endif%}
+                                    {%endif%}
+                                {% empty %}
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
+                                            <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
+                                {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
+                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('comanda_cli{{com.id}}')"  aria-label="Close" data-target="comanda_cli{{com.id}}"  >Sair</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            {% endif %}
+        {% endfor %}
 {% endblock %}
 </html>

@@ -13,14 +13,14 @@
             {{ message }}
         </div>
     {% endfor %}
-<header class="text-center justify-content-around  masthead text-white" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
+<header class="text-center justify-content-around  masthead" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
 
     {% if user.is_authenticated %}
         <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
 
         <div class="login-dark" align="center">
             <p align="center">
-            <h2 class="sr-only">Cadastros</h2>
+            <h2 class="sr-only ">Cadastros</h2>
 <!--                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>-->
                 <table>
                 {% for c in cad %}
