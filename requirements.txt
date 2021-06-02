@@ -39,6 +39,6 @@ six==1.15.0
 soupsieve==2.0.1
 sqlparse==0.3.1
 static3==0.7.0
-urllib3==1.25.11
+urllib3==1.26.5
 validate-docbr==1.8.2
 whitenoise==5.2.0
