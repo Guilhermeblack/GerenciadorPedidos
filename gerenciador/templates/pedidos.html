@@ -83,7 +83,7 @@
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 {% for pro in prod %}
-                                    {% if pro.tipo == 'B' and pro.cardapio == True %}
+                                    {% if pro.tipo == 'B' or pro.tipo == 'O' and pro.cardapio == True %}
                                         <div class="card border border-secondary" style="width: auto; margin: 4px;">
                                             <div class="card-body">
                                                 <h5 class="card-title">{{pro.nome}}</h5>
@@ -94,6 +94,9 @@
                                                 {% if movi == "L" %}
                                                     {% if user.is_authenticated and perms.gerenciador.fazer_pedido  %}
                                                         <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.id}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
+                                                    {% else %}
+                                                        <label class="card-label"  type="label"  >Abra sua comanda e faça o pedido</label>
+
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
@@ -126,7 +129,7 @@
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 {% for pro in prod %}
-                                    {% if pro.tipo == 'A'  and pro.cardapio == True %}
+                                    {% if pro.tipo == 'A' or pro.tipo == 'O'  and pro.cardapio == True %}
                                     <div class="card border border-secondary" style="width: auto; margin: 4px;">
                                         <div class="card-body">
                                             <h5 class="card-title">{{pro.nome}}</h5>
@@ -137,7 +140,8 @@
                                             {% if movi == "L" %}
                                                 {% if user.is_authenticated and perms.gerenciador.fazer_pedido %}
                                                     <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
-
+                                                {% else %}
+                                                    <label class="card-label"  type="label"  >Abra sua comanda e faça o pedido</label>
                                                 {% endif %}
                                             {% endif %}
                                         </div>
@@ -185,12 +189,17 @@
                                         <p><select class="mdb-select md-form" id="comandaref" name="comandaref">
                                           <option value="" disabled selected>Escolha a comanda</option>
                                             {{comandas}}
-                                            {% for com in comandas %}
-                                                <option value="{{com.id}}">{{com.nome}}</option>
+                                            {% if user.groups.all.0.name != 'cliente' %}
+                                                {{request.user.name}}
+                                            {% else %}
+                                                {% for com in comandas %}
 
-                                            {%empty%}
-                                                <option value="{{com.id}}">{{ 'Não existem comandas abertas' }}</option>
-                                            {%endfor%}
+                                                    <option value="{{com.id}}">{{com.nome}}</option>
+
+                                                {%empty%}
+                                                    <option>{{ 'Não existem comandas abertas' }}</option>
+                                                {%endfor%}
+                                            {% endif%}
                                         </select></p>
                                         <p>{{ pedido.quantidade }}</p>
                                         <p>{{ pedido.observacao }}</p>
@@ -208,14 +217,15 @@
                         </div>
                     </div>
                 {%if movi == "L" %}
-                    {% if perms.gerenciador.abrir_comanda %}
+                    {% if perms.gerenciador.abrir_comanda or user.is_anonymous %}
 <!--                            bptao da nova comanda-->
-                            {% if user.is_authenticated and perms.gerenciador.abrir_comanda %}
+                            {% if perms.gerenciador.abrir_comanda or user.is_anonymous %}
                                 <div style="margin: 10px;">
                                     <button class="btn btn-primary text-center border rounded border-dark" id="n_comanda"
                                             type="button" style="height: 86px;width: 329px;padding: 13px;margin: 7px;margin-left: 4px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novaComanda">NOVA COMANDA
                                     </button>
                                 </div>
+
                             {% endif %}
                             <div class="modal fade" role="dialog" tabindex="-1" id="novaComanda" style="color: rgb(33,37,41);">
                                 <div class="modal-dialog modal-lg" role="document">

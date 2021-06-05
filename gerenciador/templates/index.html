@@ -19,63 +19,76 @@
             <h1 class='p-3 text-center' style="color: rgb(44,62,80);">Bem Vindo</h1>
 
                 <div class="col d-fluid" >
-                    {% if user.is_authenticated %}<a  href="{% url 'pedidos' %}" >{% else %} <a  href="{% url 'loguin' %}" >{% endif %}
 
 <!--                            <div class="btn-group justify-content-center" role="group" style="padding: 4px;min-width: 8px;">-->
 <!--                                <button class="btn btn-primary text-center border rounded align-content-center" type="button" style="width: 188px;padding: 5px;padding-right: 15px;margin: 7px;height: 193px;"><small></small><i class="fa fa-list-alt" style="height: 79px;width: 121px;font-size: 59px;margin: 3px;padding: 5px;"></i></button>-->
 <!--                            </div>-->
-                        {% if user.is_authenticated %}
-                            <div class="col-sm d-inline-flex justify-content-center">
-                                <ul class="text-center " style="color: rgb(44,62,180);"><strong>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Acesse para consultar o cardapio
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Aconpanhe o feed, os pedidos estarão rolando la
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Conceda acesso para seus clientes
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Gerenciamento mais fácil ara você
-                                    </li>
-                                </strong></ul>
+                    {% if user.is_authenticated %}
+                        <div class="col-sm d-inline-flex justify-content-center">
+                            <ul class="text-center " style="color: rgb(44,62,180);"><strong>
+                                <li class="col-sm mb-4 pt-2">
+                                    Acesse para consultar o cardapio
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Aconpanhe o feed, os pedidos estarão rolando la
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Conceda acesso para seus clientes
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Gerenciamento mais fácil ara você
+                                </li>
+                            </strong></ul>
+                        </div>
+
+
+
+
+                    {% else %}
+                        <div class="col-sm d-inline-flex justify-content-center">
+                            <ul class="text-center " style="color: rgb(44,62,180);"><strong><h4>
+                                <li class="col-sm mb-4 pt-2">
+                                    Cadastre seu estabelecimento e funcionarios de forma facil
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Todo controle em tempo real e gerenciamento preciso com acesso fácil
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Conceda acesso para seus clientes consultarem comanda e o cardapio
+                                </li>
+                                <li class="col-sm mb-4 pt-2">
+                                    Gerenciamento de pedidos, recebimentos e estoque
+                                </li>
+                            </h4></strong></ul>
+                        </div>
+
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+
+                        <a  href="{% url 'loguin' %}" >
+                        <div class="row btn btn-md p-0 justify-content-center ">
+
+                            <button type="button" class="btn btn-primary">{{'ENTRE'}}</button>
+                        </div>
+                        </a>
+
+                        {% if perms.gerenciador.sou_cliente %}
+                        <!--                        <a  href="{% url 'pedidos' %}" >  Para comandas -->
+
+                            <div class="row btn btn-md p-0 justify-content-center ">
+
+                                <button type="button" class="btn btn-primary">{{'COMANDA'}}</button>
                             </div>
-                            <div class="row p-0 justify-content-center ">
-                                <small
-                                    style="padding: 16px;font-size: 36px;color: rgb(44,62,80); align-self: end">
-                                    {{'CARDAPIO'}}
+                    <!--                        </a>-->
 
-                                </small>
-                            </div>
-
-
-
-                        {% else %}
-                            <div class="col-sm d-inline-flex justify-content-center">
-                                <ul class="text-center " style="color: rgb(44,62,180);"><strong>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Cadastre seu estabelecimento e funcionarios de forma facil
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Todo controle em tempo real e gerenciamento preciso com acesso fácil
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Conceda acesso para seus clientes consultarem comanda e o cardapio
-                                    </li>
-                                    <li class="col-sm mb-4 pt-2">
-                                        Gerenciamento de pedidos, recebimentos e estoque
-                                    </li>
-                                </strong></ul>
-                            </div>
-                            <div class="row p-0 justify-content-center ">
-                                <small
-                                    style="padding: 16px;font-size: 36px;color: rgb(44,62,80); align-self: end">
-                                    {{'ENTRE'}}
-
-                                </small>
-                            </div>
                         {% endif %}
+                    {% endif %}
+
+                        <a  href="{% url 'pedidos' %}" >
+                        <div class="row p-0 btn btn-sm justify-content-center ">
+                            <button type="button" class="btn btn-primary">{{'CARDAPIO'}}</button>
+                        </div>
 
 
 

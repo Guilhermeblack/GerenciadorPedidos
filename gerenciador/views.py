@@ -493,16 +493,23 @@ def ped(request):
         nc = models.Newcli.objects.get(user=request.user)
         pprint(nc.loja)
         loja = nc.loja
-        if 'gerente' == request.user.groups:
-            messages.warning(
-                request,
-                " caiu logadin {}".format(request.user)
-            )
+        # if 'gerente' == request.user.groups:
+            # messages.warning(
+            #     request,
+            #     " caiu logadin {}".format(request.user)
+            # )
         pprint(loja)
+        estado_mov = loja.movimento
 
     else:
-        return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-    estado_mov = loja.movimento
+        produtos = models.Produtocad.objects.filter().all
+        pprint(produtos)
+        comandas= models.Comanda.objects.filter(status="A")
+        estado_mov = 'L'
+        loja = models.Loja.objects.get(pk=1)
+
+
+
     formComanda = forms.comandas
     if request.POST:
         # print(request.POST)
@@ -521,6 +528,8 @@ def ped(request):
             # criar verificação do numero da comanda se nao esta aberta para nao repetir numero
 
             # print('tem perm')
+
+
             if formcom.is_valid():
                 formco = formcom.save(commit=False)
                 formco.loja = loja
@@ -666,8 +675,8 @@ def ped(request):
         messages.success(request, "{}, Data {}".format(request.user, date.today()))
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
-            'prod': models.Produtocad.objects.filter(loja=loja),
-            'comandas': models.Comanda.objects.filter(status= "A",loja=loja),
+            'prod': produtos,
+            'comandas': comandas,
             'movi':estado_mov,
             'pedido': forms.pedidos()
 

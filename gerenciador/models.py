@@ -202,6 +202,7 @@ class Produtocad(models.Model):
     STATUS_CHOICES = (
         ("A", "Alimento"),
         ("B", "Bebida"),
+        ("O", "Outro")
     )
     tipo = models.CharField(
         max_length=1,

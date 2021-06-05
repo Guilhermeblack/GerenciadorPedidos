@@ -33,56 +33,75 @@ class produto(forms.ModelForm):
 
 class pedidos(forms.ModelForm):
 
-    class Meta:
-        model = models.Pedido
-        fields = 'comandaref','produtosPed','observacao','quantidade','status','valor'
-        name= 'soupedido'
 
-        widgets = {
-            'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-            # 'produtosPed': forms.HiddenInput(),
-            # 'quantidade': forms.IntegerField(help_text="Insira a quantidade do produto que será pedido"),
-            # 'comandaref': forms.SelectMultiple(help_text="Insira a quantidade do produto que será pedido"),
-            'status': forms.HiddenInput(),
-            'valor': forms.HiddenInput()
-        }
 
     def __init__(self, *args, **kwargs):
         super(pedidos, self).__init__(*args, **kwargs)
         self.fields['produtosPed'].label =''
 
+    class Meta:
+        model = models.Pedido
+        fields = 'comandaref','produtosPed','observacao','quantidade','status','valor'
+        name= 'soupedido'
+
+    widgets = {
+        'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
+        # 'produtosPed': forms.HiddenInput(),
+        # 'quantidade': forms.IntegerField(help_text="Insira a quantidade do produto que será pedido"),
+        # 'comandaref': forms.SelectMultiple(help_text="Insira a quantidade do produto que será pedido"),
+        'status': forms.HiddenInput(),
+        'valor': forms.HiddenInput()
+    }
+
+
 class comandas(forms.ModelForm):
+
+
+    nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'}), help_text="Insira o nome da nova comanda"),
+    # n_mesa = forms.IntegerField(help_text="Insira o nome da nova comanda")
+    # valor= forms.FloatField(widget=forms.HiddenInput())
 
     class Meta:
         model = models.Comanda
         fields = 'nome',"n_mesa"
         name = 'soucomanda'
 
-    nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'}), help_text="Insira o nome da nova comanda"),
-    # n_mesa = forms.IntegerField(help_text="Insira o nome da nova comanda")
-    # valor= forms.FloatField(widget=forms.HiddenInput())
 
 
 
 
 
 class Newloja(forms.ModelForm):
+
+
+
     class Meta:
         model = models.Loja
         fields = 'nome_loja',"porte"
         name = 'souloja'
 
-    nome_loja : forms.CharField(help_text="Defina se o produto irá aparecer no cardápio")
-    porte : forms.ChoiceField()
+    nome_loja: forms.CharField(help_text="Defina o Nome da Loja",
+                               widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Nome da loja'}))
+    porte: forms.ChoiceField()
+
 
 class Newcli(forms.ModelForm):
+
+    username : forms.CharField(help_text="Defina o Nome de Usuário",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Nome de acesso'}))
+    # # password : forms.CharField(widget=forms.PasswordInput())
+    # email : forms.EmailField(help_text="Defina o email")
+    first_name : forms.CharField(help_text="Defina o Nome",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Seu nome'}))
+    last_name : forms.CharField(help_text="Defina o segundo nome",label="Telefone",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Your note...'}))
+
+
+
     class Meta:
         model = models.User
         fields = 'username', 'password', 'email', 'first_name', 'last_name'
         name = 'sounovocli'
 
-    # username : forms.CharField(help_text="Defina o nome de usuário")
-    # # password : forms.CharField(widget=forms.PasswordInput())
-    # email : forms.EmailField(help_text="Defina o email")
-    # first_name : forms.CharField(help_text="Defina o primeiro nome")
-    # last_name : forms.CharField(help_text="Defina o segundo nome")
+
+
+    def __init__(self, *args, **kwargs):
+        super(Newcli, self).__init__(*args, **kwargs)
+        self.fields['last_name'].label ='Telefone'
