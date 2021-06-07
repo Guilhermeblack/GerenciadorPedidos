@@ -10,6 +10,9 @@
     <script>
 
     $(document).ready(function(){
+
+        $('#id_status').prop('hidden');
+
         setTimeout( function() {
             location.href = "{% url 'pedidos' %}";
             $("#set_pg_top").click();
@@ -32,9 +35,12 @@
             $("#id_produtosPed option[value='" + val +"']").attr("selected","selected");
             $('#id_produtosPed').hide();
         });
+
         $('#n_comanda').click(function(){
             $("#id_valor").val(0.0)
         });
+
+
 
 
     });
@@ -92,10 +98,10 @@
                                                 <h6 class="card-subtitle mb-2 text-muted">R$ {{pro.preco}}</h6>
                                                 <p class="card-text">{{pro.descricao}}</p>
                                                 {% if movi == "L" %}
-                                                    {% if user.is_authenticated and perms.gerenciador.fazer_pedido  %}
+                                                    {% if user.is_authenticated and perms.gerenciador.fazer_pedido or perms.gerenciador.sou_cliente %}
                                                         <button class="btn btn-success btn-lg btn-block pedB" id="pedB"  name="pedbtn" data-toggle="modal" value="{{pro.id}}" data-target="#novoPedido" type="button"  >Fazer Pedido</button>
                                                     {% else %}
-                                                        <label class="card-label"  type="label"  >Abra sua comanda e faça o pedido</label>
+                                                        <label class="card-label bg-danger text-white"  type="label"  >Abra sua comanda e faça o pedido</label>
 
                                                     {% endif %}
                                                 {% endif %}
@@ -138,7 +144,7 @@
                                             <h6 class="card-subtitle mb-2 text-muted">R$ {{pro.preco}}</h6>
                                             <p class="card-text">{{pro.descricao}}</p>
                                             {% if movi == "L" %}
-                                                {% if user.is_authenticated and perms.gerenciador.fazer_pedido %}
+                                                {% if user.is_authenticated and perms.gerenciador.fazer_pedido or perms.gerenciador.sou_cliente %}
                                                     <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
                                                 {% else %}
                                                     <label class="card-label"  type="label"  >Abra sua comanda e faça o pedido</label>
@@ -203,8 +209,9 @@
                                         </select></p>
                                         <p>{{ pedido.quantidade }}</p>
                                         <p>{{ pedido.observacao }}</p>
-                                        <p>{{ pedido.status }}</p>
-                                        <p>{{ pedido.produtosPed }}</p>
+<!--                                        <p>vaisefude</p>-->
+<!--                                        <p>{{ pedido.status }}</p>-->
+<!--                                        <p>{{ pedido.produtosPed }}</p>-->
 
                                     </div>
 

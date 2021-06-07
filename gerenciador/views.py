@@ -20,7 +20,7 @@ from asgiref.sync import async_to_sync
 
 
 def index(request):
-    if request.user.is_authenticated == False:
+    if request.user.is_anonymous :
         messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
     else:
         messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
@@ -473,7 +473,10 @@ def feed(request):
         })
 
     else:
-        messages.success(request, "{}, Data {}".format(request.user, date.today()))
+        if request.user.is_anonymous:
+            messages.success(request, "Visitante, Data {}".format(date.today()))
+        else:
+            messages.success(request, "{}, Data {}".format(request.user, date.today()))
 
         # pprint(models.Pedido.objects.all().order_by('id'))
         return render(request, 'feed.html', {
@@ -500,7 +503,10 @@ def ped(request):
             # )
         pprint(loja)
         estado_mov = loja.movimento
-
+        if loja.id == 1:
+            produtos = models.Produtocad.objects.filter().all
+            comandas = models.Comanda.objects.filter(cliente=nc)
+            pprint(comandas)
     else:
         produtos = models.Produtocad.objects.filter().all
         pprint(produtos)
@@ -540,8 +546,19 @@ def ped(request):
                     email= request.POST['nome']+"@mail.com"
                 )
 
+
+
                 user_comanda.groups.add(Group.objects.get(name='cliente'))
                 user_comanda.save()
+
+                userc = authenticate(
+                    username=request.POST['nome'],
+                    password=password
+                )
+
+                if userc is not None:
+                    login(request, userc)
+
                 clientec = models.Newcli.objects.create(
                     user = user_comanda,
                     loja = loja
@@ -550,6 +567,10 @@ def ped(request):
                 clientec.save()
                 formco.cliente = clientec
                 formco.save()
+
+                #prgar a loja certa para filtrar os produtos
+
+
                 messages.success(request, "Comanda aberta !")
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
@@ -672,7 +693,10 @@ def ped(request):
         messages.warning(request, "Ação inválida !")
         return redirect('pedidos')
     else:
-        messages.success(request, "{}, Data {}".format(request.user, date.today()))
+        if request.user.is_anonymous:
+            messages.success(request, "Visitante, Data {}".format( date.today()))
+        else:
+            messages.success(request, "{}, Data {}".format(request.user, date.today()))
         return render(request, 'pedidos.html', {
             'newcomanda': formComanda,
             'prod': produtos,

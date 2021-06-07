@@ -271,7 +271,7 @@ class Pedido(models.Model):
         default= 1
     )
     observacao = models.TextField(
-        max_length=170,
+        max_length=50,
         null=False,
         blank=True,
         default='Sem Observações.',

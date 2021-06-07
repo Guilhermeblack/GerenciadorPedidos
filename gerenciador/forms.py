@@ -20,7 +20,7 @@ class produto(forms.ModelForm):
         fields = 'nome','descricao','preco','tipo','img_prod','quantidade','medida','cardapio','qnt_minima'
 
         widgets = {
-            'descricao' : forms.Textarea(attrs={'rows': 3, 'cols': 27}),
+            'descricao' : forms.Textarea(attrs={'rows': 3, 'cols': 27})
 
             # 'nome' : forms.CharField(help_text="Este campo representa o nome do produto"),
             # 'preco' : forms.FloatField(help_text="Insira o preço do produto neste campo"),
@@ -35,23 +35,25 @@ class pedidos(forms.ModelForm):
 
 
 
-    def __init__(self, *args, **kwargs):
-        super(pedidos, self).__init__(*args, **kwargs)
-        self.fields['produtosPed'].label =''
 
     class Meta:
         model = models.Pedido
-        fields = 'comandaref','produtosPed','observacao','quantidade','status','valor'
+        fields = 'comandaref','observacao','quantidade','status','valor','produtosPed'
         name= 'soupedido'
 
     widgets = {
-        'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-        # 'produtosPed': forms.HiddenInput(),
-        # 'quantidade': forms.IntegerField(help_text="Insira a quantidade do produto que será pedido"),
-        # 'comandaref': forms.SelectMultiple(help_text="Insira a quantidade do produto que será pedido"),
+        'observacao': forms.TextInput(attrs={'rows': 3, 'cols': 8}),
+        'produtosPed': forms.HiddenInput(),
+    #     # 'quantidade': forms.IntegerField(help_text="Insira a quantidade do produto que será pedido"),
+    #     # 'comandaref': forms.SelectMultiple(help_text="Insira a quantidade do produto que será pedido"),
         'status': forms.HiddenInput(),
         'valor': forms.HiddenInput()
     }
+
+    # def __init__(self, *args, **kwargs):
+    #     super(pedidos, self).__init__(*args, **kwargs)
+    #     self.fields['produtosPed'].label =''
+
 
 
 class comandas(forms.ModelForm):
