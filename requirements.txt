@@ -27,7 +27,7 @@ pagarme-python==4.0.1
 paypal-checkout-serversdk==1.0.1
 paypalhttp==1.0.0
 phonenumberslite==8.12.17
-Pillow==7.2.0
+Pillow==8.2.0
 psycopg2==2.8.6
 pycparser==2.20
 pyOpenSSL==20.0.1
