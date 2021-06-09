@@ -1019,4 +1019,29 @@ def adm(request):
     else:
         messages.danger(request, "Você não tem permissão para acessar esta página.")
         return redirect('index')
+
+
+def cliente(request):
+
+    if request.POST:
+        pass
+
+    if request.user.is_authenticated:
+        nc = models.Newcli.objects.get(user=request.user)
+        comanda = models.Comanda.objects.get(cliente=nc)
+        loja = comanda.loja
+        pedidos = models.Pedido.objects.filter(comandaref = comanda)
+        val=0
+        for p in pedidos:
+            val = val+ p.valor
+        pag = models.Pagamentos.objects.filter(pedidored__in = pedidos)
+
+    # comanda, produtos, loja
+    return render(request, 'cliente.html',{
+        'comanda': comanda,
+        'pedidos': pedidos,
+        'pag': pag,
+        'val':val
+    })
+
 # Create your views here.

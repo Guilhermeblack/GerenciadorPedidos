@@ -147,7 +147,7 @@
                                                 {% if user.is_authenticated and perms.gerenciador.fazer_pedido or perms.gerenciador.sou_cliente %}
                                                     <button class="btn btn-success btn-lg btn-block pedA" id="pedA" data-toggle="modal" value="{{pro.id}}" name="pedbtn" data-target="#novoPedido" type="button" >Fazer Pedido</button>
                                                 {% else %}
-                                                    <label class="card-label"  type="label"  >Abra sua comanda e faça o pedido</label>
+                                                    <label class="card-label bg-danger text-white"  type="label"  >Abra sua comanda e faça o pedido</label>
                                                 {% endif %}
                                             {% endif %}
                                         </div>

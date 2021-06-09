@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+{% load cloudinary %}
+
+    <header class="masthead text-dark text-center" style="background-color: rgb(255,255,255);">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="container " style=" align-content:center">
+
+            <h1 class="text-dark" style="padding: 18px;">{{comanda.nome}}</h1>
+
+            <br class="text-dark" style=" align-content:center">
+                <p></p>
+                <table class="table text-secondary text-align-center hover table-sm">
+                {% for p in pedidos %}
+
+
+                    {% if 'relareceb' in tp %}
+
+                        {% if forloop.first %}
+                        <thead>
+                            <tr>
+                                <h4>
+                                    <th scope="col">{{'Id' }}</th>
+                                    <th scope="col">{{ 'Produto' }}</th>
+                                    <th scope="col">{{ 'Status' }}</th>
+                                    <th scope="col">{{ 'Situação' }}</th>
+                                    <th scope="col">{{'data do Pedido' }}</th>
+                                </h4>
+                            </tr>
+                        </thead><tbody>
+
+                        {% endif %}
+                        <tr >
+
+
+                            <td >{{ p.id }}</td>
+                            <td >{{ p.id }}</td>
+                            <td >{{ p.id }}</td>
+                            <td >{{ p.id }}</td>
+                            <td >{{ p.id }}</td>
+                        </tr>
+                        {% if forloop.last %}
+                            <tr>Total<th></th><th></th><th></th><th class="content-align-right" > {{val}}  </th><th></th></tr>
+                        {% endif %}
+
+
+
+                    {% endif %}
+                    </tbody>
+                {% empty %}
+                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                    <div class='row text-align-center  hover' >
+                        <div class='col text-align-center p3'>
+                            <h3>{{'Sem Pedidos Vinculados a Comanda'}}</h3>
+                        </div>
+                    </div>
+                    <p></p>
+                {% endfor %}
+                </table>
+
+             <button type="button" onclick="(window.history.back())" class="btn btn-sucess border btn-lg btn-block bg-warning" id="volt">Voltar</button>
+
+        </div>
+    </header>
+{% endblock %}
+</html>
