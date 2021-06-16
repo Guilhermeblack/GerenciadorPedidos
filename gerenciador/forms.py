@@ -38,21 +38,19 @@ class pedidos(forms.ModelForm):
 
     class Meta:
         model = models.Pedido
-        fields = 'comandaref','observacao','quantidade','status','valor','produtosPed'
+        fields = 'comandaref','observacao','quantidade','produtosPed','valor'
         name= 'soupedido'
 
     widgets = {
-        'observacao': forms.TextInput(attrs={'rows': 3, 'cols': 8}),
-        'produtosPed': forms.HiddenInput(),
+        'observacao': forms.TextInput(attrs={'rows': 3, 'cols': 8})
+        # 'produtosPed': forms.HiddenInput(),
     #     # 'quantidade': forms.IntegerField(help_text="Insira a quantidade do produto que será pedido"),
     #     # 'comandaref': forms.SelectMultiple(help_text="Insira a quantidade do produto que será pedido"),
-        'status': forms.HiddenInput(),
-        'valor': forms.HiddenInput()
     }
 
-    # def __init__(self, *args, **kwargs):
-    #     super(pedidos, self).__init__(*args, **kwargs)
-    #     self.fields['produtosPed'].label =''
+    def __init__(self, *args, **kwargs):
+        super(pedidos, self).__init__(*args, **kwargs)
+        self.fields['produtosPed'].label =''
 
 
 

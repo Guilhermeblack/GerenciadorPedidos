@@ -518,7 +518,7 @@ def ped(request):
 
     formComanda = forms.comandas
     if request.POST:
-        # print(request.POST)
+        pprint(request.POST)
 
 
         if 'n_mesa' in request.POST:
@@ -597,7 +597,7 @@ def ped(request):
             pprint(request.user.groups.all())
             print('printou o grupo')
             # jogar campo por campo e jogar o produto depois
-
+            pprint(newped)
             if newped.is_valid():
                 messag =''
                 add_comanda = models.Comanda.objects.get(pk=request.POST['comandaref'])
