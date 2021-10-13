@@ -47,7 +47,7 @@
 
                             <td >{{ p.id }}</td>
                             {% for r in p.produtosPed.all %}
-                                <td >  <img class="card-img"  src="{{r.img_prod.url}}" alt="{{ r.nome }}"><br>{{ r.nome }}</td>
+                                <td >  <img class="card-img img-thumbnail h-30 w-25"  src="{{r.img_prod.url}}" alt="{{ r.nome }}"><br>{{ r.nome }}</td>
                             {% endfor %}
                             <td >{{ p.quantidade }}</td>
 <!--                            {% for r in p.produtosPed.all %}-->

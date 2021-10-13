@@ -14,10 +14,17 @@
     $(document).ready(function(){
 
         setTimeout( function() {
-            location.reload(false);
-            $("#set_pg_top").click();
+            $('.card-body').each(function(data){
 
-        }, 80000);
+                let id = $(this).attr('data-idped');
+                let stat = $(this).siblings().find('.active').text().trim();
+<!--                console.log('roddo');-->
+                color_bg(stat, id);
+            });
+
+        }, 1500);
+
+
         $('.card-body').each(function(){
             let id = $(this).attr("id");
             let stat = $(this).siblings().find('.active').text().trim();
@@ -33,10 +40,10 @@
                     var uai = $(this).closest('.ped_');
 <!--                    console.log(uai);-->
                     setTimeout( function() {
-                        console.log(uai);
+<!--                        console.log(uai);-->
 
                         uai.fadeOut('slow');
-                        $("#set_pg_top").click();
+<!--                        $("#set_pg_top").click();-->
 
                     }, 8500);
                 };
@@ -45,8 +52,9 @@
     });
 
      function color_bg(stat, id){
-        console.log(stat);
-        console.log('#'+id);
+
+<!--        console.log(stat);-->
+<!--        console.log('#'+id, '   essesaiuidddddd');-->
 
         if( id[0] != 'b'){
 
@@ -56,19 +64,19 @@
         switch (stat) {
             case "Pedido realizado":
 
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#D8FBDA');
             break;
             case "Fazendo":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#F4FA8A');
             break;
             case "Saiu para entrega":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#ADDCF6');
             break;
             case "Foi entregue":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#B1FBAE ');
 
             break;
@@ -76,12 +84,14 @@
             default:
                 $('#'+id).css("background-color", "");
         };
+<!--        console.log('mudadooo ',Date.now())-->
     };
 
     $(document).on('click', '.cp',function(){
     
-        let stat = $(this).parent().find('.status_pedido').parent('.active').prev().text().trim();
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
         let st='';
+        console.log('soustatsss 1', stat);
         switch (stat) {
             case "Pedido realizado":
                 st = "P";
@@ -100,20 +110,26 @@
             break;
             default: st = "P";
         };
-        let id = $(this).parent().parent().siblings('#idped').text().trim();
-        let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
-        console.log(csrf);
+        let id = $(this).attr('data-idped');
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        console.log($(this), 'sou o case');
 
 
 
         $.post(
          "feed",
          {
-            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
          },
         function() {color_bg(stat, id);})
-        .done(function() {location.reload(false);})
-          .fail(function() {}).always(function() {$("#set_pg_top").click(); });
+        .done(function() {location.reload(false);
+                color_bg(stat, id);}
+                )
+          .fail(function() {})
+          .always();
+
+
+
 
 
 
@@ -123,8 +139,10 @@
     });
 
     $(document).on('click', '.cn',function(){
+
         let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
         let st='';
+        console.log('soustatsss 1', stat);
         switch (stat) {
             case "Pedido realizado":
                 st = "P";
@@ -146,16 +164,16 @@
 
             default: st = "P";
         };
-        let id = $(this).parent().parent().siblings('#idped').text().trim();
+        let id = $(this).attr('data-idped');
 
-        let csrf = $(this).parents().find("input[name=csrfmiddlewaretoken]").val();
-        console.log(csrf);
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        console.log($(this), 'sou o case');
 
 
         $.post(
          'feed',
          {
-            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
          },
         function() {
             color_bg(stat, id);
@@ -163,12 +181,13 @@
           .done(function() {
 
                 location.reload(false);
+                color_bg(stat, id);
 
           })
           .fail(function() {
           })
           .always(function() {
-            $("#set_pg_top").click();
+            color_bg(stat, id);
           });
 
 
@@ -179,6 +198,9 @@
 
 
     });
+
+
+
 
     $(document).on('click', '.x_c',function(){
 
@@ -275,8 +297,8 @@
                     'fpag':fpag
                     },
                 success: function (response) {
-                        location.reload();
-                        $("#set_pg_top").click();
+                        location.reload(false);
+<!--                        $("#set_pg_top").click();-->
                 },
                 error: function (response) {
                 }
@@ -479,14 +501,14 @@
 
                                         </div>
 
-                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-slide="prev">
+                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="prev">
                                             {% if choice != 'Pedido realizado' %}<div><i class="caret-left-square-fill dark" ></i></div>
                                               <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
                                             {% endif %}
                                           </a>
 
 
-                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-slide="next">
+                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="next">
                                             {% if choice != 'Foi Entregue' %}
                                               <i class="arrow-alt-circle-right bg-dark" ></i>
                                               <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>

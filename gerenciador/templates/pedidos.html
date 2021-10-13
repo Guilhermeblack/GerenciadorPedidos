@@ -88,6 +88,8 @@
                     <div class="modal fade" role="dialog" tabindex="-1" id="pedBebidas" style=" color: rgb(33,37,41);">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
+                                <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
                                 {% for pro in prod %}
                                     {% if pro.tipo == 'B' or pro.tipo == 'O' and pro.cardapio == True %}
                                         <div class="card border border-secondary" style="width: auto; margin: 4px;">
@@ -134,6 +136,8 @@
                     <div class="modal fade" role="dialog" tabindex="-1" id="pedAlimento" style=" color: rgb(33,37,41);">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
+                                <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">×</span></button>
                                 {% for pro in prod %}
                                     {% if pro.tipo == 'A' or pro.tipo == 'O'  and pro.cardapio == True %}
                                     <div class="card border border-secondary" style="width: auto; margin: 4px;">
@@ -193,10 +197,11 @@
                                         <hr>
                                         {% csrf_token %}
                                         <p><select class="mdb-select md-form" id="comandaref" name="comandaref">
-                                          <option value="" disabled selected>Escolha a comanda</option>
-                                            {{comandas}}
+                                          <option value="" disabled >Escolha a comanda</option>
+<!--                                            {{comandas}}-->
                                             {% if user.groups.all.0.name != 'cliente' %}
-                                                {{request.user.name}}
+
+                                            <option value="{{com.id}}" selected>{{request.user.name}}</option>
                                             {% else %}
                                                 {% for com in comandas %}
 

@@ -268,7 +268,7 @@ def feed(request):
     )
     if request.POST:
         # print(request.POST)
-
+        # EXCLUIR/ CANCELAR PEDIDOS
         if 'exc_ped' in request.POST:
             pprint(request.POST)
             ped = models.Pedido.objects.get(pk=request.POST['exc_ped'])
@@ -298,23 +298,24 @@ def feed(request):
             # os Insumos recebem de volta sua quantidade conforme o que é usado no produto vezes quantidade do produto
             messages.success(request, "{}, Pedido cancelado com sucesso!".format(request.user))
 
-
+        # FEITA A ALTERAÇÃO DO STATUS DO PEDIDO
         if 'stats' in request.POST:
-            print(request.POST)
+            # print(request.POST)
             ped= models.Pedido.objects.get(pk=request.POST['idstat'])
-            pprint(ped)
+            # pprint(ped)
             ped.status=request.POST['stats']
             ped.save()
             messages.success(request, "{}, status alterado com sucesso.".format(request.user))
-            return render(request, 'feed.html', {
+            # return render(request, 'feed.html', {
+            #
+            #     'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+            #     'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+            #     'choices': STATUS_CHOICES,
+            #     'fpg': FORMA_PGT,
+            #     'movi': estado_mov
+            # })
 
-                'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
-                'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
-                'choices': STATUS_CHOICES,
-                'fpg': FORMA_PGT,
-                'movi': estado_mov
-            })
-
+        # REALIZANDO OPAGAMENTODE PRODUTOS DO PEDIDO
         if 'comanda_x' in request.POST:
             # tirar do total da comanda
 
@@ -494,19 +495,22 @@ def ped(request):
 
     if request.user.is_authenticated:
         nc = models.Newcli.objects.get(user=request.user)
-        pprint(nc.loja)
+        # pprint(nc.loja)
+        # //tennho a loja do uauario atual
         loja = nc.loja
-        # if 'gerente' == request.user.groups:
-            # messages.warning(
-            #     request,
-            #     " caiu logadin {}".format(request.user)
-            # )
-        pprint(loja)
+
+        # pprint(loja)
         estado_mov = loja.movimento
         if loja.id == 1:
             produtos = models.Produtocad.objects.filter().all
             comandas = models.Comanda.objects.filter(cliente=nc)
-            pprint(comandas)
+            # pprint(comandas)
+        else:
+            produtos = models.Produtocad.objects.filter(loja = loja)
+            comandas = models.Comanda.objects.filter(cliente=nc)
+            # pprint(comandas)
+
+
     else:
         produtos = models.Produtocad.objects.filter().all
         pprint(produtos)
@@ -524,12 +528,12 @@ def ped(request):
         if 'n_mesa' in request.POST:
             usr = get_user(request)
 
-            pprint(request.POST)
+            # pprint(request.POST)
 
             # if usr.has_perm('abrir_comanda'):
             formcom = forms.comandas(request.POST)
 
-            pprint(formcom)
+            # pprint(formcom)
 
             # criar verificação do numero da comanda se nao esta aberta para nao repetir numero
 
@@ -613,6 +617,7 @@ def ped(request):
                         if prod.quantidade <= prod.qnt_minima and  request.user.groups.all()[0].name == 'gerente':
                             messag = " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
                             messages.warning(request, messag)
+                            prod.cardapio = False
                         prod.save()
                     else:
                         messag = " Estoque do(a) {} insuficiente. Reabasteça o estoque".format(prod.nome)
@@ -623,10 +628,10 @@ def ped(request):
                 valu = prod.preco * qnt
                 newped.cleaned_data['valor'] =float(valu)
                 newped['valor'].value = valu
-                print(newped.cleaned_data, '  <<<')
+                # print(newped.cleaned_data, '  <<<')
                 if newped.is_valid():
                     j = newped.save(commit=False)
-                    j.loja = loja
+                    j.loja = prod.loja
                     j.save()
                     j.produtosPed.add(prod)
 
@@ -641,7 +646,9 @@ def ped(request):
                             print(ins.insumo_prod.quantidade,' - quantidade produto')
                             ins.insumo_prod.quantidade = ins.insumo_prod.quantidade - ins.quantidade_prod
                             if ins.insumo_prod.quantidade < ins.insumo_prod.qnt_minima and request.user.groups.all()[0].name == 'gerente':
-                                print('pedou um negativo')
+                                print('pegou um negativo')
+                                ins.insumo_prod.cardapio= False
+                                ins.insumo_prod.save()
                                 messag =  " Quantidade mínima do(a) {} atingido. Reabasteça o estoque".format(prod.nome)
                                 messages.warning(request, messag)
                             sv = ins.insumo_prod.save()

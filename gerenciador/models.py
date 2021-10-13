@@ -59,8 +59,8 @@ class Newcli(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True)
-    # def __str__(self):
-    #     return ' {}'.format(self.nome_loja)
+    def __str__(self):
+        return ' {} _{}'.format(self.loja, self.user)
 
 # Create your models here.
 
