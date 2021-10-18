@@ -100,7 +100,8 @@ def loguin(request):
 #novo gerente e loja, controle de cadastros
 @csrf_protect
 def new(request):
-
+    nc = models.Newcli.objects.get(user=request.user)
+    loja = nc.loja
     # if request.user.is_authenticated
     if request.POST:
         pprint(request.POST)
@@ -191,6 +192,8 @@ def new(request):
             # user.save()
 
             # pprint(gerente)
+    else:
+        pass
     return render(request, 'newcliente.html',{
         'loja': forms.Newloja,
         'clie': forms.Newcli,
@@ -1034,14 +1037,25 @@ def cliente(request):
         pass
 
     if request.user.is_authenticated:
+
+        # //  FUNCIONARIO NAO POSSUI COMANDA
         nc = models.Newcli.objects.get(user=request.user)
-        comanda = models.Comanda.objects.get(cliente=nc)
-        loja = comanda.loja
-        pedidos = models.Pedido.objects.filter(comandaref = comanda)
-        val=0
-        for p in pedidos:
-            val = val+ p.valor
-        pag = models.Pagamentos.objects.filter(pedidored__in = pedidos)
+        val = 0
+
+        comanda = models.Comanda.objects.filter(cliente=nc)
+
+        if comanda:
+            # pprint(comanda)
+            loja = comanda[0].loja
+            pedidos = models.Pedido.objects.filter(comandaref = comanda[0])
+
+            for p in pedidos:
+                val = val+ p.valor
+            pag = models.Pagamentos.objects.filter(pedidored__in = pedidos)
+        else:
+            comanda = []
+            pedidos= []
+            pag = []
 
     # comanda, produtos, loja
     return render(request, 'cliente.html',{

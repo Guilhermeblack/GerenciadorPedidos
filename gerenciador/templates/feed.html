@@ -16,67 +16,78 @@
         setTimeout( function() {
             $('.card-body').each(function(data){
 
-                let id = $(this).attr('data-idped');
+
+
                 let stat = $(this).siblings().find('.active').text().trim();
-<!--                console.log('roddo');-->
+
+                let id = $(this).siblings().find('.cp').attr('data-idped');
+<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
                 color_bg(stat, id);
             });
 
-        }, 1500);
+        }, 8000000);
 
 
-        $('.card-body').each(function(){
-            let id = $(this).attr("id");
-            let stat = $(this).siblings().find('.active').text().trim();
+        $('.card-body').each(function(data){
 
-            color_bg(stat, id);
-        });
 
-        $('.carousel-item').each(function(){
-            if($(this).hasClass("active") ){
 
-                if($(this).find('.status_pedido').text() == "Foi entregue"){
+                let stat = $(this).siblings().find('.active').text().trim();
 
-                    var uai = $(this).closest('.ped_');
-<!--                    console.log(uai);-->
-                    setTimeout( function() {
-<!--                        console.log(uai);-->
+                let id = $(this).siblings().find('.cp').attr('data-idped');
+<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
+                color_bg(stat, id);
+            });
 
-                        uai.fadeOut('slow');
+
+
+<!--        $('.carousel-item').each(function(){-->
+<!--            if($(this).hasClass("active") ){-->
+
+<!--                if($(this).find('.status_pedido').text() == "Foi entregue"){-->
+
+<!--                    var uai = $(this).closest('.ped_');-->
+<!--                    setTimeout( function() {-->
+
+<!--                        uai.fadeOut('slow');-->
 <!--                        $("#set_pg_top").click();-->
 
-                    }, 8500);
-                };
-            };
-        });
+<!--                    }, 8500);-->
+<!--                };-->
+<!--            };-->
+<!--        });-->
     });
 
      function color_bg(stat, id){
 
-<!--        console.log(stat);-->
-<!--        console.log('#'+id, '   essesaiuidddddd');-->
+        console.log(stat,'esstaatblanlndlasndlna');
+        console.log('#'+id, '   essesaiuidddddd');
+        if(id){
 
-        if( id[0] != 'b'){
+            if( id[0] != 'b' && id){
 
-            id = 'bodybg'+2;
-            console.log('nodale #'+id);
+                id = 'bodybg'+id;
+                console.log('nodale #'+id);
+            }else{
+                id = 'bodybg'+2;
+            }
         }
         switch (stat) {
             case "Pedido realizado":
 
-<!--                $('#'+id).css("background-color", "");-->
+                $('#'+id).css("background-color", "");
                 $('#'+id).css('background-color','#D8FBDA');
             break;
             case "Fazendo":
-<!--                $('#'+id).css("background-color", "");-->
+                $('#'+id).css("background-color", "");
                 $('#'+id).css('background-color','#F4FA8A');
             break;
             case "Saiu para entrega":
-<!--                $('#'+id).css("background-color", "");-->
+                $('#'+id).css("background-color", "");
                 $('#'+id).css('background-color','#ADDCF6');
             break;
             case "Foi entregue":
-<!--                $('#'+id).css("background-color", "");-->
+                $('#'+id).css("background-color", "");
                 $('#'+id).css('background-color','#B1FBAE ');
 
             break;
@@ -84,7 +95,7 @@
             default:
                 $('#'+id).css("background-color", "");
         };
-<!--        console.log('mudadooo ',Date.now())-->
+        console.log('mudadooo ',Date.now())
     };
 
     $(document).on('click', '.cp',function(){
@@ -110,9 +121,12 @@
             break;
             default: st = "P";
         };
-        let id = $(this).attr('data-idped');
+        let id = $(this).parent().find('.cp').attr('data-idped');
+
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
         console.log($(this), 'sou o case');
+        color_bg(stat, id);
+
 
 
 
@@ -122,10 +136,10 @@
             'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
          },
         function() {color_bg(stat, id);})
-        .done(function() {location.reload(false);
+        .done(function() {
                 color_bg(stat, id);}
                 )
-          .fail(function() {})
+          .fail()
           .always();
 
 
@@ -164,7 +178,7 @@
 
             default: st = "P";
         };
-        let id = $(this).attr('data-idped');
+        let id = $(this).parent().find('.cn').attr('data-idped');
 
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
         console.log($(this), 'sou o case');
@@ -176,17 +190,19 @@
             'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
          },
         function() {
+
             color_bg(stat, id);
         })
           .done(function() {
 
-                location.reload(false);
+
                 color_bg(stat, id);
 
           })
           .fail(function() {
           })
           .always(function() {
+
             color_bg(stat, id);
           });
 
@@ -213,12 +229,12 @@
 
 <!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
             if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').first('.stt').text() != "C" && $(this).attr('name') == nome ){
-                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');
-                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');
+<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');-->
+<!--                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');-->
                 olc = $(this).parent('div').siblings('.prec').text();
                 console.log(olc+'taindo');
                 olc = parseFloat( olc.replace(/[^0-9,]*/g, '').replace(',', '.') ).toFixed(2);
-                console.log(parseFloat(olc)+' jafoi');
+<!--                console.log(parseFloat(olc)+' jafoi');-->
 
                 if ( $(this).parent('div').siblings('.qnt').text() != null ){
 
@@ -229,7 +245,7 @@
             };
         });
 
-        console.log(' nudale peds',armazena_ped);
+<!--        console.log(' nudale peds',armazena_ped);-->
 
 
 
@@ -252,8 +268,15 @@
         $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
 
+
+<!--        fechar modais para abrir o de pagamento-->
+
+
+        fechaele('comanda_cli'+nome);
+        fechaele('comandas');
         $('#comanda_x').val();
         $('#x_comanda').modal('show');
+
 
     });
 
@@ -297,7 +320,7 @@
                     'fpag':fpag
                     },
                 success: function (response) {
-                        location.reload(false);
+
 <!--                        $("#set_pg_top").click();-->
                 },
                 error: function (response) {
@@ -422,7 +445,7 @@
         $(""+v+"").modal().toggle();
         if(md == 'comandas'){
 
-            location.reload(false);
+<!--            location.reload(false);-->
         }
 
     }
