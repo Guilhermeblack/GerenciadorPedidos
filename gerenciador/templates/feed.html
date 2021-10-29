@@ -25,7 +25,7 @@
                 color_bg(stat, id);
             });
 
-        }, 8000000);
+        }, 8000);
 
 
         $('.card-body').each(function(data){
@@ -35,7 +35,7 @@
                 let stat = $(this).siblings().find('.active').text().trim();
 
                 let id = $(this).siblings().find('.cp').attr('data-idped');
-<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
+                console.log(id, ' ijdsidjsijdisjdijsds  ');
                 color_bg(stat, id);
             });
 
@@ -75,19 +75,19 @@
         switch (stat) {
             case "Pedido realizado":
 
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#D8FBDA');
             break;
             case "Fazendo":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#F4FA8A');
             break;
             case "Saiu para entrega":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#ADDCF6');
             break;
             case "Foi entregue":
-                $('#'+id).css("background-color", "");
+<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#B1FBAE ');
 
             break;
@@ -140,7 +140,7 @@
                 color_bg(stat, id);}
                 )
           .fail()
-          .always();
+          .always(color_bg(stat, id));
 
 
 
@@ -182,7 +182,7 @@
 
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
         console.log($(this), 'sou o case');
-
+        color_bg(stat, id);
 
         $.post(
          'feed',

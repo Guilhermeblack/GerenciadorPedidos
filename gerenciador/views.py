@@ -347,10 +347,14 @@ def feed(request):
                                 status="F",
                                 loja= loja
                             )
-                            nc = models.Newcli.objects.get(com.cliente)
-                            models.User.objects.get(nc).delete()
-                            nc.delete()
 
+                            # nc = models.Newcli.objects.get( com.cliente)
+                            # pprint(nc)
+                            # models.User.objects.get(pk=com.cliente.user).delete()
+                            com.cliente.user.delete()
+                            com.cliente.delete()
+                            # pprint(com)
+                            # print('comandinha ')
                             receb.pedidored.add(pedido_prod)
 
                             receb.save()

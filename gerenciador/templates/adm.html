@@ -253,8 +253,8 @@
 <!--            #manda ajax para alterar estoque -->
             var est = $(this).val();
             var pro = $(this).parent().siblings('#x_pedido').val();
-            console.log('foi estoque > ',est);
-            console.log('foi produto > ',pro);
+<!--            console.log('foi estoque > ',est);-->
+<!--            console.log('foi produto > ',pro);-->
 
             $.ajax({
                 headers: { "X-CSRFToken": '{{csrf_token}}' },
@@ -262,7 +262,7 @@
                 url: "{% url 'administrador' %}",
                 data: {'estoque' :est,'produto': pro},
                 success: function (response) {
-
+<!--                    $(this).val(response.quantidade);-->
                 },
                 error: function (response) {
                 }
@@ -423,7 +423,7 @@
                                                 <div class="input-group-prepend ">
                                                     <span class="input-group-text">Estoque:</span>
                                                 </div>
-                                                <input type="number" class="estoque_prod"  value="{{pro.quantidade}}" id="qnt_{{pro.id}}">
+                                                <input type="text" class="estoque_prod"   step=".01"  value="{{pro.quantidade|floatformat:2}}" id="qnt_{{pro.id}}">
                                                  <div class="input-group-prepend ">
                                                     <span class="input-group-text">Cardapio:</span>
                                                 </div>
