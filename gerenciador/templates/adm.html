@@ -303,65 +303,80 @@
                             {% if form %}
                             <form method="POST" class="justify-content-center" id="newprod" enctype="multipart/form-data" >
                                 <div class="modal-content border  bg-secondary  " align="center">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Novo Produto</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <div class="modal-header text-center " >
+                                        <h3 class="modal-title text-center ml-5" style="width:95%">Novo Produto</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body w-80  "  >
+                                    <div class="modal-body w-80  ml-6" style="margin-left:20%" >
 
-                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex " >
-                                              <div class="input-group-prepend" align="center">
-                                                <span class="input-group-text" id="basic-addon1">Nome:</span>
-                                              </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" id="basic-addon1"><h5></he>Nome:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
                                                 {{ form.nome }}
-                                                <div class="input-group-prepend justify-content-center w-60 d-inline-flex">
-                                                    <span class="input-group-text al" >Tipo: </span>
-                                              </div>
+                                            </div>
+
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Tipo:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
                                                 {{ form.tipo }}
                                             </div>
-                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex ">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text">Preço: R$</span>
-                                              </div>
-                                              {{ form.preco }}
 
-                                                <div class="input-group-prepend align-content-center ">
-                                                <span class="input-group-text">Und Medida:</span>
-                                              </div>
-                                              {{ form.medida }}
+                                            <div class="input-group  mb-0" style="width:95%" >
 
-
+                                                <span class="input-group" ><h5></he>Preço:</h5></span>
                                             </div>
-                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex ">
-                                                <div class="input-group-prepend ">
-                                                    <span class="input-group-text">Qnt em estoque:</span>
-                                              </div>
-                                              {{ form.quantidade }}
-                                                <div class="input-group-prepend ">
-                                                    <span class="input-group-text">Qnt mínima estoque:</span>
-                                              </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.preco }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Und Medida:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.medida }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Quantidade total do produto em estoque:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.quantidade }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Quantidade mínima limite em estoque:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
                                                 {{ form.qnt_minima }}
                                             </div>
 
 <!--                                            </div>-->
-                                            <div class="input-group mb-3 justify-content-center w-60 d-inline-flex" >
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text">Descrição:</span>
-                                              </div>
-                                                {{ form.descricao }}
+                                            <div class="input-group  mb-0" style="width:95%" >
 
+                                                <span class="input-group" ><h5></he>Descrição do produto:</h5></span>
                                             </div>
-                                            <div class="mb-3 justify-content-center w-30 d-inline-flex " >
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.descricao }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
 
-                                                <span class="input-group-text">Item do Cardápio ?</span>
-                                                <input type="checkbox" class="cardapio_prod"  name="cardapio"  style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+                                                <span class="input-group" ><h5></he>Produto disponível para consulta no cardápio ?</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                <input type="checkbox" class="cardapio_prod lg" data-on="Sim" data-off="Não"  name="cardapio"  style="font-size:large;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+                                            </div>
+
 
 <!--                                                {{form.cardapio}}-->
-                                            </div>
-                                            <div class="input-group mb-3 justify-content-center w-30 d-inline-flex">
 
-                                              <div class="custom-file w-30">
+                                            <div class="input-group mb-4 justify-content-center ">
+
+                                              <div class="custom-file w-5 px-3">
                                                 {{ form.img_prod }}
-                                                <label class="custom-file-label w-20" for="id_img_prod">Selecione a Imagem do Produto</label>
+                                                <label class="custom-file-label" for="id_img_prod">Selecione a Imagem do Produto</label>
                                               </div>
                                             </div>
 
@@ -370,7 +385,7 @@
                                                     <label class="input-group-text " ><h3>{{'Selecione os insumos do produto'}}</h3></label>
                                                     </a>
                                                     <div class="dropdown-menu" aria-labelledby="insumo">
-                                                      <div class="container bg-secondary">
+                                                      <div class="container bg-dark">
                                                         {% for p in prod %}
                                                             <div class="row dropdown-item ">
 
@@ -378,13 +393,13 @@
 
                                                                     <div class="input-group-text">
                                                                       <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
+                                                                        <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
+                                                                                                                                                <span class="input-group-text">{{p.get_medida_display}}</span>
+
                                                                     </div>
 
                 <!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
-                                                                    <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
-                                                                    <div class="input-group-prepend mr-2">
-                                                                        <span class="input-group-text">{{p.get_medida_display}}</span>
-                                                                      </div>
+
                                                                 </div>
 
 

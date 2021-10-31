@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+
+
+
+
+      <div class="container px-3">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="section-title mb-4" data-aos="fade-up">
+          <h2>Sobre a GBlack Tecnologia</h2>
+        </div>
+
+<!--        <div class="faq-list p-2 container ">-->
+
+<!--          <div data-aos="fade-up col align-self-center py-2 my-2 col-lg-auto">-->
+<!--              <a data-toggle="collapse" class="collapsed" href="  #faq1"><label class="input-group-text  " ><h5> Cadastre Sua Loja</h5></label></a>-->
+<!--            <div id="faq1" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                Preencha o formulário de cadastrocom as informações do estabelecimento a ser cadastrado, juntamente com as informações do seu cadstro.-->
+<!--              </p>-->
+<!--              <p>-->
+<!--                O cadastro feito junto com a loja será considerado o gerente da loja, que terá todas as permissões dentro do sistema.-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Cadastre e manipule seus funcionários através do menu de cadastros, definindo obrigatóriamente um nome de usuário e uma senha.-->
+<!--                    <span> Defina tambem o grupo do funcionário, o grupo irá definir as permissões dentro do sistema</span>-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Cadastre seus produtos através do menu administrativo (apenas o grupo de gerente tem acesso) preenchendo o formulário de cadastro do produto com-->
+<!--                    Nome do produto, tipo do produto, podendo ser alimento ou bebida, unidade de medida do produto, preço do produto, podendo ou não ter uma quantidade em estoque definida-->
+<!--                    , defina tambem se o produto estará disponível para pedidos e consulta geral no cardapio, uma imagem representativa do produto que será armazenada em nuvem-->
+<!--                    E caso o produto possua insumos (previamente cadastrados), os insumos podem ser vinculados definindo a quantidade de cada insumo usada no produto.-->
+
+<!--              </p>-->
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--          <div data-aos="fade-up px-5 w-80" data-aos-delay="100">-->
+<!--            <a data-toggle="collapse" href="  #faq2" class="collapsed"><label class="input-group-text align-text-center  " ><h5>{{'Criando Comandas/Pedidos'}}</h5></label></a>-->
+<!--            <div id="faq2" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                O Estabelecimento deve estar com o movimento ativo (ação realizada pelo gerente) para que as novas comandas possam ser abertas e novos pedidos possam ser feitos.-->
+<!--                Sendo assim, o funcionário com permissão poderá abrir uma nova comanda no menu de cardapio, no botão 'Nova Comanda', definindo um nome e o numero da mesa para a comanda.-->
+
+<!--              </p>-->
+<!--                <p>-->
+<!--                Após a comanda estar aberta ela ja pode receber novos pedidos, e o cliente pode tambem acessar o sistema.-->
+<!--                Para se realizar um novo pedido de um produto, primeiro é acessado o menu de cardapio, e ao escolher o produto acessar o botãp 'Fazer Pedido', definindo então-->
+<!--                A comanda que receberá o pedido, a quantidade do pedido, e uma possível obseervação.-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Após o pedido feito, podemos então acompanhar o pedido atraves do feed do sistema-->
+<!--              </p>-->
+
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--          <div data-aos="fade-up px-5 w-80" data-aos-delay="200">-->
+<!--            <a data-toggle="collapse" href="  #faq3" class="collapsed"><label class="input-group-text align-text-center  " ><h5>{{'Comandas e Pedidos'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>-->
+<!--            <div id="faq3" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                Pedidos feitos agora estarão disponíveis no feed de pedidos, representados basicamente com nome da comanda responsável, numero do pedido, imagem do produto-->
+<!--                  e uma cor representando o status do pedido.-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Funcionários com a devida permissão poderão alterar o status do pedido, na parte inferior de cada pedido. O 'X' no canto superior direito cancela o pedido, pedidos cancelados tem seu valor retirado do total da comanda-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Funcionários com a devida permissão poderão acessar o botao de comandas e fazer o gerenciamento das comandas e recebimentos.<br>-->
+<!--                    Comandas que tem seu valor total pago são automaticamente encerradas, junto com o usuario da comanda.-->
+<!--              </p>-->
+
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--          <div data-aos="fade-up px-5 w-80" data-aos-delay="300">-->
+<!--            <a data-toggle="collapse" href="  #faq4" class="collapsed"><label class="input-group-text " ><h5>{{'Acesso do Cliente'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>-->
+<!--            <div id="faq4" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                Clientes terão acesso as informações da sua comanda.<br>-->
+<!--                O cliente pode acessar o sistema com usuário de login sendo o nome registrado na comanda e a senha sendo o nome + numero da mesa-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                O cliente podera acompanhar seus próprios pedidos no feed, podem nao podera alterar status dos pedidos.<br>-->
+<!--                O cliente tambem tera a permissao de acompanhar o total da sua comanda e fazer alguns filtros.-->
+<!--              </p>-->
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--          <div data-aos="fade-up px-5 w-80" data-aos-delay="400">-->
+<!--            <a data-toggle="collapse" href="  #faq5" class="collapsed"><label class="input-group-text " ><h5>{{'Relatório'}}</h5></label><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>-->
+<!--            <div id="faq5" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                 O gerente podera gerar relatorio através do menu administrativo acessando o botão 'relatórios'-->
+<!--              </p>-->
+<!--              <p>-->
+<!--                 Assim que o filtro for definido e a consulta feita, o resultado sera apresentado em uma nova tela.-->
+<!--              </p>-->
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--          <div data-aos="fade-up px-5 w-80" data-aos-delay="500">-->
+<!--            <a data-toggle="collapse" href="  #faq6" class="collapsed"><label class="input-group-text " ><h5>{{'Implementações Futuras'}}</h5></label></a>-->
+<!--            <div id="faq6" class="collapse align-text-center px-5 w-80 mt-3" data-parent=".faq-list"><h6>-->
+<!--              <p>-->
+<!--                Módulos adicionais para lojas parceiras-->
+<!--              </p>-->
+<!--              <p>-->
+<!--                Manipulação das permissões da cada grupo-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Gerenciamento de fornecedores-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Módulos de integração com API ifood e outros sistemas-->
+<!--              </p>-->
+<!--                <p>-->
+<!--                Novidade envolvendo reconhecimento facial-->
+<!--              </p>-->
+<!--            </h6></div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+
+          <div class="section-footer mt-5 justify-content-center section-sm" data-aos="fade-up">
+            <b><i>Dúvidas e sugestões, contato rodapé</i></b></span>
+            </div>
+      </div>
+
+{% endblock %}
+</html>

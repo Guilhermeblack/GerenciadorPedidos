@@ -5,15 +5,41 @@
 {% load static %}
 {% block content %}
 <script>
-<!--    $('#msg').display('block', function(){-->
-<!--        setInterval(function() {-->
-<!--            $('#msg').fadeOut('slow');-->
-<!--        }, 3500);-->
-<!--    });-->
+    $('.alert').each(function(){
+
+        $(this).display('block', function(){
+            setInterval(function() {
+                $(this).fadeOut('slow');
+            }, 3500);
+        });
+
+    });
+
 
 $(document).ready(function(){
 
+
+
+
     $('#id_password').attr('type','password');
+
+    $('#id_password').parent().attr('class','w-50');
+    $('#id_username').parent().attr('class','w-50');
+    $('.helptext').attr('hidden', true);
+    $('#id_nome_loja').parent().attr('class','w-50');
+    $('#id_last_name').parent().attr('class','w-50');
+
+    var prtt = $('#id_porte');
+    console.log(prtt);
+    prtt.children().each(function(){
+
+        if($(this).text() == "---------"){
+            $(this).attr('disabled',true);
+            $(this).attr('hidden','true');
+        }
+
+    });
+
 });
 
 </script>
@@ -26,7 +52,7 @@ $(document).ready(function(){
         </div>
     {% endfor %}
     {% if user.is_authenticated %}
-        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);padding-bottom: 4px;">
+        <header class="text-center justify-content-center align-content-center masthead text-white text-center" style="background-color: rgb(255,255,255);">
             <h1 class="text-primary" align="center" style="margin: 3px;">Cadastros da Loja</h1>
         </header>
         <div class="login-dark align-itens-center" style="background-color: rgb(255,255,253);margin: 4px;">
@@ -53,14 +79,14 @@ $(document).ready(function(){
             </form>
         </div>
     {% elif user.is_anonymous %}
-        <header class="text-center justify-content-center align-content-bottom masthead text-white text-center" style=" align:bottom; background-color: rgb(255,255,255);width: auto; height: 178px; padding-top: 40px; margin: 5px;padding-bottom: 14px;">
-            <h1 class="align-items-center text-center text-primary" style=" font-size: 62px;margin: 3px;" >ENTRAR</h1>
+        <header class="text-center justify-content-center align-content-bottom masthead text-white text-center" style=" align:bottom; background-color: rgb(255,255,255);width: auto; height: auto; padding-top: 10px; margin: 5px;padding-bottom: 14px;">
+<!--            <h1 class="align-items-center text-center text-primary" style=" font-size: 62px;margin: 3px;" >ENTRAR</h1>-->
         </header>
-        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;margin: 4px;height: 465px;">
+        <div class="login-dark" style="background-color: rgb(255,255,253);background-repeat: no-repeat;">
             <form method="post" style="margin-top: 4px;padding: 22px;">
 
-                <h2 class="sr-only">Login Form</h2>
-                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>
+                <h2 class="align-content-center text-white">Nova Loja</h2>
+                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: auto;"></i></div>
                 {{loja.as_p}}
                 {{clie.as_p}}
                 <select name="grupocli" hidden>

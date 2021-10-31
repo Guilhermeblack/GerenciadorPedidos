@@ -81,17 +81,13 @@ class Newloja(forms.ModelForm):
         name = 'souloja'
 
     nome_loja: forms.CharField(help_text="Defina o Nome da Loja",
-                               widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Nome da loja'}))
-    porte: forms.ChoiceField()
+                               widget=forms.Textarea(attrs={'class': 'form-input form-group mx-5', 'placeholder': 'Nome da loja'}))
+    porte: forms.ChoiceField( widget= forms.Select(attrs={"name": "select_0","class": "form-control"}))
 
 
 class Newcli(forms.ModelForm):
 
-    username : forms.CharField(help_text="Defina o Nome de Usuário",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Nome de acesso'}))
-    # # password : forms.CharField(widget=forms.PasswordInput())
-    # email : forms.EmailField(help_text="Defina o email")
-    first_name : forms.CharField(help_text="Defina o Nome",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Seu nome'}))
-    last_name : forms.CharField(help_text="Defina o segundo nome",label="Telefone",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Your note...'}))
+
 
 
 
@@ -100,7 +96,11 @@ class Newcli(forms.ModelForm):
         fields = 'username', 'password', 'email', 'first_name', 'last_name'
         name = 'sounovocli'
 
-
+    username : forms.CharField(help_text="Defina o Nome de Usuário",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Nome de acesso'}))
+    password : forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input p-2 mr-4'}))
+    # email : forms.EmailField(help_text="Defina o email")
+    first_name : forms.CharField(help_text="Defina o Nome",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Seu nome'}))
+    last_name : forms.CharField(help_text="Defina o segundo nome",label="Telefone",widget=forms.Textarea(attrs={'class': 'form-input', 'placeholder':'Numero Telefone'}))
 
     def __init__(self, *args, **kwargs):
         super(Newcli, self).__init__(*args, **kwargs)

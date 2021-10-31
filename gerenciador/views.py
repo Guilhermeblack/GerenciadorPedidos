@@ -27,11 +27,17 @@ def index(request):
     return render(request, 'index.html')
 
 
+
+def sobre_gb(request):
+    return render(request, 'sobre_gb.html', {
+        'user': request.user,
+    })  # enviar para as informações da equipe de dev
+
+
 def sobre(request):
     return render(request, 'sobre.html', {
         'user': request.user,
-    })  # enviar para as comandas
-
+    })  # enviar para as orientações do sistema
 
 @csrf_protect
 def loguin(request):
@@ -67,8 +73,8 @@ def loguin(request):
     else:
 
         if request.user.is_authenticated :
-            pprint(request.user)
-            pprint(request.user.id)
+            # pprint(request.user)
+            # pprint(request.user.id)
 
             nc = models.Newcli.objects.get(user=request.user.id)
             if nc is not None:
@@ -100,12 +106,19 @@ def loguin(request):
 #novo gerente e loja, controle de cadastros
 @csrf_protect
 def new(request):
-    nc = models.Newcli.objects.get(user=request.user)
-    loja = nc.loja
-    # if request.user.is_authenticated
+
+    if request.user.is_authenticated:
+        nc = models.Newcli.objects.get(user=request.user)
+        loja = nc.loja
+    else:
+        pass
+
     if request.POST:
         pprint(request.POST)
-        gp = Group.objects.get(name=request.POST['grupocli'])
+        if request.user.is_authenticated:
+            gp = Group.objects.get(name=request.POST['grupocli'])
+        else:
+            gp = 1;
         # print(' --- ')
         # pprint(gp)
         # print('post da loja')
@@ -117,20 +130,21 @@ def new(request):
         #preciso de uma loja, se nao for uma nova pego a loja do usuario logado
 
         if lj.is_valid():
-            pprint(lj)
+            # pprint(lj)
             lojinha = lj.save()
-            messages.info(request, 'Parabens, sua loja foi aberta. \n --  {}'.format(date.today()))
+
         else:
             nl = models.Newcli.objects.get(user=request.user)
             lojinha = nl.loja
         gr = request.POST
         senha = gr['password']
         gr._mutable = True
-        gr['password'] = make_password(gr['password'])
+        gr['password'] = make_password(senha)
         gr._mutable = False
-        ger = forms.Newcli(gr )
+        pprint(gr)
+        ger = forms.Newcli(data=gr or None)
 
-        pprint(ger)
+        pprint(ger.errors)
         if ger.is_valid():
             print('bateeu')
 
@@ -139,7 +153,7 @@ def new(request):
             gerente = ger.save(commit= False)
             gerente.loja = lojinha
 
-        # gerente.save(commit= False)
+            # gerente.save(commit= False)
             print(' nodaleee ')
             gerente.loja = lojinha
             gerente.save()
@@ -150,7 +164,7 @@ def new(request):
             cli.save()
             pprint(cli)
             # gp.save()
-            print('salvo tudo')
+            # print('salvo tudo')
             if request.user.is_authenticated:
 
                 messages.info(request, 'Bem vinda(o), fique a vontade. \n --  {}'.format(date.today()))
@@ -174,12 +188,12 @@ def new(request):
 
                 if user is not None and 'gerente' not in gerente.groups.all():
                     login(request, user)
-                    messages.info(request, 'Bem vinda(o), aproveite o melhor sistema. \n --  {}'.format(date.today()))
+                    messages.info(request, 'Bem vinda(o), aproveite o melhor sistema. Sua loja foi criada ! \n --  {}'.format(date.today()))
                     return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
         else:
             lojinha.delete()
-            messages.info(request, 'Cadastro inválido. \n --  {}'.format(date.today()))
+            messages.info(request, 'Cadastro inválido. Loja Não criada \n --  {}'.print(ger.errors))
 
 
             # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
@@ -192,12 +206,18 @@ def new(request):
             # user.save()
 
             # pprint(gerente)
+
     else:
-        pass
+        if request.user.is_anonymous:
+            grups = [1,3,5]
+
+        else:
+            grups = Group.objects.all()
+    grups = Group.objects.all()
     return render(request, 'newcliente.html',{
         'loja': forms.Newloja,
         'clie': forms.Newcli,
-        'groups': Group.objects.all()
+        'groups': grups
     })
 
 
@@ -250,7 +270,7 @@ def logoutuser(request):
     return redirect('index')
 
 
-# @permission_required('ver_feed')
+@permission_required('gerenciador.ver_feed')
 def feed(request):
     nc = models.Newcli.objects.get(user=request.user)
     loja = nc.loja
