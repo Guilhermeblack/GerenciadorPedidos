@@ -76,11 +76,14 @@ def loguin(request):
             # pprint(request.user)
             # pprint(request.user.id)
 
-            nc = models.Newcli.objects.get(user=request.user.id)
+            nc = models.Newcli.objects.get(user=request.user)
+            pprint(nc)
             if nc is not None:
                 loja = nc.loja
             else:
-                loja = request.user.loja
+                nc = models.Newcli.objects.get(user=request.user.id)
+                print('memo ???')
+                loja = nc.loja
 
             nl = models.Newcli.objects.filter(loja = loja)
             # print('oclii')
@@ -193,7 +196,7 @@ def new(request):
 
         else:
             lojinha.delete()
-            messages.info(request, 'Cadastro inválido. Loja Não criada \n --  {}'.print(ger.errors))
+            messages.info(request, 'Cadastro inválido. Loja Não criada \n --  {}'.pprint(ger.errors))
 
 
             # user = User.objects.create_user(request.POST['Usuario'], request.POST['Email'], request.POST['Senha'] )
@@ -388,7 +391,7 @@ def feed(request):
                         receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status= "P",
-                            loja=request.user.loja
+                            loja=loja
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -407,7 +410,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="R",
-                                loja=request.user.loja
+                                loja=loja
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -434,7 +437,7 @@ def feed(request):
                             receb = models.Pagamentos.objects.create(
                                 valor=valo_ped,
                                 status="P",
-                                loja=request.user.loja
+                                loja=loja
                             )
                             receb.pedidored.add(pedido_prod)
                             receb.save()
@@ -452,7 +455,7 @@ def feed(request):
                                 receb = models.Pagamentos.objects.create(
                                     valor=valo_ped,
                                     status="R",
-                                    loja=request.user.loja
+                                    loja=loja
                                 )
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
@@ -474,7 +477,7 @@ def feed(request):
                         receb = models.Pagamentos.objects.create(
                             valor=valo_ped,
                             status="F",
-                            loja=request.user.loja
+                            loja=loja
                         )
                         receb.pedidored.add(pedido_prod)
                         receb.save()
@@ -526,16 +529,16 @@ def ped(request):
         # //tennho a loja do uauario atual
         loja = nc.loja
 
-        # pprint(loja)
+        pprint(loja)
         estado_mov = loja.movimento
         if loja.id == 1:
             produtos = models.Produtocad.objects.filter().all
-            comandas = models.Comanda.objects.filter(cliente=nc)
+            comandas = models.Comanda.objects.filter(loja=loja)
             # pprint(comandas)
         else:
             produtos = models.Produtocad.objects.filter(loja = loja)
-            comandas = models.Comanda.objects.filter(cliente=nc)
-            # pprint(comandas)
+            comandas = models.Comanda.objects.filter(loja=loja)
+            pprint(comandas)
 
 
     else:
@@ -555,7 +558,7 @@ def ped(request):
         if 'n_mesa' in request.POST:
             usr = get_user(request)
 
-            # pprint(request.POST)
+            pprint(request.POST)
 
             # if usr.has_perm('abrir_comanda'):
             formcom = forms.comandas(request.POST)
@@ -587,7 +590,7 @@ def ped(request):
                     password=password
                 )
 
-                if userc is not None:
+                if userc is not None and request.user.is_anonymous :
                     login(request, userc)
 
                 clientec = models.Newcli.objects.create(

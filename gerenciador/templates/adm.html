@@ -15,6 +15,19 @@
 
         var usrlog= $('#movimentar').val();
         $(document).ready(function(){
+
+
+            var prtt = $('#id_tipo');
+            console.log(prtt);
+            prtt.children().each(function(){
+
+                if($(this).text() == "---------"){
+                    $(this).attr('disabled',true);
+                    $(this).attr('hidden','true');
+                }
+
+            });
+
             $('#id_qnt_minima').css('width','15%');
             $('#mov').change(function(){
                 $('#alt-mov').modal('show');
@@ -304,9 +317,9 @@
                             <form method="POST" class="justify-content-center" id="newprod" enctype="multipart/form-data" >
                                 <div class="modal-content border  bg-secondary  " align="center">
                                     <div class="modal-header text-center " >
-                                        <h3 class="modal-title text-center ml-5" style="width:95%">Novo Produto</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <h3 class="modal-title text-center ml-4" style="width:95%">Novo Produto</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
-                                    <div class="modal-body w-80  ml-6" style="margin-left:20%" >
+                                    <div class="modal-body w-80  ml-3" style="margin-left:20%" >
 
                                             <div class="input-group  mb-0" style="width:95%" >
 
@@ -366,7 +379,7 @@
                                                 <span class="input-group" ><h5></he>Produto disponível para consulta no cardápio ?</h5></span>
                                             </div>
                                             <div class="input-group input-lg mb-3 " style="width:95%">
-                                                <input type="checkbox" class="cardapio_prod lg" data-on="Sim" data-off="Não"  name="cardapio"  style="font-size:large;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+                                                <input type="checkbox" class="cardapio_prod w-10" data-on="Sim" data-off="Não"  name="cardapio"  style="font-size:large;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
                                             </div>
 
 
@@ -380,9 +393,9 @@
                                               </div>
                                             </div>
 
-                                                <div class="dropdown input-group-text p-2 m-2 justify-content-center w-30 d-inline-flex">
+                                                <div class="dropdown input-group-text p-2 m-2 justify-content-center w-30 ">
                                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="insumo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                                    <label class="input-group-text " ><h3>{{'Selecione os insumos do produto'}}</h3></label>
+                                                    <label class="input-group-text " ><h5>{{'Selecione os insumos do produto'}}</h5></label>
                                                     </a>
                                                     <div class="dropdown-menu" aria-labelledby="insumo">
                                                       <div class="container bg-dark">

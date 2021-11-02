@@ -6,7 +6,7 @@
 
     <script type="text/javascript">
 
-    var armazena_ped = [];
+    const armazena_ped = [];
 
        $(document).on("click",".close-filho",function() {
             $(this).parents().find('.mod-filho').modal('hide');
@@ -25,7 +25,7 @@
                 color_bg(stat, id);
             });
 
-        }, 8000);
+        }, 1500);
 
 
         $('.card-body').each(function(data){
@@ -283,6 +283,9 @@
     $(document).on('click','#comanda_fecha', function(){
 
         let pedidu=[];
+
+
+<!--        EESA VARIAVEL armazena_ped AINDA NAO EXISTE -->
         for (i = 0; i < armazena_ped.length; i++) {
             pedidu[i]= armazena_ped[i][1] ;
 
@@ -591,7 +594,7 @@
                                             </h2>
                                             </h2>
                                         </div>
-                                        <div class="row d-flex justify-content-center">
+                                        <div class="row justify-content-center">
 
                                             <h2 style="width:70%" class="d-flex justify-content-center 22"><b>
                                                 <div class="form-group p-2 flex-fill bd-highlight">
