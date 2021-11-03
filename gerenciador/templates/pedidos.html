@@ -266,6 +266,13 @@
                                 </div>
                             </div>
                     {%endif%}
+
+                {% else %}
+                    {% if perms.gerenciador.abrir_comanda or user.is_anonymous %}
+                        <div class='col text-align-center mt-4'><h6><strong>
+                            Não é possível abrir nova comanda <br> Movimento encerrado !
+                        </strong></h6></div>
+                    {% endif %}
                 {% endif %}
                 </div>
             </div>

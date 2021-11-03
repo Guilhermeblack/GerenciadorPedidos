@@ -469,6 +469,7 @@ def feed(request):
                     pedido_prod.save()
                     com.save()
 
+
                 if com.valor <= 0:
 
                     com.status="F"
@@ -488,6 +489,14 @@ def feed(request):
                         new_status = 'FECHADA'
                     com.save()
                     new_status = 'FECHADA'
+                return render(request, 'feed.html', {
+
+                    'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                    'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+                    'choices': STATUS_CHOICES,
+                    'fpg': FORMA_PGT,
+                    'movi': estado_mov
+                })
             else:
                 new_status = 'Sem pedido Selecionado'
 
@@ -614,7 +623,8 @@ def ped(request):
                                'pedido': forms.pedidos
                                })
             else:
-                messages.warning(request, "Formulário inválido!")
+
+                messages.warning(request, "Formulário inválido! {}".pprint(formcom.errors))
 
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,

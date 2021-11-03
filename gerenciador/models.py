@@ -134,6 +134,7 @@ class Comanda(models.Model):
     n_mesa = models.IntegerField(
         null=False,
         blank=False,
+        unique=True
     )
 
     valor = models.FloatField(
@@ -304,8 +305,8 @@ class Pedido(models.Model):
 
     data = models.DateTimeField(auto_now_add=True , blank=True)
 
-    def __str__(self):
-        return '{} - {}'.format( self.id, self.comandaref)
+    # def __str__(self):
+    #     return '{} - {}'.format( self.id, self.comandaref)
 
     objects = models.Manager()
 
