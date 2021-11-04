@@ -359,7 +359,7 @@ def feed(request):
                 print('entao foi o pedd')
 
                 if isinstance(peed, str):
-                    pedido_prod = models.Pedido.objects.get(pk=peed, loja=loja)
+                    pedido_prod = models.Pedido.objects.get(pk=peed)
                     print('apenas um item sendo pago')
                     com.valor -= valo_ped
                     if valo >= pedido_prod.valor:
@@ -397,11 +397,12 @@ def feed(request):
                         receb.save()
                         com.save()
                         pedido_prod.save()
+                        pass
 
                     else:
 
                         if valo > 0:
-                            print('valor nao paga produto sobra {} ')
+                            print('valor nao paga produto sobra {} '.pprint(valo))
                             print(valo,'  valoo')
                             pedido_prod.valor -= valo
                             print(com.valor,'  comanda valoor')
@@ -417,9 +418,12 @@ def feed(request):
                             pedido_prod.save()
                             com.save()
                             print('passo aqui')
+                            pass
+
+
                     pedido_prod.save()
                     new_status = 'ATUALIZADA com sucesso'
-
+                    pass
 
                 elif peed.length > 0:
                     pprint('mais de um produto no pedido')
@@ -442,6 +446,7 @@ def feed(request):
                             receb.pedidored.add(pedido_prod)
                             receb.save()
                             pedido_prod.save()
+                            pass
                         else:
                             print('valor do produto pagou o valor do pedido aqui'.format(valo))
                             if valo > 0:
@@ -460,14 +465,17 @@ def feed(request):
                                 receb.pedidored.add(pedido_prod)
                                 receb.save()
                                 pedido_prod.save()
+                                pass
                             elif valo <= 0:
 
 
                                 print('fecho o valor do pedido {}'.format(valo))
                                 com.save()
+                                pass
                     new_status = 'ATUALIZADA com sucesso'
                     pedido_prod.save()
                     com.save()
+                    pass
 
 
                 if com.valor <= 0:
@@ -487,8 +495,10 @@ def feed(request):
                         models.User.objects.get(nc).delete()
                         nc.delete()
                         new_status = 'FECHADA'
+                        pass
                     com.save()
                     new_status = 'FECHADA'
+                    messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
                 return render(request, 'feed.html', {
 
                     'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
@@ -499,6 +509,7 @@ def feed(request):
                 })
             else:
                 new_status = 'Sem pedido Selecionado'
+                pass
 
 
             messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
