@@ -43,7 +43,7 @@ def sobre(request):
 def loguin(request):
 
     if request.POST:
-        # print(' >>>', request.POST)
+        pprint(request.POST)
         formu = forms.autForm(request.POST)
         # print(' >>>', formu)
         if formu.is_valid():
@@ -121,7 +121,7 @@ def new(request):
         if request.user.is_authenticated:
             gp = Group.objects.get(name=request.POST['grupocli'])
         else:
-            gp = 1;
+            gp = 1
         # print(' --- ')
         # pprint(gp)
         # print('post da loja')
@@ -355,12 +355,13 @@ def feed(request):
             valo= valo_ped
             if 'pedi[]' in request.POST:
                 peed = request.POST['pedi[]']
-                pprint(peed)
-                print('entao foi o pedd')
+                # pprint(peed)
+                # print('entao foi o pedd')
 
                 if isinstance(peed, str):
                     pedido_prod = models.Pedido.objects.get(pk=peed)
                     print('apenas um item sendo pago')
+                    pprint(pedido_prod)
                     com.valor -= valo_ped
                     if valo >= pedido_prod.valor:
                         if com.valor <= 0:
@@ -402,7 +403,7 @@ def feed(request):
                     else:
 
                         if valo > 0:
-                            print('valor nao paga produto sobra {} '.pprint(valo))
+                            print('valor nao paga produto sobra {} '.format(pprint(valo)))
                             print(valo,'  valoo')
                             pedido_prod.valor -= valo
                             print(com.valor,'  comanda valoor')
@@ -432,7 +433,7 @@ def feed(request):
                         pprint('loop dos produtos sendo pagos')
                         pprint(p)
                         pedido_prod = models.Pedido.objects.get(pk=p)
-
+                        pprint(pedido_prod)
                         if valo >= pedido_prod.produtosPed.all()[0].preco:
                             print('valor sendo pago {}  é maior que valor do produto {}'.format(valo,pedido_prod.produtosPed.all()[0].preco ))
                             valo -= pedido_prod.produtosPed.all()[0].preco * pedido_prod.produtosPed.all()[0].quantidade
@@ -471,7 +472,14 @@ def feed(request):
 
                                 print('fecho o valor do pedido {}'.format(valo))
                                 com.save()
-                                pass
+                                return render(request, 'feed.html', {
+
+                                    'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                                    'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+                                    'choices': STATUS_CHOICES,
+                                    'fpg': FORMA_PGT,
+                                    'movi': estado_mov
+                                })
                     new_status = 'ATUALIZADA com sucesso'
                     pedido_prod.save()
                     com.save()
@@ -494,11 +502,30 @@ def feed(request):
                         nc = models.Newcli.objects.get(com.cliente)
                         models.User.objects.get(nc).delete()
                         nc.delete()
+                        com.save()
                         new_status = 'FECHADA'
-                        pass
+                        messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
+                        return render(request, 'feed.html', {
+
+                            'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                            'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+                            'choices': STATUS_CHOICES,
+                            'fpg': FORMA_PGT,
+                            'movi': estado_mov
+                        })
                     com.save()
                     new_status = 'FECHADA'
                     messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
+                    return render(request, 'feed.html', {
+
+                        'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
+                        'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
+                        'choices': STATUS_CHOICES,
+                        'fpg': FORMA_PGT,
+                        'movi': estado_mov
+                    })
+            else:
+                new_status = 'Sem pedido Selecionado'
                 return render(request, 'feed.html', {
 
                     'comandas': models.Comanda.objects.filter(loja=loja).order_by('id', 'data'),
@@ -507,9 +534,6 @@ def feed(request):
                     'fpg': FORMA_PGT,
                     'movi': estado_mov
                 })
-            else:
-                new_status = 'Sem pedido Selecionado'
-                pass
 
 
             messages.success(request, "{}, Comanda {} .".format(request.user, new_status))
@@ -595,7 +619,7 @@ def ped(request):
                 formco.loja = loja
                 password = ""+request.POST['nome']+request.POST['n_mesa']+""
                 user_comanda = models.User.objects.create_user(
-                    username=request.POST['nome'],
+                    username=request.POST['nome']+request.POST['n_mesa'],
                     password=password,
                     email= request.POST['nome']+"@mail.com"
                 )
@@ -606,7 +630,7 @@ def ped(request):
                 user_comanda.save()
 
                 userc = authenticate(
-                    username=request.POST['nome'],
+                    username=request.POST['nome']+request.POST['n_mesa'],
                     password=password
                 )
 
@@ -625,7 +649,7 @@ def ped(request):
                 #prgar a loja certa para filtrar os produtos
 
 
-                messages.success(request, "Comanda aberta !")
+                messages.success(request, "Comanda aberta ! \n Acesso: {}".format(request.POST['nome']+request.POST['n_mesa']))
                 return render(request, 'pedidos.html',
                               {'newcomanda': formComanda,
                                'prod': models.Produtocad.objects.filter(loja=loja),

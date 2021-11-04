@@ -125,7 +125,7 @@
         let id = $(this).parent().find('.cp').attr('data-idped');
 
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
-        console.log($(this), 'sou o case');
+<!--        console.log($(this), 'sou o case');-->
         color_bg(stat, id);
 
 
@@ -292,8 +292,8 @@
             pedidu[i]= armazena_ped[i][1] ;
 
         }
-        console.log(' pedido pae');
-        console.log(pedidu);
+<!--        console.log(' pedido pae');-->
+<!--        console.log(pedidu);-->
 
         let vall = $('#valou').val();
 
@@ -327,6 +327,7 @@
                 success: function (response) {
 
 <!--                        $("#set_pg_top").click();-->
+                    location.reload(false)
                 },
                 error: function (response) {
                 }
@@ -360,7 +361,7 @@
         var numero = parseFloat(valor);
         document.getElementById('valori').value = numero;
 
-        console.log( $('#val_ini').val() +'  val_ini');
+<!--        console.log( $('#val_ini').val() +'  val_ini');-->
 
         var tot = parseFloat($('#val_ini').val());
 
