@@ -22,13 +22,16 @@
             <p align="center">
             <h2 class="sr-only ">Cadastros</h2>
 <!--                <div class="illustration" style="width: 132px;padding: 0px;margin: 4px;margin-left: 55px;height: 116px;margin-bottom: 11px;"><i class="icon ion-ios-locked-outline" style="font-size: 50px;"></i></div>-->
-                <table>
+                <table class="table table-bordered">
                 {% for c in cad %}
                     <tr class="form-group" align="center" border="1px">
                         <th class="form-group" align="center">{{c.user.username}}</th>
                         <th class="form-group" colspan="3"></th>
                         <th class="form-group" align="center" >{{c.user.email}}</th>
-                        <th class="form-group" align="center" ><button class="btn btn-sm btn-warning">editar</button></th>
+                        <th class="form-group" align="center" >{{c.user.date_joined}}</th>
+                        <th class="form-group" align="center" >{% if c.user.last_login != None%} {{c.user.last_login}} {% endif %}</th>
+                        <th class="form-group" align="center" >{{c.user.groups.all.0}}</th>
+<!--                        <th class="form-group" align="center" ><button class="btn btn-sm btn-warning">editar</button></th>-->
                     </tr>
 
                 {%endfor%}

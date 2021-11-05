@@ -82,7 +82,7 @@ def loguin(request):
                 loja = nc.loja
             else:
                 nc = models.Newcli.objects.get(user=request.user.id)
-                print('memo ???')
+                # print('memo ???')
                 loja = nc.loja
 
             nl = models.Newcli.objects.filter(loja = loja)
