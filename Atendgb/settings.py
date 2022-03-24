@@ -79,7 +79,33 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'Atendgb.wsgi.application'
+ASGI_APPLICATION  = 'Atendgb.wsgi.application'
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        ### Method 1: Via redis lab
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [
+        #       'redis://h:<password>;@<redis Endpoint>:<port>'
+        #     ],
+        # },
+
+        ### Method 2: Via local Redis
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+             "hosts": [('127.0.0.1', 6379)],
+        },
+
+        ### Method 3: Via In-memory channel layer
+        ## Using this method.
+        # "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
+
 
 LOGOUT_REDIRECT_URL = '/'
 
@@ -122,6 +148,8 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 ]
+
+
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Internationalization
@@ -230,3 +258,4 @@ CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA = 'ek_live_kwLtZhdUxIWxbGGC4cHq7cddKh5T21'
 
 # Para validar telefones no Brasil
 PHONENUMBER_DEFAULT_REGION = 'BR'
+
