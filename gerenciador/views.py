@@ -2,7 +2,7 @@ from datetime import date
 import datetime
 
 import cloudinary
-import django_pagarme
+# import django_pagarme
 import base64
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
@@ -278,7 +278,7 @@ def feed(request):
     nc = models.Newcli.objects.get(user=request.user)
     loja = nc.loja
 
-    pprint(loja)
+    # pprint(loja)
     estado_mov = loja.movimento
     STATUS_CHOICES = (
         "Pedido realizado",
@@ -544,6 +544,7 @@ def feed(request):
             'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
             'choices': STATUS_CHOICES,
             'fpg': FORMA_PGT,
+            'loja': loja.nome_loja,
             'movi': estado_mov
         })
 
@@ -560,6 +561,7 @@ def feed(request):
             'pedidos': models.Pedido.objects.filter(loja=loja).order_by('id'),
             'choices': STATUS_CHOICES,
             'fpg': FORMA_PGT,
+            'loja': loja.nome_loja,
             'movi': estado_mov
         })
 

@@ -13,11 +13,7 @@
 
         $('#id_status').prop('hidden');
 
-        setTimeout( function() {
-            location.href = "{% url 'pedidos' %}";
-            $("#set_pg_top").click();
 
-        }, 800000);
         $('.pedB').click(function(){
 
             $('#prod_ped').text($(this).siblings('.card-title').text());

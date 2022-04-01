@@ -14,55 +14,31 @@
     $(document).ready(function(){
 
 
-        setTimeout( function() {
-            $('.card-body').each(function(data){
+        <!--FUNCOES WEB SOCKET-->
+            const loja = JSON.parse(document.getElementById('loja').textContent);
+
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/chat/'
+                + loja
+                + '/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                color_bg(data.stat, data.id);
+            };
+
+            chatSocket.onclose = function(e) {
+            };
 
 
-
-                let stat = $(this).siblings().find('.active').text().trim();
-
-                let id = $(this).siblings().find('.cp').attr('data-idped');
-<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
-                color_bg(stat, id);
-            });
-
-        }, 15000);
-
-
-        $('.card-body').each(function(data){
-
-
-
-                let stat = $(this).siblings().find('.active').text().trim();
-
-                let id = $(this).siblings().find('.cp').attr('data-idped');
-                console.log(id, ' ijdsidjsijdisjdijsds  ');
-                color_bg(stat, id);
-            });
-
-
-
-<!--        $('.carousel-item').each(function(){-->
-<!--            if($(this).hasClass("active") ){-->
-
-<!--                if($(this).find('.status_pedido').text() == "Foi entregue"){-->
-
-<!--                    var uai = $(this).closest('.ped_');-->
-<!--                    setTimeout( function() {-->
-
-<!--                        uai.fadeOut('slow');-->
-<!--                        $("#set_pg_top").click();-->
-
-<!--                    }, 8500);-->
-<!--                };-->
-<!--            };-->
-<!--        });-->
     });
 
      function color_bg(stat, id){
 
-        console.log(stat,'esstaatblanlndlasndlna');
-        console.log('#'+id, '   essesaiuidddddd');
+
         if(id){
 
             if( id[0] != 'b' && id){
@@ -76,19 +52,17 @@
         switch (stat) {
             case "Pedido realizado":
 
-<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#D8FBDA');
             break;
             case "Fazendo":
-<!--                $('#'+id).css("background-color", "");-->
                 $('#'+id).css('background-color','#F4FA8A');
             break;
             case "Saiu para entrega":
-<!--                $('#'+id).css("background-color", "");-->
+
                 $('#'+id).css('background-color','#ADDCF6');
             break;
             case "Foi entregue":
-<!--                $('#'+id).css("background-color", "");-->
+
                 $('#'+id).css('background-color','#B1FBAE ');
 
             break;
@@ -96,14 +70,13 @@
             default:
                 $('#'+id).css("background-color", "");
         };
-        console.log('mudadooo ',Date.now())
+
     };
 
     $(document).on('click', '.cp',function(){
     
         let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
         let st='';
-        console.log('soustatsss 1', stat);
         switch (stat) {
             case "Pedido realizado":
                 st = "P";
@@ -125,30 +98,12 @@
         let id = $(this).parent().find('.cp').attr('data-idped');
 
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
-<!--        console.log($(this), 'sou o case');-->
-        color_bg(stat, id);
 
 
 
-
-        $.post(
-         "feed",
-         {
-            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
-         },
-        function() {color_bg(stat, id);})
-        .done(function() {
-                color_bg(stat, id);}
-                )
-          .fail()
-          .always(color_bg(stat, id));
-
-
-
-
-
-
-
+            chatSocket.send(JSON.stringify({
+                'stats' :st, 'idstat': id
+            }));
 
 
     });
@@ -182,30 +137,10 @@
         let id = $(this).parent().find('.cn').attr('data-idped');
 
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
-        console.log($(this), 'sou o case');
-        color_bg(stat, id);
 
-        $.post(
-         'feed',
-         {
-            'stats' :st, 'idstat': id, 'csrfmiddlewaretoken': csrf
-         },
-        function() {
-
-            color_bg(stat, id);
-        })
-          .done(function() {
-
-
-                color_bg(stat, id);
-
-          })
-          .fail(function() {
-          })
-          .always(function() {
-
-            color_bg(stat, id);
-          });
+        chatSocket.send(JSON.stringify({
+            'stats' :st, 'idstat': id
+        }));
 
 
 
@@ -463,6 +398,7 @@
     </script>
 
 
+
     <header class="text-center justify-content-around  masthead text-white" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
         {% for message in messages %}
             <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
@@ -473,7 +409,7 @@
             </div>
         {% endfor %}
 
-
+            {{ loja|json_script:"loja" }}
             <div class="row bg-white">
                 <div class="col d-flex justify-content-center">
                     <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>

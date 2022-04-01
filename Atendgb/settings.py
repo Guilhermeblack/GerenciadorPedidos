@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'Atendgb',
     'gerenciador',
     'cloudinary',
-    'django_pagarme',
+    'channels'
+    # 'django_pagarme',
     # 'django_signal_notifier',
 
 ]
