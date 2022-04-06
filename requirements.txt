@@ -15,11 +15,14 @@ daphne==3.0.2
 dj-config-url==0.1.1
 dj-static==0.0.6
 Django==3.2.12
+django-ajax==0.3.0
+django-pwa==1.0.10
 hiredis==2.0.0
 hyperlink==21.0.0
 idna==3.3
 incremental==21.3.0
 msgpack==1.0.3
+psycopg2==2.9.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.21

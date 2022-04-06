@@ -14,7 +14,7 @@ from channels.http import AsgiHandler
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-import Atendgb.urls
+from  Atendgb import routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Atendgb.settings')
 django.setup()
@@ -23,10 +23,11 @@ application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            Atendgb.urls.websocket_urlpatterns
+            routing.websocket_urlpatterns
         )
     ),
 })
+
 
 
 

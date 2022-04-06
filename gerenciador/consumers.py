@@ -1,13 +1,18 @@
 import json
 # noinspection PyUnresolvedReferences
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from pprint import pprint
 from . import models, forms
 
 
 class StateConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
+        pprint(self.scope['url_route'])
+        pprint(self.scope['url_route']['kwargs'])
+        pprint(self.scope['url_route']['kwargs']['loja'])
+
         self.room_name = self.scope['url_route']['kwargs']['loja']
-        self.room_group_name = 'chanel_%s' % self.room_name
+        self.room_group_name = 'channel_%s' % self.room_name
 
         # Join room group de pedidos
         await self.channel_layer.group_add(
@@ -15,6 +20,7 @@ class StateConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        print("Dentro")
 
     async def disconnect(self, close_code):
         print("Disconnected")

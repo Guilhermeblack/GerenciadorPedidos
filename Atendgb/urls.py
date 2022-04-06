@@ -21,7 +21,7 @@ urlpatterns = [
     path('sobre', views.sobre, name='sobre'),
     path('gbtech', views.sobre_gb, name='gbtech'),
     path('cliente/', views.cliente, name='cliente'),
-    path('checkout/', include('django_pagarme.urls'))
+    # path('checkout/', include('django_pagarme.urls'))
     # path('loguin/', include('urls', namespace='log')),
 
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

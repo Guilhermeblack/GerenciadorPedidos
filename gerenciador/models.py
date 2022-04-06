@@ -83,7 +83,7 @@ class Gerente(models.Model):
     def __str__(self):
         return self.nome
 
-    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ger_loja")
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True, related_name="ger_loja"),
     id = models.AutoField(primary_key=True),
 
     nome = models.CharField(

@@ -82,7 +82,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'Atendgb.wsgi.application'
-ASGI_APPLICATION  = 'Atendgb.wsgi.application'
+ASGI_APPLICATION  = 'Atendgb.asgi.application'
 
 
 CHANNEL_LAYERS = {
@@ -98,7 +98,7 @@ CHANNEL_LAYERS = {
         ### Method 2: Via local Redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-             "hosts": [('127.0.0.1', 6379)],
+             "hosts": [('redis', 6379),('127.0.0.1', 6379)],
         },
 
         ### Method 3: Via In-memory channel layer
