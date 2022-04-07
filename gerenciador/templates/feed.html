@@ -13,7 +13,7 @@
     $(document).ready(function(){
 
 
-        // //<!--FUNCOES WEB SOCKET-->
+        <!--FUNCOES WEB SOCKET-->
             const loja = JSON.parse(document.getElementById('loja').textContent);
 
             const chatSocket = new WebSocket(
@@ -32,6 +32,16 @@
             chatSocket.onclose = function(e) {
             };
 
+            $('.card-body').each(function(data){
+
+
+
+                let stat = $(this).siblings().find('.active').text().trim();
+
+                let id = $(this).siblings().find('.cp').attr('data-idped');
+<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
+                color_bg(stat, id);
+            });
 
     });
 
@@ -156,21 +166,21 @@
     $(document).on('click', '.x_c',function(){
 
 
-//<!--        pegar todos os valores dos campos selecionados-->
+<!--        pegar todos os valores dos campos selecionados-->
         var ped;
         var vainfo=0;
         let nome = $(this).val();
         let olc=0;
         $('.selec').each(function(){
 
-//<!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
+<!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
             if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').first('.stt').text() != "C" && $(this).attr('name') == nome ){
-//<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');-->
-//<!--                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');-->
+<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');-->
+<!--                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');-->
                 olc = $(this).parent('div').siblings('.prec').text();
                 console.log(olc+'taindo');
                 olc = parseFloat( olc.replace(/[^0-9,]*/g, '').replace(',', '.') ).toFixed(2);
-//<!--                console.log(parseFloat(olc)+' jafoi');-->
+<!--                console.log(parseFloat(olc)+' jafoi');-->
 
                 if ( $(this).parent('div').siblings('.qnt').text() != null ){
 
@@ -181,7 +191,7 @@
             };
         });
 
-//<!--        console.log(' nudale peds',armazena_ped);-->
+<!--        console.log(' nudale peds',armazena_ped);-->
 
 
 
@@ -194,18 +204,18 @@
 
         }
 
-//<!--        console.log(parseFloat(vlr+' tot'));-->
+<!--        console.log(parseFloat(vlr+' tot'));-->
         $('#comanda_x').val($(this).val());
         $('#val_ini').val(vlr);
 
 
-//<!--        console.log(parseFloat(vlr)+' que vai mostrar');-->
+<!--        console.log(parseFloat(vlr)+' que vai mostrar');-->
 
         $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
 
 
-//<!--        fechar modais para abrir o de pagamento-->
+<!--        fechar modais para abrir o de pagamento-->
 
 
         fechaele('comanda_cli'+nome);
@@ -221,13 +231,13 @@
         let pedidu=[];
 
 
-//<!--        EESA VARIAVEL armazena_ped AINDA NAO EXISTE -->
+<!--        EESA VARIAVEL armazena_ped AINDA NAO EXISTE -->
         for (i = 0; i < armazena_ped.length; i++) {
             pedidu[i]= armazena_ped[i][1] ;
 
         }
-//<!--        console.log(' pedido pae');-->
-//<!--        console.log(pedidu);-->
+<!--        console.log(' pedido pae');-->
+<!--        console.log(pedidu);-->
 
         let vall = $('#valou').val();
 
@@ -260,7 +270,7 @@
                     },
                 success: function (response) {
 
-//<!--                        $("#set_pg_top").click();-->
+<!--                        $("#set_pg_top").click();-->
                     location.reload(false)
                 },
                 error: function (response) {
@@ -278,7 +288,7 @@
 
 
         $("#can_ped").val(com_x);
-//<!--        console.log($("#can_ped").val());-->
+<!--        console.log($("#can_ped").val());-->
 
     });
 
@@ -295,16 +305,16 @@
         var numero = parseFloat(valor);
         document.getElementById('valori').value = numero;
 
-//<!--        console.log( $('#val_ini').val() +'  val_ini');-->
+<!--        console.log( $('#val_ini').val() +'  val_ini');-->
 
         var tot = parseFloat($('#val_ini').val());
 
         var div = $('#divisor_tot').val();
         tot = tot/div;
 
-//<!--        $('.22').removeClass("bg-secondary");-->
-//<!--        $('.33').addClass("bg-secondary");-->
-//<!--        $('#valou').prop('disabled', true);-->
+<!--        $('.22').removeClass("bg-secondary");-->
+<!--        $('.33').addClass("bg-secondary");-->
+<!--        $('#valou').prop('disabled', true);-->
 
         $('#valou').val(parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
         $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
@@ -345,7 +355,7 @@
             val = val.replace(-3, ',');
         };
 
-//<!--        console.log(val);-->
+<!--        console.log(val);-->
 
         $('#divisor_tot').val(1);
 
@@ -389,7 +399,7 @@
         $(""+v+"").modal().toggle();
         if(md == 'comandas'){
 
-//<!--            location.reload(false);-->
+<!--            location.reload(false);-->
         }
 
     }
@@ -456,9 +466,9 @@
 
                                     <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
                                         <div class="carousel-inner">
-    //<!--                                    {{choices}}-->
+    <!--                                    {{choices}}-->
                                         {% for choice in choices  %}
-//<!--                                              {{choice}}-->
+<!--                                              {{choice}}-->
                                            <div {% if choice == pedido.get_status_display and choice != 'Cancelado' %} class="carousel-item active" {%else%}  class="carousel-item"{% endif %} >
                                             <div class="d-block status_pedido" >{{ choice }}</div>
                                             </div>
@@ -517,7 +527,7 @@
     </header>
 
 
-//<!--                        realizar agamento-->
+<!--                        realizar agamento-->
             <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
                             <div class="modal-dialog modal-lg " role="document">
                                 <div class="modal-content bg-alert">
@@ -610,7 +620,7 @@
                         </div>
 
 
-//<!--                            modal cancelar pedido-->
+<!--                            modal cancelar pedido-->
             <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
                 <div class="modal-dialog modal-dialog-centered" role="document" >
 
@@ -637,7 +647,7 @@
             </div>
 
 
-//<!--                 #modal das coomandas           -->
+<!--                 #modal das coomandas           -->
             <div class="modal fade mr-2 pr-3" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
                 <div class="modal-content  w-80 mx-3">
 
@@ -671,7 +681,7 @@
 
 
 
-//<!--                                                    -=-=-=-=-=-=-=-=-=-&#45;&#45;=-=-=&#45;&#45;=-=-=-=-=-=-===-=-->
+<!--                                                    -=-=-=-=-=-=-=-=-=-&#45;&#45;=-=-=&#45;&#45;=-=-=-=-=-=-===-=-->
                                 {% endif %}
                             {% empty %}
                                 <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
@@ -683,7 +693,7 @@
                         </div>
 
                         <div class="modal-footer">
-//<!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
+<!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
                             <button class="btn btn-danger cancel" type="button" onclick="fechaele('rld')" data-target="comandas" data-dismiss="modal" >Sair</button>
                         </div>
                     </form>
@@ -691,7 +701,7 @@
         </div>
 
 
-//<!--                          modal  pedidos da comanda-->
+<!--                          modal  pedidos da comanda-->
             {% for com in comandas %}
                 {% if com.status == 'A' %}
 
@@ -720,11 +730,11 @@
                                 </h6>
 
                                 {% for ped in pedidos %}
-//<!--                                                                            {{ ped.comandaref.id }}-->
-//<!--                                                                            {{ com.id }}-->
+<!--                                                                            {{ ped.comandaref.id }}-->
+<!--                                                                            {{ com.id }}-->
                                     {% if ped.comandaref.id == com.id and com.status == 'A' %}
 
-//<!--                                                                                    condicao para cliente-->
+<!--                                                                                    condicao para cliente-->
                                         {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                         <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
@@ -746,7 +756,7 @@
 
 
                                         </div>
-//<!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
+<!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
 
                                         <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
                                     {%endif%}

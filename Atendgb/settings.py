@@ -88,18 +88,18 @@ ASGI_APPLICATION  = 'Atendgb.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         ### Method 1: Via redis lab
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #     "hosts": [
-        #       'redis://h:<password>;@<redis Endpoint>:<port>'
-        #     ],
-        # },
-
-        ### Method 2: Via local Redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-             "hosts": [('redis', 6379),('127.0.0.1', 6379)],
+            "hosts": [
+              'redis://h:JgnO7QjePRVCxKxdqoR713Nlu49VNKMy@redis-13847.c1.us-central1-2.gce.cloud.redislabs.com:13847'
+            ],
         },
+
+        ### Method 2: Via local Redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #      "hosts": [('redis', 6379),('127.0.0.1', 6379)],
+        # },
 
         ### Method 3: Via In-memory channel layer
         ## Using this method.

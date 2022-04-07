@@ -3,24 +3,28 @@ import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from pprint import pprint
 from . import models, forms
-
+from asgiref.sync import async_to_sync
 
 class StateConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        pprint(self.scope['url_route'])
-        pprint(self.scope['url_route']['kwargs'])
-        pprint(self.scope['url_route']['kwargs']['loja'])
+
+        # pprint(self.scope['url_route']['kwargs'])
+        # pprint(self.scope['url_route']['kwargs']['loja'])
 
         self.room_name = self.scope['url_route']['kwargs']['loja']
-        self.room_group_name = 'channel_%s' % self.room_name
+        self.room_group_name = 'loja_%s' % self.room_name
+        # pprint(self.room_group_name)
 
+        # pprint(self.room_name)
+        # pprint(self.channel_name)
         # Join room group de pedidos
         await self.channel_layer.group_add(
-            self.room_group_name,
+            self.room_name,
             self.channel_name
         )
+        # print("Dentro")
         await self.accept()
-        print("Dentro")
+
 
     async def disconnect(self, close_code):
         print("Disconnected")
