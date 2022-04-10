@@ -10,27 +10,8 @@
        $(document).on("click",".close-filho",function() {
             $(this).parents().find('.mod-filho').modal('hide');
        });
-    $(document).ready(function(){
 
-
-        <!--FUNCOES WEB SOCKET-->
-            const loja = JSON.parse(document.getElementById('loja').textContent);
-
-            const chatSocket = new WebSocket(
-                'ws://'
-                + window.location.host
-                + '/ws/stt/'
-                + loja
-                + '/'
-            );
-
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                color_bg(data.stat, data.id);
-            };
-
-            chatSocket.onclose = function(e) {
-            };
+$(document).ready(function(){
 
             $('.card-body').each(function(data){
 
@@ -43,7 +24,15 @@
                 color_bg(stat, id);
             });
 
-    });
+
+
+
+
+<!--alert(SttSocek);-->
+
+});
+
+
 
      function color_bg(stat, id){
 
@@ -58,19 +47,34 @@
                 id = 'bodybg'+2;
             }
         }
-        switch (stat) {
-            case "Pedido realizado":
 
+        switch (stat) {
+            case "Pedido realizado" :
                 $('#'+id).css('background-color','#D8FBDA');
             break;
-            case "Fazendo":
+            case  "P":
+                $('#'+id).css('background-color','#D8FBDA');
+            break;
+            case "Fazendo" :
                 $('#'+id).css('background-color','#F4FA8A');
             break;
-            case "Saiu para entrega":
+            case  "F":
+                $('#'+id).css('background-color','#F4FA8A');
+            break;
+            case "S":
 
                 $('#'+id).css('background-color','#ADDCF6');
             break;
-            case "Foi entregue":
+            case "Saiu para entrega" :
+
+                $('#'+id).css('background-color','#ADDCF6');
+            break;
+            case  "E":
+
+                $('#'+id).css('background-color','#B1FBAE ');
+
+            break;
+            case "Foi entregue" :
 
                 $('#'+id).css('background-color','#B1FBAE ');
 
@@ -81,84 +85,6 @@
         };
 
     };
-
-    $(document).on('click', '.cp',function(){
-    
-        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
-        let st='';
-        switch (stat) {
-            case "Pedido realizado":
-                st = "P";
-            break;
-            case "Fazendo":
-                st = "F";
-            break;
-            case "Saiu para entrega":
-                st = "S";
-            break;
-            case "Foi entregue":
-                st = "E";
-            break;
-            case "Cancelado":
-                st = "P";
-            break;
-            default: st = "P";
-        };
-        let id = $(this).parent().find('.cp').attr('data-idped');
-
-        let csrf = $("input[name=csrfmiddlewaretoken]").val();
-
-
-
-            chatSocket.send(JSON.stringify({
-                'stats' :st, 'idstat': id
-            }));
-
-
-    });
-
-    $(document).on('click', '.cn',function(){
-
-        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
-        let st='';
-        console.log('soustatsss 1', stat);
-        switch (stat) {
-            case "Pedido realizado":
-                st = "P";
-            break;
-            case "Fazendo":
-                st = "F";
-            break;
-            case "Saiu para entrega":
-                st = "S";
-
-            break;
-            case "Foi entregue":
-                st = "E";
-
-            break;
-            case "Cancelado":
-                st = "E";
-            break;
-
-            default: st = "P";
-        };
-        let id = $(this).parent().find('.cn').attr('data-idped');
-
-        let csrf = $("input[name=csrfmiddlewaretoken]").val();
-
-        chatSocket.send(JSON.stringify({
-            'stats' :st, 'idstat': id
-        }));
-
-
-
-
-
-
-
-
-    });
 
 
 
@@ -418,7 +344,7 @@
             </div>
         {% endfor %}
 
-            {{ loja|json_script:"loja" }}
+        <input type="hidden" class="lojaz" id="lojaz" value="{{loja}}">
             <div class="row bg-white">
                 <div class="col d-flex justify-content-center">
                     <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>
@@ -486,7 +412,7 @@
                                           </a>
 
 
-                                          <a class="carousel-control-next cn" href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="next">
+                                          <a class="carousel-control-next cn"  href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="next">
                                             {% if choice != 'Foi Entregue' %}
                                               <i class="arrow-alt-circle-right bg-dark" ></i>
                                               <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
@@ -780,5 +706,103 @@
 
             {% endif %}
         {% endfor %}
+
+    <script>
+    $(document).on('click', '.cp',function(){
+
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
+        let st='';
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+            break;
+            case "Foi entregue":
+                st = "E";
+            break;
+            case "Cancelado":
+                st = "P";
+            break;
+            default: st = "P";
+        };
+        let id = $(this).parent().find('.cp').attr('data-idped');
+
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+
+
+            SttSocek.send(JSON.stringify({
+                'stats' :st, 'idstat': id
+            }));
+
+
+    });
+
+    $(document).on('click', '.cn',function(){
+
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
+        let st='';
+        console.log('soustatsss 1', stat);
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+
+            break;
+            case "Foi entregue":
+                st = "E";
+
+            break;
+            case "Cancelado":
+                st = "E";
+            break;
+
+            default: st = "P";
+        };
+        let id = $(this).parent().find('.cn').attr('data-idped');
+
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+        SttSocek.send(JSON.stringify({
+            'stats' :st, 'idstat': id
+        }));
+
+
+    });
+
+
+
+            <!--FUNCOES WEB SOCKET-->
+            const loja = $('.lojaz').val();
+            <!--alert(loja);-->
+            SttSocek = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/stt/'
+                + loja
+                + '/'
+            );
+
+            SttSocek.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                color_bg(data.stat, data.id);
+            };
+
+            SttSocek.onclose = function(e) {
+            };
+
+
+
+    </script>
 {% endblock %}
 </html>

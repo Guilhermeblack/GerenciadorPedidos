@@ -1,11 +1,19 @@
 import json
 # noinspection PyUnresolvedReferences
+from os import stat
+
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from pprint import pprint
 from . import models, forms
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
+from channels.db import database_sync_to_async
+
+
 
 class StateConsumer(AsyncJsonWebsocketConsumer):
+
+
+
     async def connect(self):
 
         # pprint(self.scope['url_route']['kwargs'])
@@ -30,39 +38,63 @@ class StateConsumer(AsyncJsonWebsocketConsumer):
         print("Disconnected")
         # Leave room group
         await self.channel_layer.group_discard(
-            self.room_group_name,
+            self.room_name,
             self.channel_name
         )
 
-    async def receive(self, data):
+    async def receive(self, text_data):
         """
         Receive message from WebSocket.
         Get the event and send the appropriate event
         """
-        response = json.loads(data)
-        stt = response.post("stats", None)
-        ped = response.post("idstat", None)
+        response = json.loads(text_data)
+        # pprint(response)
+        # dir(response)
+        stt = response['stats']
+        ped = response['idstat']
 
         statusatualizado=''
-        if ped :
+        # if ped :
             # enviar para o feed o status do pedido atualizado
-            # print(request.POST)
-            pedid = models.Pedido.objects.get(pk=ped)
-            # pprint(ped)
-            pedid.status = stt
-            p = pedid.save(commit=False)
-            await self.channel_layer.group_send(self.room_group_name, {
-                'type':'send_message',
-                'id': ped,
-                'stat': stt,
-            })
+
+            # await sync_to_async(models.Pedido.objects.filter(pk=ped).update(status=stt), thread_sensitive=True)
+            #
+            # print('chaiii')
+            # p = att_ped(response)
+        # print('foiaqanttt')
+        await att_ped(response)
+        await self.channel_layer.group_send(self.room_name, {
+            'type':'send_message',
+
+            'id': ped,
+            'stat': stt,
+
+        })
 
 
 
     async def send_message(self, res):
         # Send message to WebSocket
+
+        # print('passaaqq')
         await self.send(text_data=json.dumps({
             'id':res['id'],
             "stat": res["stat"],
         }))
 
+@database_sync_to_async
+def att_ped( dt):
+
+
+    # pprint(response)
+    # dir(response)
+    stt = dt['stats']
+    ped = dt['idstat']
+
+    ret_alt_status = models.Pedido.objects.get(pk=ped)
+    ret_alt_status.status = stt
+    ree = ret_alt_status.save()
+
+
+    # print('ree')
+    return ree
