@@ -91,7 +91,7 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [
-              'redis://h:JgnO7QjePRVCxKxdqoR713Nlu49VNKMy@redis-13847.c1.us-central1-2.gce.cloud.redislabs.com:13847'
+              'redis://:JgnO7QjePRVCxKxdqoR713Nlu49VNKMy@redis-13847.c1.us-central1-2.gce.cloud.redislabs.com:13847'
             ],
         },
 
