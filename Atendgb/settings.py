@@ -84,16 +84,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Atendgb.wsgi.application'
 ASGI_APPLICATION  = 'Atendgb.asgi.application'
 
+REDIS_URL = 'redis://:p4cf501224a59e14454c4c145aeaa0899267342c2a07e699100015ad2684b2a12@ec2-52-203-135-103.compute-1.amazonaws.com:29039'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 CHANNEL_LAYERS = {
     'default': {
         ### Method 1: Via redis lab
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [
-              'redis://:JgnO7QjePRVCxKxdqoR713Nlu49VNKMy@redis-13847.c1.us-central1-2.gce.cloud.redislabs.com:13847'
-            ],
-        },
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [
+        #       'redis://:JgnO7QjePRVCxKxdqoR713Nlu49VNKMy@redis-13847.c1.us-central1-2.gce.cloud.redislabs.com:13847'
+        #
+        #     ],
+        # },
 
         ### Method 2: Via local Redis
         # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -175,17 +187,17 @@ USE_TZ = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'bab77316bbc476dfcf73dd0f6fdc4c6f9a9f569a79237e82ad99e5fddeb73bf5',
-        'HOST': 'localhost',
+        'NAME': 'd8aa7cgop6qt0i',
+        'USER': 'hezvwzayygpuor',
+        'PASSWORD': '800bd5a88f41d5a5266e22316667b536b22153f19c7dce9fdeb3bf7645393d34',
+        'HOST': 'ec2-44-207-30-235.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
 
 import dj_database_url
-DATABASES['default'] = dj_database_url.config(default='postgres://cthnqrzlzcfwki:bab77316bbc476dfcf73dd0f6fdc4c6f9a9f569a79237e82ad99e5fddeb73bf5@ec2-3-228-114-251.compute-1.amazonaws.com:5432/ddq9lfm8i99u0d')
-# DATABASES['default'] = dj_database_url.config()
+DATABASES['default'] = dj_database_url.config(default='postgres://hezvwzayygpuor:800bd5a88f41d5a5266e22316667b536b22153f19c7dce9fdeb3bf7645393d34@ec2-44-207-30-235.compute-1.amazonaws.com:5432/d8aa7cgop6qt0i')
+DATABASES['default'] = dj_database_url.config()
 
 # essa linha
 # DATABASES['default'] = dj_database_url.config()
