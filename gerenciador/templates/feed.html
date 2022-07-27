@@ -1,0 +1,808 @@
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+{% load cloudinary %}
+
+    <script type="text/javascript">
+
+
+        const armazena_ped = [];
+       $(document).on("click",".close-filho",function() {
+            $(this).parents().find('.mod-filho').modal('hide');
+       });
+
+$(document).ready(function(){
+
+            $('.card-body').each(function(data){
+
+
+
+                let stat = $(this).siblings().find('.active').text().trim();
+
+                let id = $(this).siblings().find('.cp').attr('data-idped');
+<!--                console.log(id, ' ijdsidjsijdisjdijsds  ');-->
+                color_bg(stat, id);
+            });
+
+
+
+
+
+<!--alert(SttSocek);-->
+
+});
+
+
+
+     function color_bg(stat, id){
+
+
+        if(id){
+
+            if( id[0] != 'b' && id){
+
+                id = 'bodybg'+id;
+                console.log('nodale #'+id);
+            }else{
+                id = 'bodybg'+2;
+            }
+        }
+
+        switch (stat) {
+            case "Pedido realizado" :
+                $('#'+id).css('background-color','#D8FBDA');
+            break;
+            case  "P":
+                $('#'+id).css('background-color','#D8FBDA');
+            break;
+            case "Fazendo" :
+                $('#'+id).css('background-color','#F4FA8A');
+            break;
+            case  "F":
+                $('#'+id).css('background-color','#F4FA8A');
+            break;
+            case "S":
+
+                $('#'+id).css('background-color','#ADDCF6');
+            break;
+            case "Saiu para entrega" :
+
+                $('#'+id).css('background-color','#ADDCF6');
+            break;
+            case  "E":
+
+                $('#'+id).css('background-color','#B1FBAE ');
+
+            break;
+            case "Foi entregue" :
+
+                $('#'+id).css('background-color','#B1FBAE ');
+
+            break;
+
+            default:
+                $('#'+id).css("background-color", "");
+        };
+
+    };
+
+
+
+
+    $(document).on('click', '.x_c',function(){
+
+
+<!--        pegar todos os valores dos campos selecionados-->
+        var ped;
+        var vainfo=0;
+        let nome = $(this).val();
+        let olc=0;
+        $('.selec').each(function(){
+
+<!--            if verifica se ja tem o item, se esta selecionado e se nao é cancelado-->
+            if( !armazena_ped.includes($(this).val() ) && $(this).prop("checked") && $(this).parent('div').first('.stt').text() != "C" && $(this).attr('name') == nome ){
+<!--                console.log($(this).parent('div').siblings('.prec').text()+'  <<< prec');-->
+<!--                console.log($(this).parent('div').siblings('.qnt').text()+'  <<< qnt');-->
+                olc = $(this).parent('div').siblings('.prec').text();
+                console.log(olc+'taindo');
+                olc = parseFloat( olc.replace(/[^0-9,]*/g, '').replace(',', '.') ).toFixed(2);
+<!--                console.log(parseFloat(olc)+' jafoi');-->
+
+                if ( $(this).parent('div').siblings('.qnt').text() != null ){
+
+                    armazena_ped.push( [parseFloat(olc), $(this).val()] );
+
+                }
+
+            };
+        });
+
+<!--        console.log(' nudale peds',armazena_ped);-->
+
+
+
+        let vlr = 0;
+        let prod = [];
+
+        for (i = 0; i < armazena_ped.length; i++) {
+          vlr += armazena_ped[i][0];
+
+
+        }
+
+<!--        console.log(parseFloat(vlr+' tot'));-->
+        $('#comanda_x').val($(this).val());
+        $('#val_ini').val(vlr);
+
+
+<!--        console.log(parseFloat(vlr)+' que vai mostrar');-->
+
+        $('#cli_com').text( parseFloat(vlr).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+        $('#valou').val( parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+
+
+<!--        fechar modais para abrir o de pagamento-->
+
+
+        fechaele('comanda_cli'+nome);
+        fechaele('comandas');
+        $('#comanda_x').val();
+        $('#x_comanda').modal('show');
+
+
+    });
+
+    $(document).on('click','#comanda_fecha', function(){
+
+        let pedidu=[];
+
+
+<!--        EESA VARIAVEL armazena_ped AINDA NAO EXISTE -->
+        for (i = 0; i < armazena_ped.length; i++) {
+            pedidu[i]= armazena_ped[i][1] ;
+
+        }
+<!--        console.log(' pedido pae');-->
+<!--        console.log(pedidu);-->
+
+        let vall = $('#valou').val();
+
+        if (vall.includes("R$")){
+            vall= parseFloat(vall.replace(/[^0-9,]*/g, '').replace(',', '.')).toFixed(2);
+
+        };
+
+        if (vall ==  0){
+
+            vall = $('#cli_com').text();
+            vall= parseFloat(vall.replace(/[^0-9,]*/g, '').replace(',', '.')).toFixed(2);
+
+        };
+
+         let com = $('#comanda_x').val();
+
+        let fpag = $('#fpg').filter(":checked").val();
+        let csrf = $(this).parent().siblings().children('#tkn').find("input[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                headers: { "X-CSRFToken": csrf },
+                type: 'POST',
+                url: "{% url 'feed' %}",
+                data: {
+                    'comanda_x' :com,
+                    'valo':vall,
+                    'pedi':pedidu,
+                    'fpag':fpag
+                    },
+                success: function (response) {
+
+<!--                        $("#set_pg_top").click();-->
+                    location.reload(false)
+                },
+                error: function (response) {
+                }
+            });
+
+
+    });
+
+    $(document).on('click','.cancela_ped', function(){
+
+        $('#modal_cancelapedido').find('#cancela').val($('#idped').text());
+        $('#modal_cancelapedido').modal('show');
+        let com_x = $(this).parents('.ped_').first().find('.idped').text();
+
+
+        $("#can_ped").val(com_x);
+<!--        console.log($("#can_ped").val());-->
+
+    });
+
+
+
+    $(document).on('click','.c_cli', function(){
+
+        armazena_ped.length = 0;
+
+    });
+
+    function converter(valor){
+
+        var numero = parseFloat(valor);
+        document.getElementById('valori').value = numero;
+
+<!--        console.log( $('#val_ini').val() +'  val_ini');-->
+
+        var tot = parseFloat($('#val_ini').val());
+
+        var div = $('#divisor_tot').val();
+        tot = tot/div;
+
+<!--        $('.22').removeClass("bg-secondary");-->
+<!--        $('.33').addClass("bg-secondary");-->
+<!--        $('#valou').prop('disabled', true);-->
+
+        $('#valou').val(parseFloat(00).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+        $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
+    }
+
+    function converter2(valor){
+
+        let vvval = $('#valou').val();
+
+        if (vvval.includes("R$")){
+            vvval = vvval.replace("R$", '');
+        };
+        if (vvval.substr(-3) == '.'){
+            vvval = vvval.replace(-3, ',');
+        };
+
+        var tot = parseFloat($('#val_ini').val());
+
+        tot = tot- vvval
+
+
+        $('#divisor_tot').val(1);
+        $('#valori').val(1);
+
+        $('#valou').val( parseFloat(vvval).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+        $('#cli_com').text( parseFloat(tot).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
+    };
+
+    function pagtot(){
+        let val = $('#val_ini').val();
+
+        if (val.includes("R$")){
+            val = val.replace("R$", '');
+        };
+        if (val.substr(-3) == '.'){
+            val = val.replace(-3, ',');
+        };
+
+<!--        console.log(val);-->
+
+        $('#divisor_tot').val(1);
+
+        $('#valori').val(1);
+
+
+
+        $('#valou').val( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }) );
+        $('#cli_com').text( parseFloat(val).toLocaleString('pt-BR',{ style: 'currency', currency: 'BRL' }));
+
+
+    };
+
+    $(document).on('click','#prodd', function(e){
+        var marcar = e.target.checked;
+        var lista = document.querySelectorAll(".selec");
+        for ( var i = 0 ; i < lista.length ; i++ ){
+            lista[i].checked = marcar;
+        };
+    });
+
+    $('#comandas').click(function(){
+        $(this).modal('hide');
+    });
+    $(document).on('hide','.mod-filho', function(){
+        console.log(' pego o modal filho');
+        $('.mod-filho').modal('hide');
+    });
+    $('.mod-filho').click(function(){
+        $(this).modal('hide');
+        $('#comandas').modal('hide');
+    });
+
+    function fechaele(md){
+        console.log('#'+md);
+        if(md == "rld"){
+                    location.reload(false);
+        }
+        let v = '#'+md;
+
+        $(""+v+"").modal().toggle();
+        if(md == 'comandas'){
+
+<!--            location.reload(false);-->
+        }
+
+    }
+
+    </script>
+
+
+
+    <header class="text-center justify-content-around  masthead text-white" style="background-color: rgb(255,255,255);margin: 5px;padding-bottom: 14px;">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <input type="hidden" class="lojaz" id="lojaz" value="{{loja}}">
+            <div class="row bg-white">
+                <div class="col d-flex justify-content-center">
+                    <h1 class="text-primary" style="width:90%; margin-bottom:35px;">FEED</h1>
+                </div>
+
+                <div class="col justify-content-lg-center">
+                    {% if user.is_authenticated and perms.gerenciador.fechar_comanda  %}
+                        <button class="btn btn-primary btn-md-auto align-content-center btn-rounded hover" style="max-height:40%; padding-bottom:7%; margin-bottom:23px; margin-right:28px;align-content:right" data-toggle="modal" data-target="#comandas"><i class="icon ion-clipboard mr-2"></i><b><span>Comandas</span></b> </button>
+
+
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            {% for pedido in pedidos|dictsort:"data" %}
+
+                {% if pedido.status != "C" and pedido.comandaref.status != 'F' %}
+                    <div class="row mb-3 ped_" id="vamofi">
+                        <div class="col mb-2">
+
+                            <div class="card  border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">{{pedido.id}} - {{pedido.comandaref}}
+                                        {% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}<button type="button" class="close cancela_ped" data-target="modal" aria-label="Close"><span
+                                                aria-hidden="true">×</span></button>{% endif %}
+                                    </h5>
+
+                                </div>
+                                <div class="card-body container" id="bodybg{{pedido.id}}"><b>
+                                    {% for ped in pedido.produtosPed.all %}
+                                        <p class="card-text">{{ped.nome}} </p>
+                                        <img class="card-img  pb-5" style="width: 15rem; " src="{{ped.img_prod.url}}" alt="">
+                                    {%endfor%}
+
+                                    <hr>
+                                    <p class="card-text">{{pedido.quantidade}}</p>
+                                    <p class="card-text">{{pedido.observacao}}</p>
+                                </b></div>
+                                <hr>
+                                {% csrf_token %}
+                                <div id="idped" class="idped" style="display: none;">{{pedido.id}}</div>
+                                <div class="pb-2 bg-light mb-3">
+
+                                    <div id="carousel{{pedido.id}}" class="carousel slide" data-interval="false" data-ride="carousel">
+                                        <div class="carousel-inner">
+    <!--                                    {{choices}}-->
+                                        {% for choice in choices  %}
+<!--                                              {{choice}}-->
+                                           <div {% if choice == pedido.get_status_display and choice != 'Cancelado' %} class="carousel-item active" {%else%}  class="carousel-item"{% endif %} >
+                                            <div class="d-block status_pedido" >{{ choice }}</div>
+                                            </div>
+
+
+
+                                        {% endfor %}
+
+                                        </div>
+
+                                          <a class="carousel-control-prev cp" href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="prev">
+                                            {% if choice != 'Pedido realizado' %}<div><i class="caret-left-square-fill dark" ></i></div>
+                                              <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                            {% endif %}
+                                          </a>
+
+
+                                          <a class="carousel-control-next cn"  href="#carousel{{pedido.id}}" role="button" data-idped="{{pedido.id}}" data-slide="next">
+                                            {% if choice != 'Foi Entregue' %}
+                                              <i class="arrow-alt-circle-right bg-dark" ></i>
+                                              <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                            {%endif%}
+                                          </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                     <div class="row mb-3" >
+                         <div class="col mb-2">
+                             {{' Comandas já finalizadas ou pedidos entregue'}}
+                             {{' Aguarde os próximos pedidos '}}
+                         </div>
+                     </div>
+                {%endif%}
+            {% empty %}
+                    <div class="row mb-3 ">
+                        <div class="col mb-2">
+                            <div class="card border border-secondary rounded-top" style="color: rgb(33,37,41);">
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                <div class='text-align-center '>
+                                        <div class='text-align-center'><strong><p><h2>
+                                            {{ 'Não existem pedidos no momento !'}}
+
+                                        </h2></p></strong></div>
+                                </div>
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                            </div>
+                        </div>
+                    </div>
+
+            {% endfor %}
+
+    </header>
+
+
+<!--                        realizar agamento-->
+            <div class="modal fade mod-filho" role="dialog" tabindex="-1" id="x_comanda" style="color: rgb(33,37,41);">
+                            <div class="modal-dialog modal-lg " role="document">
+                                <div class="modal-content bg-alert">
+
+                                    <div class="modal-header"> <strong><h4 class="text-align-center ">ENCERRAR COMANDA </h4></strong>
+                                        <button type="button" onclick="fechaele('x_comanda')" class="close close-filho" data-target="modal" aria-label="Close"><span
+                                            aria-hidden="true" aria-label="Close">×</span></button>
+                                    </div>
+                                    <div class="modal-body"  class="d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-center">
+                                            <h2 style="width:70%" class="d-flex justify-content-center">
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+                                                    <label for="cli_com"> Total: </label>
+                                                    <h2 style="text-transform:uppercase"><p id="cli_com"></p></h2>
+                                                </div>
+                                            </h2>
+                                            </h2>
+                                        </div>
+                                        <div class="row justify-content-center">
+
+                                            <h2 style="width:70%" class="d-flex justify-content-center 22"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+                                                    <label for="valori"><h4> Dividir em: </h4></label>
+                                                    <input type="range" id="divisor_tot" class="form-control p-2 justify-content-center" min="1" max="12" value="1" step="1" id="dis_pag" oninput="converter(this.value)" >
+                                                    <input type="hidden" class="form-control p-2 justify-content-center" name="val_ini" id="val_ini">
+                                                    <input type="text" class="form-control p-2 justify-content-center disabled" name="valori"  value="1" id="valori">
+                                                </div>
+                                            </b></h2>
+                                            <h2 style="width:70%" class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight ">
+                                                    <label > OU </label>
+                                                </div>
+                                            </b></h2>
+                                            <b>
+                                            <h2  class="d-flex justify-content-center 33" ><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+
+                                                    <label><h4> Pagar a Quantidade: </h4></label>
+                                                    <row class="d-flex p-3 ">
+                                                        <input id="valou" class="form-control ml-3 p-2 justify-content-center" name="valou" onblur="converter2(this.value)" >
+                                                        <button type="button" id="pag_tot" onclick="pagtot()" style="width:33%" aria-pressed="false" class="btn btn-primary form-control p-2 mx-3 justify-content-end" > pagar total</button>
+                                                    </row>
+
+                                                </div>
+                                            </b></h2>
+                                            <h2 class="d-flex justify-content-center bg-secondary text-white text-xl-center"><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight ">
+                                                    <label for="valou"><h4> Forma de pagamento: </h4></label>
+                                                </div>
+                                            </b></h2>
+                                            <h2  class="d-flex justify-content-center 33" ><b>
+                                                <div class="form-group p-2 flex-fill bd-highlight">
+
+
+                                                    <row class="container p-3" name="formpg" id="formpg" >
+
+                                                        {% for pg in fpg %}
+                                                            <div class="form-check p-2 m-3">
+                                                                <input class="form-check-input" type="radio" {% if pg == Cartão %} selected {%endif%} value="{{pg}}" name="fpg{{pg}}" id="{{pg}}" >
+                                                                <label class="form-check-label" for="{{pg}}">
+                                                                    {{pg}}
+                                                                </label>
+                                                            </div>
+                                                        {%endfor%}
+
+                                                    </row>
+
+                                                </div>
+                                            </b></h2>
+                                            <span><u><i>
+                                                O valor restante ira ser abatido dos itens selecionados e retornará ao total da comanda
+                                            </i></u></span>
+
+                                            </b>
+                                        </div>
+                                        <div id="tkn">
+                                        <input type="hidden" id="comanda_x" disabled >
+                                        {%csrf_token%}
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-success btn-lg btn-block" type="button" id="comanda_fecha"> Pagar !</button>
+                                        <button class="btn btn-danger btn-lg cancel" onclick="fechaele('rld')" type="button" data-dismiss="modal" > Não pagar !</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+<!--                            modal cancelar pedido-->
+            <div class="modal fade bg-danger text-danger" role="dialog" tabindex="-1" id="modal_cancelapedido">
+                <div class="modal-dialog modal-dialog-centered" role="document" >
+
+                    <div class="modal-content bg-light">
+                        <div class="modal-header">
+                            <h4 class="modal-title text-light">Cancelar Pedido</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body text-sucess">
+                            <p>
+                            <h2><b>Deseja mesmo cancelar este pedido ?</b></h2>
+                            </p>
+                            <form name="exc_ped" class="post-form" method="post" action="{% url 'feed' %}">
+                                <input class="hidden can_ped" name="exc_ped" hidden id="can_ped">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" id="confirm_cancel">Confirmar</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer"><button id='cancel' class="btn btn-lg border btn-danger" type="button" data-dismiss="modal" onclick="naocencela()">Não cancelar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+<!--                 #modal das coomandas           -->
+            <div class="modal fade mr-2 pr-3" role="document" tabindex="-1" id="comandas" style="color: rgb(33,37,41);">
+                <div class="modal-content  w-80 mx-3">
+
+                    <div class="modal-header"> <strong><h4 class="text-align-center ">COMANDAS </h4></strong>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fechaele('comandas')" data-target="comandas" aria-label="Close"><span
+                               class="close" data-dismiss="modal" aria-hidden="true"> ×</span></button>
+                    </div>
+                    <form method="post" name="comandas">
+                        <div class="modal-body">
+                            <h6 class="modal-title">
+                                <div class="row align-items-center">
+                                    <div class='col text-align-left font-weight-bold'>{{ 'Nº Mesa' }}</div>
+                                    <div class='col text-align-center font-weight-bold'>{{ 'Nome Cliente' }}</div>
+                                    <div class='col text-align-center font-weight-bold'>{{ 'Total Comanda' }}</div>
+                                </div>
+                            </h6>
+
+                            {% for com in comandas %}
+                                {% if com.status == 'A' %}
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <div class='row text-align-center pb-1 hover c_cli' data-toggle="modal" data-target="#comanda_cli{{com.id}}" style="cursor: pointer;">
+
+
+                                        <div class='col text-align-left'>{{ com.n_mesa }}</div>
+                                        <div class='col text-align-center'>{{ com.nome }}</div>
+                                        <div class='col text-align-right' id="vlr_comanda">R$ {{ com.valor }}</div>
+                                    </div>
+
+
+
+
+
+<!--                                                    -=-=-=-=-=-=-=-=-=-&#45;&#45;=-=-=&#45;&#45;=-=-=-=-=-=-===-=-->
+                                {% endif %}
+                            {% empty %}
+                                <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                <div class='row text-align-center pb-1 hover' style="cursor: pointer;">
+                                        <div class='col text-align-left'><strong> Não Existem Clientes !</strong></div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="modal-footer">
+<!--                                                <button class="btn btn-success btn-lg btn-block" type="submit" >Abrir comanda</button>-->
+                            <button class="btn btn-danger cancel" type="button" onclick="fechaele('rld')" data-target="comandas" data-dismiss="modal" >Sair</button>
+                        </div>
+                    </form>
+                </div>
+        </div>
+
+
+<!--                          modal  pedidos da comanda-->
+            {% for com in comandas %}
+                {% if com.status == 'A' %}
+
+
+                <div class="modal fade justify-content-center pr-3 mod-filho" role="document" tabindex="-1" id="comanda_cli{{com.id}}" style="color: rgb(33,37,41);">
+
+                    <div class="modal-content w-80 mr-2 mx-3">
+
+                        <div class="modal-header"> <strong><h4 class="text-align-center ">PEDIDOS </h4></strong>
+                            <button type="button" class="close close-filho"  onclick="fechaele('comanda_cli{{com.id}}')" data-target="comanda_cli{{com.id}}" aria-label="Close"><span
+                                aria-hidden="true" aria-label="Close" >×</span></button>
+                        </div>
+                        <form method="post" name="comanda_cli">
+                            <div class="modal-body" id="pedidos_cli">
+                                <h6 class="modal-title">
+                                    <div class="row align-items-start">
+                                        <div class='col text-align-left font-weight-bold'>
+                                            <input type="checkbox" class="" name="prodd" id="prodd" >
+                                        </div>
+                                        <div class='col text-align-left font-weight-bold'>{{ 'Prd' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'qnt' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'Vlr' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'Stt' }}</div>
+                                        <div class='col text-align-center font-weight-bold'>{{ 'Pag' }}</div>
+                                    </div>
+                                </h6>
+
+                                {% for ped in pedidos %}
+<!--                                                                            {{ ped.comandaref.id }}-->
+<!--                                                                            {{ com.id }}-->
+                                    {% if ped.comandaref.id == com.id and com.status == 'A' %}
+
+<!--                                                                                    condicao para cliente-->
+                                        {% if user.groups.all.0.name != 'cliente' or com.nome == user.username %}
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div class='row text-align-center pb-1 hover' id="{{ped.id}}" style="cursor: pointer"; >
+                                            <div class='col text-align-center'>
+                                                {% if ped.status_pago != "P" %}
+                                                    <input type="checkbox" class="selec" name="{{com.id}}" id="prod_{{ped.id}}" value="{{ped.id}}">
+                                                {% endif %}
+                                            </div>
+                                            {% for prod in ped.produtosPed.all %}
+                                                    <div class='col text-align-left'>{{ prod.nome }}</div>
+                                            {% endfor %}
+                                            <div class='col text-align-center qnt'>{{ ped.quantidade }}</div>
+                                            <div class='col text-align-center prec' >R$ {{ ped.valor }}</div>
+
+                                            <div class='col text-align-right stt'>{{ ped.get_status_display }}</div>
+
+
+                                            <div class='col text-align-right stt_pgt'>{{ ped.get_status_pago_display }}</div>
+
+
+                                        </div>
+<!--                                                                                            {% if forloop.last %}</div>{% endif %}-->
+
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    {%endif%}
+                                    {%endif%}
+                                {% empty %}
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <div class='row text-align-center mt-8 hover' style="cursor: pointer;">
+                                            <div class='col text-align-center'><strong> Não pxistem pedidos para esta comanda !</strong></div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="modal-footer" >{% if perms.gerenciador.fechar_comanda or perms.gerenciador.abrir_comanda %}
+                                {% if com.status == "A" %}<button class="btn btn-info btn-lg btn-block x_c" type="button" id="_{{com.id}}" name="{{com.valor}}" value="{{com.id}}" >Pagar</button>{% endif %}
+                                {% endif %}<button class="btn btn-danger cancel close-filho" type="button" onclick="fechaele('rld')"  aria-label="Close" data-target="comanda_cli{{com.id}}"  >Sair</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            {% endif %}
+        {% endfor %}
+
+    <script>
+    $(document).on('click', '.cp',function(){
+
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
+        let st='';
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+            break;
+            case "Foi entregue":
+                st = "E";
+            break;
+            case "Cancelado":
+                st = "P";
+            break;
+            default: st = "P";
+        };
+        let id = $(this).parent().find('.cp').attr('data-idped');
+
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+
+
+            SttSocek.send(JSON.stringify({
+                'stats' :st, 'idstat': id
+            }));
+
+
+    });
+
+    $(document).on('click', '.cn',function(){
+
+        let stat = $(this).parent().find('.status_pedido').parent('.active').next().text().trim();
+        let st='';
+        console.log('soustatsss 1', stat);
+        switch (stat) {
+            case "Pedido realizado":
+                st = "P";
+            break;
+            case "Fazendo":
+                st = "F";
+            break;
+            case "Saiu para entrega":
+                st = "S";
+
+            break;
+            case "Foi entregue":
+                st = "E";
+
+            break;
+            case "Cancelado":
+                st = "E";
+            break;
+
+            default: st = "P";
+        };
+        let id = $(this).parent().find('.cn').attr('data-idped');
+
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+        SttSocek.send(JSON.stringify({
+            'stats' :st, 'idstat': id
+        }));
+
+
+    });
+
+
+
+            <!--FUNCOES WEB SOCKET-->
+            const loja = $('.lojaz').val();
+            <!--alert(loja);-->
+            SttSocek = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/stt/'
+                + loja
+                + '/'
+            );
+
+            SttSocek.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                color_bg(data.stat, data.id);
+            };
+
+            SttSocek.onclose = function(e) {
+            };
+
+
+
+    </script>
+{% endblock %}
+</html>
