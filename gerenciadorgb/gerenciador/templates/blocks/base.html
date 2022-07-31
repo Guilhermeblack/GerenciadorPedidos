@@ -1,0 +1,98 @@
+{% load pwa %}
+<head>
+    {% load static %}
+    {% progressive_web_app_meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Gerenciador de Pedidos</title>
+    <link  rel="shortcut icon"  type = "image/png"  href="{% static 'favicon/favicon.ico' %} " />
+
+<!--    <script type="text/javascript" src="{% static 'django_ajax/js/jquery.ajax.min.js' %}"></script>-->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Login-Form-Dark.css' %}">
+
+
+</head>
+
+<body id="page-top" >
+
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" >
+
+
+        setInterval(function() {
+            $('#msg').fadeOut('slow');
+        }, 2600);
+
+
+    </script>
+    <nav class="navbar navbar-light fixed-top bg-secondary text-uppercase" id="mainNav">
+        <div class="container-fluid"><a class="navbar-brand js-scroll-trigger" href="{% url 'index' %}" style="color: rgb(247,230,86);">G Black</a>
+            <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded"
+                    data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+                    style="background-color: rgb(255,255,253);"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'gbtech' %}">SOBRE A GBLACK</a></li>
+
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'sobre' %}">MANUAL</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'pedidos' %}">CARDAPIO</a>
+                    </li>
+                    {% if user.is_anonymous %}
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'loguin' %}">ENTRAR</a></li>
+
+                    {% elif user.is_authenticated %}
+                        {% if perms.gerenciador.iniciar_movimento %}
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'administrador' %}">Administração</a>
+                            </li>
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'loguin' %}">Cadastros</a>
+                            </li>
+
+
+                        {% endif %}
+
+
+                        {% if perms.gerenciador.ver_feed %}
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                    class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'feed' %}">FEED</a>
+                            </li>
+                        {%endif%}
+
+                        {% if perms.gerenciador.sou_cliente %}
+                            <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                                    class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'cliente' %}">COMANDA</a>
+                            </li>
+                        {%endif%}
+
+                        <li class="nav-item mx-0 mx-lg-1" role="presentation"><a
+                            class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">SAIR</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="container-fluid" style="height:auto">
+        <div class="row btn btn-md m-2 p-3 justify-content-center ">
+
+            <button type="button" name="botaovoltar" onclick="(window.history.back())" style="background-color: #fcea8b; color:#999966" class="btn "><strong>{{'VOLTAR'}}</strong></button>
+        </div>
+        {% block content %}
+        {% endblock %}
+
+    </section>
+    {% include "blocks/footer.html" %}
+
+
+</body>
+
+
+
