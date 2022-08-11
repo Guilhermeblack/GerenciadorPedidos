@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block content %}
+{% load cloudinary %}
+
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js" integrity="sha512-vSyPWqWsSHFHLnMSwxfmicOgfp0JuENoLwzbR+Hf5diwdYTJraf/m+EKrMb4ulTYmb/Ra75YmckeTQ4sHzg2hg==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+
+        var usrlog= $('#movimentar').val();
+        $(document).ready(function(){
+
+
+            var prtt = $('#id_tipo');
+            console.log(prtt);
+            prtt.children().each(function(){
+
+                if($(this).text() == "---------"){
+                    $(this).attr('disabled',true);
+                    $(this).attr('hidden','true');
+                }
+
+            });
+
+            $('#id_qnt_minima').css('width','15%');
+            $('#mov').change(function(){
+                $('#alt-mov').modal('show');
+
+            });
+
+            $('#confirm').click(function(){
+                var x='';
+                var cnt=0;
+                $(":checkbox").each(function () {
+                    if(cnt ==0){
+                        var ischecked = $(this).is(":checked");
+
+                        tkn = '{{ csrf_token }}';
+                        if (ischecked) {x =  "L";}else{x= "D";}
+
+                        $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                        type: 'POST',
+                        url: "{% url 'administrador' %}",
+                        data: {'movimento' :x},
+                        success: function (response) {
+
+                        },
+                        error: function (response) {
+                        }
+                        });
+                    }
+                    cnt++;
+                });
+            });
+
+            $('#cancel').click(function(){
+                location.reload();
+                $("#set_pg_top").click();
+
+
+            });
+
+            $('.close').click(function(){
+                location.reload();
+                $("#set_pg_top").click();
+            });
+
+
+        });
+
+        $(document).on('click','.del_prod', function(){
+
+            $('#x_pedido').val($(this.val()));
+
+
+        });
+
+
+        $(document).on('change','#comandas_rel', function(){
+            $('#blocks').empty();
+            $('#relator').val('relacomanda');
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class=" col"><label for="nome_comanda">Nome</label><input type="text" class="form-control" name="nome_comanda" id="nome_comanda" placeholder="Nome"></div>';
+
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" name="nmesa_comanda" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+
+            form += '</div>';
+            form += '<div class="row pt-4 justify-content-around">';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="status_comanda">Status</label>';
+            form += '<select name="status_comanda" id="status_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="A" >Aberto</option><option value="F">Fechado</option>';
+            form += '</select></div>';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="cat_comanda">Ordenação</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="data" >Data</option><option value="status">Status</option><option value="nome">Nome</option><option value="valor">Valor</option>';
+            form += '</select></div>';
+
+            form += '</div>';
+            var convert_html = $.parseHTML(form);
+            console.log(convert_html);
+            $('.select_date').show();
+            $('#blocks').append(convert_html);
+
+
+
+        });
+
+
+        $(document).on('change','#pedidos_rel', function(){
+            $('#blocks').empty();
+            $('#relator').val('relaped');
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class=" col"><label for="nome_pedido">Nome</label><input type="text" class="form-control" name="nome_comanda" id="nome_comanda" placeholder="Nome"></div>';
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" name="nmesa_comanda" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+            form += '</div>';
+
+            form += '<div class="row pt-4 justify-content-around">';
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="status_pedido">Status</label>';
+
+            form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" name="statsped" id="statsped" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Status Pedido</button>';
+            form+='<div class="dropdown-menu  pr-6" aria-labelledby="statsped" name="statsped">';
+            form+='<ul style="list-style: none;" >';
+
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="P"> Pedido realizado</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="F"> Fazendo</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="S"> Saiu para entrega</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="E"> Foi entregue</label></li>';
+            form+='<li class="ms-select-all"><label><input type="checkbox" name="statsped[]" data-name="selec_pedido[]" value="C"> Cancelado</label></li>';
+            form+='</ul></div></div></div>';
+
+
+            form += '<div class="col-sm-4 justify-content-around">';
+            form += '<label for="cat_comanda">Categoria</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="comandaref" >Por comanda</option><option value="valor">Por preço</option><option value="status">Por status</option><option value="status_pago">Por status pagamento</option>';
+            form += '</select></div>';
+
+            form+='';
+            form+='</div>';
+            var convert_html = $.parseHTML(form);
+            console.log(convert_html);
+            $('.select_date').show();
+            $('#blocks').append(convert_html);
+
+
+        });
+
+
+
+        $(document).on('change','#produtos_rel', function(){
+            $('#blocks').empty();
+            $('.select_date').hide();
+            $('#relator').val('relaprod');
+
+
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class="dropdown"><button class="btn btn-secondary btn btn-lg dropdown-toggle" type="button" name="tipo_prod" id="tipo_prod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Por produto</button>';
+            form+='<div class="dropdown-menu" aria-labelledby="tipo_prod">';
+            form+='<ul style="list-style: none;" >';
+
+            {% for p in prod %}
+                form+='<li style="list-style: none;" class="ms-select-all"><label><input type="checkbox" data-name="selec_produto[]" name="selec_produto[]" value={{p.id}}> {{p.nome}}</label></li>';
+            {% endfor %}
+            form+='</ul></div></div></div>';
+
+
+            form += '<div class="row pt-4 justify-content-center">';
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="tipo_prod">Ordenação</label><select name="tipo_prod" id="tipo_prod" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="valor" >Pelo valor</option><option value="nome">Pelo nome</option><option value="tipo">Pelo tipo</option>';
+            form += '</select></div>';
+
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="cat_comanda">Tipo do produto</label><select name="cat_comanda" id="cat_comanda" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="A" >Alimento</option><option value="B">Bebida</option>';
+            form += '</select></div>';
+
+            form+='</div>';
+
+            var convert_html = $.parseHTML(form);
+            console.log(convert_html);
+            $('#blocks').append(convert_html);
+
+        });
+
+        $(document).on('change','#recebimentos_rel', function(){
+            $('#blocks').empty();
+            var form ='';
+            form += '<div class="row justify-content-center ">';
+
+            form += '<div class=" col"><label for="nome_comanda">Nome da comanda</label><input type="text" class="form-control" name="nome_comanda" id="nome_comanda" placeholder="Nome da comanda"></div>';
+            form += '<div class=" col"><label for="nmesa_comanda">Número da mesa</label><input type="number" class="form-control" name="nmesa_comanda" id="nmesa_comanda" placeholder="Nº mesa"></div>';
+
+            form += '<div class="col-sm-4 justify-content-center">';
+            form += '<label for="orderec">Ordenação</label><select name="orderec" id="orderec" class="form-control">';
+            form += '<option selected disabled>Selecione</option><option value="prod" >Por produto</option><option value="data" >Por data de recebimento</option><option value="valor">Pelo nome</option><option value="tipo">Pelo tipo</option>';
+            form += '</select></div>';
+
+            form += '</div>';
+            var convert_html = $.parseHTML(form);
+            console.log(convert_html);
+            $('#relator').val('relareceb');
+            $('#blocks').append(convert_html);
+            $('.select_date').show();
+
+
+        });
+
+        $(document).on('click','#rel_btn', function(){
+
+            $('.select_date').hide();
+        });
+
+        $(document).on('blur','.qnt_ins', function(){
+            if( $(this).val() != "" ){
+                console.log('foiuai');
+                console.log($(this).attr("id"));
+                console.log($(this));
+                $(this).attr("name",  $(this).attr("id") );
+            }
+
+        });
+
+
+
+        $(document).on('click',' .toggle-group', function(){
+
+<!--            #manda ajax para mostrar produto cardapio-->
+            var card = $(this).siblings('.cardapio_prod').val();
+            var pro = $(this).parents().siblings('#x_pedido').val();
+            console.log(card);
+            console.log('foi produto > ',pro);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'administrador' %}",
+                data: {'cardapio' :card,'produto': pro},
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
+        });
+
+        $(document).on('blur','.estoque_prod', function(){
+<!--            #manda ajax para alterar estoque -->
+            var est = $(this).val();
+            var pro = $(this).parent().siblings('#x_pedido').val();
+<!--            console.log('foi estoque > ',est);-->
+<!--            console.log('foi produto > ',pro);-->
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'administrador' %}",
+                data: {'estoque' :est,'produto': pro},
+                success: function (response) {
+<!--                    $(this).val(response.quantidade);-->
+                },
+                error: function (response) {
+                }
+            });
+        });
+    </script>
+
+
+    <header class="masthead text-white" style="background-color: rgb(255,255,255)">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible justify-content-top" id="msg" role="alert" style="background-color:powderblue; font-size: medium; color: rgb(44,62,80) ">
+                <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="align-content-center ">
+            <h1 class="text-center align-content-center p-1 m-auto" style="align-content: center; padding: 5px;color: rgb(44,62,80)">
+                Iniciar movimento</h1>
+        </div>
+        <div class="d-flex justify-content-center" style="color: rgb(241,234,72);width: auto;padding: 5px;">
+            <div class="row text-center d-inline-flex" >
+
+                <div class="col-auto text-center m-auto flex-fill" style="margin: 4px;padding: 3px;min-height: 21px;">
+                    <div class="btn-group btn-group-lg justify-content-center " id="movimento" role="group" style="height: 60%;width: 80%;padding: 2px;min-width: 20px;">
+                            {% if mov == "L" %}
+                                <input  checked id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
+                            {% else %}
+                                <input  id='mov' name='mov' style="font-size:large;" data-on="Funcionando" data-off="Finalizado" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="150" data-height="150" >
+                            {% endif %}
+                    </div>
+                    <hr>
+<!--                    funçao de zerar historico-->
+                    <button class="btn btn-primary text-center border rounded border-dark" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#novoProduto">Produtos</button>
+                    <div class="modal fade " role="document" tabindex="-1" id="novoProduto">
+                        <div class="card justify-content-center">
+                            {% if form %}
+                            <form method="POST" class="justify-content-center" id="newprod" enctype="multipart/form-data" >
+                                <div class="modal-content border  bg-secondary  " align="center">
+                                    <div class="modal-header text-center " >
+                                        <h3 class="modal-title text-center ml-4" style="width:95%">Novo Produto</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body w-80  ml-3" style="margin-left:20%" >
+
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" id="basic-addon1"><h5></he>Nome:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.nome }}
+                                            </div>
+
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Tipo:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.tipo }}
+                                            </div>
+
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Preço:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.preco }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Und Medida:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.medida }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Quantidade total do produto em estoque:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.quantidade }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Quantidade mínima limite em estoque:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.qnt_minima }}
+                                            </div>
+
+<!--                                            </div>-->
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Descrição do produto:</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                {{ form.descricao }}
+                                            </div>
+                                            <div class="input-group  mb-0" style="width:95%" >
+
+                                                <span class="input-group" ><h5></he>Produto disponível para consulta no cardápio ?</h5></span>
+                                            </div>
+                                            <div class="input-group input-lg mb-3 " style="width:95%">
+                                                <input type="checkbox" class="cardapio_prod w-10" data-on="Sim" data-off="Não"  name="cardapio"  style="font-size:large;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+                                            </div>
+
+
+<!--                                                {{form.cardapio}}-->
+
+                                            <div class="input-group mb-4 justify-content-center ">
+
+                                              <div class="custom-file w-5 px-3">
+                                                {{ form.img_prod }}
+                                                <label class="custom-file-label" for="id_img_prod">Selecione a Imagem do Produto</label>
+                                              </div>
+                                            </div>
+
+                                                <div class="dropdown input-group-text p-2 m-2 justify-content-center w-30 ">
+                                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="insumo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                    <label class="input-group-text " ><h5>{{'Selecione os insumos do produto'}}</h5></label>
+                                                    </a>
+                                                    <div class="dropdown-menu" aria-labelledby="insumo">
+                                                      <div class="container bg-dark">
+                                                        {% for p in prod %}
+                                                            <div class="row dropdown-item ">
+
+                                                                <div class="input-group-prepend mt-3 newprod">
+
+                                                                    <div class="input-group-text">
+                                                                      <label class="input-group-text" id="inputGroup-sizing-sm">{{p.nome}}</label>
+                                                                        <input type="text" class="qnt_ins" name="" id="{{p.id}}" aria-label="Quantidade do insumo">
+                                                                                                                                                <span class="input-group-text">{{p.get_medida_display}}</span>
+
+                                                                    </div>
+
+                <!--                                                    #qnt_ins recebe o name de um ajax se for selecionado e envia ja com a quantidade-->
+
+                                                                </div>
+
+
+
+                                                            </div>
+                                                        {% endfor %}
+                                                      </div>
+                                                    </div>
+                                                </div>
+
+
+                                            {% csrf_token %}
+<!--                                            {{ form.as_p }}-->
+
+
+                                    </div>
+                                    <div class="modal-footer"><div><button class="btn btn-primary" type="submit">Salvar</button></div><div><button class="btn btn-light" type="button" data-dismiss="modal">Fechar</button></div></div>
+                                </div>
+                            </form>
+                            {% endif %}
+
+
+                            {% for pro in prod %}
+                                <div class="card border bg-secondary mt-2" >
+                                    <div class="card-body">
+<!--                                            habilitar campo aberto para alteraçoes-->
+                                        <h5 class="card-title">{{pro.nome}}</h5>
+                                          <img class="card-img-top pb-5" style="width: 18rem;" src="{{pro.img_prod.url}}" alt="">
+
+
+                                        <h6 class="card-subtitle mb-2 text-muted" font-italic>R${{pro.preco}}</h6>
+                                        <p class="card-text font-weight-bold text-capitalize"><h7>{{pro.descricao}}</h7></p>
+
+                                        <form action="{% url 'administrador' %}" method="post" name="prod_x">
+                                            <div class="input-group mb-3 justify-content-center">
+                                                <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Estoque:</span>
+                                                </div>
+                                                <input type="text" class="estoque_prod"   step=".01"  value="{{pro.quantidade|floatformat:2}}" id="qnt_{{pro.id}}">
+                                                 <div class="input-group-prepend ">
+                                                    <span class="input-group-text">Cardapio:</span>
+                                                </div>
+                                                <input type="checkbox" class="cardapio_prod" {% if pro.cardapio == True %} checked value="1" {% else %} value="0" {% endif %}  id="cardap_{{pro.id}}"  style="font-size:small;" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-success" data-width="50" data-height="50" >
+
+                                            </div>
+                                            <input hidden name="prod_x" id="x_pedido" value="{{pro.id}}">
+                                            {% csrf_token%}
+                                            <button type="submit" class="btn btn-danger del_prod" value="{{ pro.id }}" >Deletar</button>
+                                        </form>
+
+<!--                                            <a href="#" class="card-button">salvar alterações</a>-->
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+                    <button class="btn btn-primary text-center border rounded border-dark" id="rel_btn" type="button" style=" height: auto;padding: 13px;margin: 7px;font-size: 31px;margin-top: 29px;" data-toggle="modal" data-target="#relatorio">Relatórios</button>
+                    <div class="modal mx-6 px-6" role="document" tabindex="-1" id="relatorio">
+                        <div class="card">
+
+
+                            <div class="card border bg-secondary mt-2" >
+                                <div class="card-body">
+<!--                                            habilitar campo aberto para alteraçoes-->
+                                    <h3 class="card-title">{{'Relatórios'}}</h3>
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="comandas_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="comandas_rel">Comandas</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="pedidos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="pedidos_rel">Pedidos</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="produtos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="produtos_rel">Produtos</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="recebimentos_rel" name="radio_opc" class="custom-control-input" required>
+                                          <label class="custom-control-label" for="recebimentos_rel">Recebimentos</label>
+                                        </div>
+                                    <p>
+                                    <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                    <form id='consulta_adm' name="consulta_adm" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" id="relator" name="relator">
+                                        <div class="row justify-content-center select_date">
+                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column row">
+                                              <h6><label for="date_de" class="col-4 col-form-label d-inline">DE</label></h6>
+                                              <div class="col-12">
+                                                <input class="form-control" type="datetime-local" id="date_de" name="date_de">
+                                              </div>
+                                            </div>
+                                            <div class="form-group form-group-inline d-lg-inline-flex flex-column">
+                                              <h6><label for="date_ate" class="col-4 col-form-label d-inline ">ATÉ</label></h6>
+                                              <div class="col-12">
+                                                <input class="form-control" type="datetime-local" id="date_ate" name="date_ate">
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <p>
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <div id="blocks">
+
+                                        </div>
+                                        <p>
+                                        <hr style="display: block; margin-top: 0.5em; margin-bottom: 20px; margin-left: auto; margin-right: auto; border-style: inset; border-width: 1px;">
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="consulta">Consultar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal bg-danger text-danger" role="dialog" tabindex="-1" id="alt-mov">
+                        <div class="modal-dialog modal-dialog-centered" role="document" >
+
+                            <div class="modal-content bg-light">
+                                <div class="modal-header">
+                                    <h4 class="modal-title text-light">Movimento</h4><button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body text-sucess">
+                                    <p>
+                                    <h2><b>Deseja mesmo realizar esta ação ?</b></h2>
+                                    </p>
+                                    {% if logado %}
+
+                                            <input type="hidden"  id="movimentar">
+                                    {% endif %}
+                                        <button type="submit" class="btn btn-sucess border btn-lg btn-block bg-warning" data-dismiss="modal" id="confirm">Confirmar</button>
+                                </div>
+                                <div class="modal-footer"><button id=cancel class="btn btn-danger" type="button" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+</html>
