@@ -16,7 +16,7 @@ Deprecated==1.2.13
 distlib==0.3.4
 dj-config-url==0.1.1
 dj-static==0.0.6
-Django==3.2.12
+Django==3.2.14
 django-ajax==0.3.0
 django-pwa==1.0.10
 django-redis==5.2.0
